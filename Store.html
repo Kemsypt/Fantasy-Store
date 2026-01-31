@@ -6,11 +6,11 @@
   <title>Fantasy Storefront Template</title>
   <style>
     :root{
-      --bg:#141016;
-      --panel:#1f1823;
-      --panel2:#221a27;
-      --text:#f3ead7;
-      --muted:#cdbfa4;
+      --bg:#0e0a10;
+      --panel:#17101c;
+      --panel2:#1b1221;
+      --text:#f7efdc;
+      --muted:#d2c6ad;
       --ink:#2b1f14;
       --paper:#f2e6c8;
       --paper2:#e7d7b0;
@@ -18,290 +18,515 @@
       --accent2:#ffb86c;
       --danger:#ff6b6b;
       --ok:#6bff9c;
-      --shadow: 0 12px 30px rgba(0,0,0,.45);
+      --shadow: 0 14px 36px rgba(0,0,0,.45);
       --radius: 18px;
-      --radius2: 12px;
-      --border: 1px solid rgba(255,255,255,.08);
+      --radius2: 14px;
+      --border: 1px solid rgba(255,255,255,.10);
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
       --serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+
+      /* Touch targets */
+      --tap: 44px;
     }
+
     *{box-sizing:border-box}
     body{
       margin:0;
       font-family: var(--sans);
       color: var(--text);
       background:
-        radial-gradient(1200px 600px at 20% 0%, rgba(182,140,255,.14), transparent 55%),
-        radial-gradient(900px 520px at 85% 20%, rgba(255,184,108,.10), transparent 50%),
-        radial-gradient(900px 800px at 60% 90%, rgba(110,255,200,.06), transparent 60%),
-        linear-gradient(180deg, #0f0b10, var(--bg));
+        radial-gradient(1100px 620px at 20% 0%, rgba(182,140,255,.16), transparent 55%),
+        radial-gradient(900px 540px at 90% 18%, rgba(255,184,108,.12), transparent 52%),
+        radial-gradient(900px 900px at 50% 100%, rgba(110,255,200,.06), transparent 62%),
+        linear-gradient(180deg, #080509, var(--bg));
       min-height:100vh;
     }
+
+    /* ====== Top App Bar (Temu-like) ====== */
     header{
-      padding:18px 18px 10px;
       position:sticky;
       top:0;
-      backdrop-filter: blur(10px);
-      background: linear-gradient(180deg, rgba(20,16,22,.92), rgba(20,16,22,.75));
+      z-index: 20;
       border-bottom: var(--border);
-      z-index: 10;
+      background: linear-gradient(180deg, rgba(14,10,16,.96), rgba(14,10,16,.78));
+      backdrop-filter: blur(12px);
     }
-    .topbar{
-      display:flex;
-      gap:12px;
+
+    .appbar{
+      display:grid;
+      grid-template-columns: 1fr minmax(220px, 1.2fr) 1fr;
+      gap: 10px;
       align-items:center;
-      justify-content:space-between;
-      flex-wrap:wrap;
+      padding: 12px 12px;
     }
-    .title{
+
+    @media (max-width: 900px){
+      .appbar{ grid-template-columns: 1fr; }
+    }
+
+    .brand{
       display:flex;
       align-items:center;
       gap:12px;
-      min-width: 240px;
+      min-width: 220px;
     }
+
     .sigil{
-      width:42px;height:42px;border-radius:14px;
-      background: radial-gradient(circle at 30% 30%, rgba(182,140,255,.9), rgba(255,184,108,.35) 55%, rgba(0,0,0,.0) 70%),
-                  linear-gradient(145deg, rgba(255,255,255,.10), rgba(0,0,0,.35));
-      border: 1px solid rgba(255,255,255,.12);
+      width:44px;height:44px;border-radius:16px;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(182,140,255,.95), rgba(255,184,108,.30) 55%, rgba(0,0,0,.0) 72%),
+        linear-gradient(145deg, rgba(255,255,255,.10), rgba(0,0,0,.35));
+      border: 1px solid rgba(255,255,255,.14);
       box-shadow: var(--shadow);
+      flex: 0 0 auto;
     }
-    h1{
+
+    .brand h1{
       margin:0;
       font-family: var(--serif);
       font-size: 18px;
       letter-spacing:.3px;
+      line-height: 1.1;
     }
-    .sub{
-      margin:2px 0 0;
+
+    .brand .sub{
+      margin-top:2px;
       font-size:12px;
       color: var(--muted);
+      line-height: 1.15;
     }
-    .controls{
+
+    .searchbar{
       display:flex;
-      gap:10px;
       align-items:center;
-      flex-wrap:wrap;
-      justify-content:flex-end;
+      gap:10px;
+      padding:10px 12px;
+      border-radius: 999px;
+      border: var(--border);
+      background: rgba(255,255,255,.05);
+      box-shadow: 0 10px 22px rgba(0,0,0,.25);
     }
-    .chip{
+
+    .searchbar input{
+      width:100%;
+      border:none;
+      outline:none;
+      color: var(--text);
+      background: transparent;
+      font-size: 14px;
+      min-height: var(--tap);
+    }
+
+    .searchbar .pill{
       display:flex;
       align-items:center;
       gap:8px;
-      padding:8px 10px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.22);
+      border-radius: 999px;
+      padding: 8px 10px;
+      white-space:nowrap;
+    }
+
+    .searchbar label{font-size:12px;color:var(--muted)}
+
+    select, input[type="number"], input[type="text"]{
+      background: rgba(0,0,0,.25);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 12px;
+      padding: 10px 12px;
+      outline:none;
+      min-height: var(--tap);
+      font-size: 14px;
+    }
+
+    button{
+      border: 1px solid rgba(255,255,255,.14);
+      background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(0,0,0,.18));
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: 14px;
+      cursor:pointer;
+      box-shadow: 0 10px 22px rgba(0,0,0,.25);
+      min-height: var(--tap);
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+    button:hover{filter: brightness(1.06)}
+    button:active{transform: translateY(1px)}
+    button:disabled{opacity:.55; cursor:not-allowed}
+
+    .btn-accent{
+      border-color: rgba(182,140,255,.38);
+      background: linear-gradient(180deg, rgba(182,140,255,.24), rgba(0,0,0,.18));
+    }
+
+    .btn-warn{
+      border-color: rgba(255,107,107,.38);
+      background: linear-gradient(180deg, rgba(255,107,107,.18), rgba(0,0,0,.18));
+    }
+
+    .actions{
+      display:flex;
+      align-items:center;
+      justify-content:flex-end;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .dm-only{display:none}
+    .dm .dm-only{display:flex}
+
+    /* Reset should only be visible in DM mode */
+    #resetAll{display:none}
+    .dm #resetAll{display:inline-flex}
+
+    /* ====== Category rail (Temu-like chips) ====== */
+    .catbar{
+      display:flex;
+      gap:10px;
+      padding: 10px 12px 12px;
+      overflow:auto;
+      border-top: 1px solid rgba(255,255,255,.06);
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 10px 12px;
       border-radius: 999px;
       border: var(--border);
       background: rgba(255,255,255,.04);
+      white-space:nowrap;
+      user-select:none;
+      min-height: var(--tap);
     }
-    .chip label{font-size:12px;color:var(--muted)}
-    select, input[type="text"], input[type="number"]{
-      background: rgba(0,0,0,.25);
-      color: var(--text);
-      border: 1px solid rgba(255,255,255,.10);
-      border-radius: 10px;
-      padding:8px 10px;
-      outline:none;
+
+    .chip.active{
+      border-color: rgba(255,184,108,.40);
+      background: rgba(255,184,108,.12);
     }
-    input[type="text"]{min-width: 220px}
-    button{
-      border: 1px solid rgba(255,255,255,.12);
-      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(0,0,0,.18));
-      color: var(--text);
-      padding:9px 12px;
-      border-radius: 12px;
-      cursor:pointer;
-      box-shadow: 0 8px 20px rgba(0,0,0,.25);
-    }
-    button:hover{filter: brightness(1.05)}
-    button:active{transform: translateY(1px)}
-    .btn-accent{
-      border-color: rgba(182,140,255,.35);
-      background: linear-gradient(180deg, rgba(182,140,255,.22), rgba(0,0,0,.18));
-    }
-    .btn-warn{
-      border-color: rgba(255,107,107,.35);
-      background: linear-gradient(180deg, rgba(255,107,107,.18), rgba(0,0,0,.18));
-    }
+
+    .chip small{color:var(--muted)}
+
+    /* ====== Layout: product feed + cart sidebar ====== */
     .layout{
       display:grid;
-      grid-template-columns: 1.6fr 1fr;
-      gap:14px;
-      padding: 14px 14px 26px;
+      grid-template-columns: 1fr 380px;
+      gap: 12px;
+      padding: 12px;
+      align-items:start;
     }
-    @media (max-width: 980px){
-      .layout{grid-template-columns:1fr}
-      input[type="text"]{min-width: 140px}
+
+    @media (max-width: 1020px){
+      .layout{grid-template-columns: 1fr}
     }
+
     .panel{
-      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(0,0,0,.12));
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(0,0,0,.16));
       border: var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       overflow:hidden;
     }
-    .panel > .hd{
-      padding:12px 14px;
+
+    .panel .hd{
+      padding: 12px 14px;
+      border-bottom: var(--border);
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap:10px;
-      border-bottom: var(--border);
+      gap: 10px;
       background: rgba(0,0,0,.18);
     }
+
     .panel .hd h2{
       font-family: var(--serif);
       font-size: 16px;
       margin:0;
+      letter-spacing:.2px;
     }
+
     .panel .bd{padding: 12px 14px}
+
+    .banner{
+      border-radius: var(--radius2);
+      border: 1px solid rgba(255,255,255,.10);
+      background:
+        radial-gradient(1000px 220px at 12% 20%, rgba(182,140,255,.18), transparent 55%),
+        radial-gradient(800px 220px at 92% 20%, rgba(255,184,108,.14), transparent 58%),
+        linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.10));
+      padding: 14px;
+      box-shadow: 0 12px 26px rgba(0,0,0,.25);
+    }
+
+    .banner .row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      flex-wrap:wrap;
+    }
+
+    .banner .k{font-size:12px;color:var(--muted)}
+    .banner .v{font-family:var(--serif);font-size:18px}
+
+    .filters{
+      display:grid;
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    @media (max-width: 900px){
+      .filters{grid-template-columns: repeat(2, minmax(0,1fr));}
+    }
+
+    /* ====== Product grid (Temu-like cards) ====== */
     .grid{
       display:grid;
-      grid-template-columns: repeat(2, minmax(0,1fr));
-      gap:10px;
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      gap: 12px;
+      margin-top: 12px;
     }
-    @media (max-width: 640px){ .grid{grid-template-columns:1fr} }
+
+    @media (max-width: 1200px){
+      .grid{grid-template-columns: repeat(3, minmax(0,1fr));}
+    }
+
+    @media (max-width: 840px){
+      .grid{grid-template-columns: repeat(2, minmax(0,1fr));}
+    }
+
+    @media (max-width: 420px){
+      .grid{grid-template-columns: 1fr;}
+    }
+
+    .card{
+      border-radius: var(--radius2);
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      box-shadow: 0 12px 22px rgba(0,0,0,.20);
+    }
+
+    .thumb{
+      aspect-ratio: 1.2 / 1;
+      width:100%;
+      background: rgba(255,255,255,.05);
+      display:block;
+      object-fit: cover;
+    }
+
+    .cardbody{padding: 10px 10px 12px; display:flex; flex-direction:column; gap: 8px;}
+
+    .title{
+      font-weight: 850;
+      letter-spacing:.2px;
+      line-height:1.2;
+      display:-webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow:hidden;
+      min-height: 2.4em;
+    }
+
+    .desc{
+      font-size:12px;
+      color: var(--muted);
+      line-height:1.25rem;
+      display:-webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow:hidden;
+      min-height: 2.4em;
+    }
+
+    .badges{display:flex; gap:8px; flex-wrap:wrap;}
+
+    .badge{
+      font-size:11px;
+      padding:6px 10px;
+      border-radius:999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: var(--muted);
+      white-space:nowrap;
+      min-height: 30px;
+      display:inline-flex;
+      align-items:center;
+    }
+
+    .priceRow{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top: 2px;
+    }
+
+    .price{
+      font-family: var(--mono);
+      font-size: 13px;
+      padding: 8px 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(182,140,255,.30);
+      background: rgba(182,140,255,.12);
+    }
+
+    .stock{
+      font-family: var(--mono);
+      font-size: 12px;
+      padding: 8px 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+    }
+
+    .out{
+      border-color: rgba(255,107,107,.45) !important;
+      background: rgba(255,107,107,.14) !important;
+    }
+
+    .addRow{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-top: 6px;
+    }
+
+    .qty{
+      display:flex;
+      align-items:center;
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 14px;
+      overflow:hidden;
+      background: rgba(0,0,0,.22);
+    }
+
+    .qty button{
+      border:none;
+      background: rgba(255,255,255,.06);
+      box-shadow:none;
+      border-radius:0;
+      min-height: var(--tap);
+      min-width: var(--tap);
+      padding: 0;
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .qty input{
+      width: 60px;
+      text-align:center;
+      border:none;
+      border-left: 1px solid rgba(255,255,255,.12);
+      border-right: 1px solid rgba(255,255,255,.12);
+      border-radius:0;
+      background: transparent;
+      min-height: var(--tap);
+      font-family: var(--mono);
+    }
+
+    /* ====== Cart (sticky on desktop) ====== */
+    .sticky{
+      position: sticky;
+      top: 118px;
+    }
+
+    @media (max-width: 1020px){
+      .sticky{position: static; top:auto;}
+    }
+
     .paper{
       background: linear-gradient(180deg, var(--paper), var(--paper2));
       color: var(--ink);
       border-radius: var(--radius2);
       padding: 12px;
       border: 1px solid rgba(0,0,0,.18);
-      box-shadow: 0 10px 24px rgba(0,0,0,.25);
+      box-shadow: 0 12px 26px rgba(0,0,0,.25);
     }
+
     .paper .k{font-size:11px;opacity:.7;letter-spacing:.2px}
-    .paper .v{font-weight:700}
-    .tabs{
-      display:flex; gap:8px; flex-wrap:wrap;
-    }
-    .tab{
-      padding:8px 10px;
-      border-radius: 999px;
-      border: var(--border);
-      background: rgba(255,255,255,.04);
-      font-size:12px;
-      cursor:pointer;
-      user-select:none;
-    }
-    .tab.active{
-      border-color: rgba(255,184,108,.35);
-      background: rgba(255,184,108,.12);
-    }
-    .items{
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-      margin-top: 10px;
-    }
-    .item{
-      display:flex;
-      gap:10px;
-      align-items:flex-start;
-      padding: 10px;
-      border-radius: var(--radius2);
-      background: rgba(0,0,0,.18);
-      border: var(--border);
-    }
-    .badge{
-      font-size:11px;
-      padding:4px 8px;
-      border-radius:999px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.06);
-      color: var(--muted);
-      white-space:nowrap;
-    }
-    .name{
-      font-weight:800;
-      letter-spacing:.2px;
-    }
-    .desc{
-      font-size:12px;
-      color: var(--muted);
-      margin-top:3px;
-      line-height:1.25rem;
-    }
-    .row{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      align-items:center;
-      justify-content:space-between;
-      width:100%;
-    }
-    .meta{
-      display:flex; gap:8px; flex-wrap:wrap; align-items:center;
-    }
-    .price{
-      font-family: var(--mono);
-      font-size:12px;
-      padding:6px 9px;
-      border-radius: 10px;
-      border: 1px solid rgba(182,140,255,.25);
-      background: rgba(182,140,255,.10);
-    }
-    .stock{
-      font-family: var(--mono);
-      font-size:12px;
-      padding:6px 9px;
-      border-radius: 10px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.06);
-    }
-    .out{ border-color: rgba(255,107,107,.40) !important; background: rgba(255,107,107,.12) !important; }
+    .paper .v{font-weight:800}
+
+    .cartlines{display:flex; flex-direction:column; gap:10px; margin-top: 10px;}
+
     .cartline{
       display:flex;
       justify-content:space-between;
-      align-items:center;
+      align-items:flex-start;
       gap:10px;
-      padding: 8px 10px;
-      border-radius: 12px;
+      padding: 10px;
+      border-radius: 14px;
       border: var(--border);
       background: rgba(0,0,0,.14);
     }
+
+    .cartline b{display:block; line-height:1.2}
     .cartline small{color: var(--muted)}
-    .qty{
-      display:flex; gap:6px; align-items:center;
+
+    .cartQty{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      align-items:flex-end;
     }
-    .qty button{padding:6px 9px;border-radius:10px}
+
+    .cartQty .qty{background: rgba(0,0,0,.12)}
+
     .receipt{
       width:100%;
-      min-height: 120px;
+      min-height: 140px;
       resize: vertical;
       font-family: var(--mono);
       font-size: 12px;
-      padding:10px;
-      border-radius: 12px;
+      padding: 12px;
+      border-radius: 14px;
       border: 1px solid rgba(255,255,255,.12);
       background: rgba(0,0,0,.22);
       color: var(--text);
     }
-    .dm-only{display:none}
-    .dm .dm-only{display:block}
-    .dm .player-only{display:none}
+
     .hint{font-size:12px;color:var(--muted);line-height:1.25rem;margin:8px 0 0}
-    .split{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:10px;
-    }
-    @media (max-width: 640px){ .split{grid-template-columns:1fr} }
-    .footer-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+
+    .split{display:grid; grid-template-columns: 1fr 1fr; gap:10px;}
+    @media (max-width: 420px){ .split{grid-template-columns:1fr} }
+
+    /* Dialogue buttons should be big for touch */
+    .dialogueBtn{min-height: var(--tap); width:100%}
+
+    /* Make form controls touch-friendly */
+    .tight select, .tight input{width:100%}
+
+    /* Hide number spinners on some browsers for aesthetics; keep input usable */
+    input[type=number]::-webkit-outer-spin-button,
+    input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type=number] { -moz-appearance: textfield; }
+
   </style>
 </head>
 <body>
 <header>
-  <div class="topbar">
-    <div class="title">
+  <div class="appbar">
+    <div class="brand">
       <div class="sigil" aria-hidden="true"></div>
       <div>
         <h1 id="storeName">The Midnight Ledger</h1>
-        <div class="sub" id="storeTag">A template storefront for any shop type • Player + DM mode</div>
+        <div class="sub" id="storeTag">Fantasy storefront template • Touch-friendly • Player + DM mode</div>
       </div>
     </div>
 
-    <div class="controls">
-      <div class="chip">
+    <div class="searchbar" role="search">
+      <input id="search" type="text" placeholder="Search items, categories, effects…" />
+      <div class="pill tight" title="Settlement affects price & specials">
         <label for="settlement">Settlement</label>
         <select id="settlement">
           <option value="hamlet">Hamlet</option>
@@ -311,225 +536,179 @@
           <option value="metropolis">Metropolis</option>
         </select>
       </div>
+    </div>
 
-      <div class="chip">
-        <label for="shopType">Shop Type</label>
+    <div class="actions">
+      <div class="pill tight" title="This is a template—swap presets later">
+        <label for="shopType">Shop</label>
         <select id="shopType">
-          <option value="general">General Store</option>
+          <option value="general">General</option>
           <option value="blacksmith">Blacksmith</option>
-          <option value="magic">Magic Shop</option>
+          <option value="magic">Magic</option>
           <option value="alchemist">Alchemist</option>
-          <option value="curio">Curio / Antiques</option>
+          <option value="curio">Curio</option>
           <option value="custom">Custom</option>
         </select>
-      </div>
-
-      <div class="chip">
-        <label for="search">Search</label>
-        <input id="search" type="text" placeholder="rope, potion, scroll..." />
       </div>
 
       <button id="toggleDM" class="btn-accent" title="Toggle DM mode">DM Mode: Off</button>
       <button id="resetAll" class="btn-warn" title="Reset to defaults">Reset</button>
     </div>
   </div>
+
+  <div class="catbar" id="categoryBar"></div>
 </header>
 
 <main class="layout" id="app">
-  <!-- LEFT: Inventory -->
+  <!-- Product feed -->
   <section class="panel">
-    <div class="hd">
-      <h2>Inventory</h2>
-      <div class="footer-actions">
-        <button id="rollSpecials" class="dm-only btn-accent">Roll Specials</button>
-        <button id="restock" class="dm-only">Restock Basics</button>
-      </div>
-    </div>
     <div class="bd">
-      <div class="tabs" id="categoryTabs"></div>
-
-      <div class="grid" style="margin-top:10px">
-        <div class="chip">
-          <label for="rarityFilter">Rarity</label>
-          <select id="rarityFilter">
-            <option value="all" selected>All</option>
-            <option value="common">Common</option>
-            <option value="uncommon">Uncommon</option>
-            <option value="rare">Rare</option>
-            <option value="very rare">Very Rare</option>
-            <option value="legendary">Legendary</option>
-          </select>
+      <div class="banner">
+        <div class="row">
+          <div>
+            <div class="k">Today’s Market</div>
+            <div class="v"><span id="marketLine">Town prices • Standard availability</span></div>
+          </div>
+          <div class="actions">
+            <button id="rollSpecials" class="dm-only btn-accent">Roll Specials</button>
+            <button id="restock" class="dm-only">Restock Basics</button>
+          </div>
         </div>
 
-        <div class="chip">
-          <label for="typeFilter">Type</label>
-          <select id="typeFilter">
-            <option value="all" selected>All</option>
-            <option value="gear">Gear</option>
-            <option value="weapon">Weapon</option>
-            <option value="armor">Armor</option>
-            <option value="ammo">Ammo</option>
-            <option value="tool">Tool</option>
-            <option value="mount">Mount</option>
-            <option value="vehicle">Vehicle</option>
-            <option value="potion">Potion</option>
-            <option value="consumable">Consumable</option>
-            <option value="magic item">Magic Item</option>
-            <option value="scroll">Scroll</option>
-            <option value="mystery">Mystery</option>
-            <option value="custom">Custom</option>
-          </select>
+        <div class="filters">
+          <div class="tight">
+            <select id="rarityFilter">
+              <option value="all" selected>Rarity: All</option>
+              <option value="common">Common</option>
+              <option value="uncommon">Uncommon</option>
+              <option value="rare">Rare</option>
+              <option value="very rare">Very Rare</option>
+              <option value="legendary">Legendary</option>
+            </select>
+          </div>
+
+          <div class="tight">
+            <select id="typeFilter">
+              <option value="all" selected>Type: All</option>
+              <option value="gear">Gear</option>
+              <option value="weapon">Weapon</option>
+              <option value="armor">Armor</option>
+              <option value="ammo">Ammo</option>
+              <option value="tool">Tool</option>
+              <option value="mount">Mount</option>
+              <option value="vehicle">Vehicle</option>
+              <option value="potion">Potion</option>
+              <option value="consumable">Consumable</option>
+              <option value="magic item">Magic Item</option>
+              <option value="scroll">Scroll</option>
+              <option value="mystery">Mystery</option>
+              <option value="custom">Custom</option>
+            </select>
+          </div>
+
+          <div class="tight">
+            <input id="maxPrice" type="number" min="0" placeholder="Max price (gp)" />
+          </div>
+
+          <div class="tight dm-only">
+            <input id="marketFactor" type="number" step="0.05" min="0.5" max="2.0" value="1.00" title="DM market multiplier" />
+          </div>
         </div>
 
-        <div class="chip">
-          <label for="maxPrice">Max Price (gp)</label>
-          <input id="maxPrice" type="number" min="0" placeholder="e.g. 250" />
-        </div>
+        <p class="hint">Prices are <b>dynamic</b>: settlement size + scarcity + DM market factor. Checkout decrements stock and can cause <span style="color:var(--danger)">out of stock</span>.</p>
+      </div>
 
-        <div class="chip dm-only">
-          <label for="marketFactor">Market Factor</label>
-          <input id="marketFactor" type="number" step="0.05" min="0.5" max="2.0" value="1.00" />
+      <div class="grid" id="productGrid" aria-live="polite"></div>
+
+      <div class="panel dm-only" style="margin-top:12px">
+        <div class="hd"><h2>DM Tools • Add Custom Item</h2></div>
+        <div class="bd">
+          <div class="filters" style="grid-template-columns: repeat(3, minmax(0,1fr));">
+            <input id="newName" type="text" placeholder="Item name" />
+            <select id="newType">
+              <option value="custom" selected>Type: Custom</option>
+              <option value="gear">Gear</option>
+              <option value="weapon">Weapon</option>
+              <option value="armor">Armor</option>
+              <option value="ammo">Ammo</option>
+              <option value="tool">Tool</option>
+              <option value="mount">Mount</option>
+              <option value="vehicle">Vehicle</option>
+              <option value="potion">Potion</option>
+              <option value="consumable">Consumable</option>
+              <option value="magic item">Magic Item</option>
+              <option value="scroll">Scroll</option>
+              <option value="mystery">Mystery</option>
+            </select>
+            <select id="newRarity">
+              <option value="common" selected>Rarity: Common</option>
+              <option value="uncommon">Uncommon</option>
+              <option value="rare">Rare</option>
+              <option value="very rare">Very Rare</option>
+              <option value="legendary">Legendary</option>
+            </select>
+          </div>
+
+          <div class="filters" style="grid-template-columns: repeat(3, minmax(0,1fr));">
+            <input id="newBasePrice" type="number" min="0" value="25" placeholder="Base price (gp)" />
+            <input id="newStock" type="number" min="0" value="1" placeholder="Stock" />
+            <select id="newCategory"></select>
+          </div>
+
+          <input id="newDesc" type="text" placeholder="Short description / effects" style="width:100%; margin-top:10px" />
+          <div class="actions" style="margin-top:10px; justify-content:flex-end">
+            <button id="addCustom" class="btn-accent">Add Item</button>
+          </div>
         </div>
       </div>
 
-      <div class="items" id="items"></div>
-
-      <p class="hint">
-        Pricing is <b>dynamic</b>: settlement size + scarcity + DM market factor adjust costs.
-        Stock decrements on checkout; items can become <span style="color:var(--danger)">out of stock</span>.
-      </p>
     </div>
   </section>
 
-  <!-- RIGHT: Cart + DM tools + Dialogue -->
-  <aside class="panel">
+  <!-- Cart Sidebar -->
+  <aside class="panel sticky">
     <div class="hd">
       <h2>Cart & Receipt</h2>
-      <div class="footer-actions">
+      <div class="actions">
         <button id="checkout" class="btn-accent">Checkout</button>
-        <button id="clearCart">Clear Cart</button>
+        <button id="clearCart">Clear</button>
       </div>
     </div>
     <div class="bd">
       <div class="paper">
         <div class="k">Current Total</div>
-        <div class="v" style="font-size:20px;font-family:var(--mono)"><span id="totalGp">0</span> gp</div>
+        <div class="v" style="font-size:22px;font-family:var(--mono)"><span id="totalGp">0</span> gp</div>
         <div class="k" style="margin-top:6px">Items in Cart: <span id="cartCount">0</span></div>
       </div>
 
-      <div style="margin-top:10px" id="cartLines"></div>
+      <div class="cartlines" id="cartLines"></div>
 
       <div style="margin-top:12px">
-        <div class="row">
-          <div class="meta">
-            <span class="badge">Receipt</span>
-            <span class="badge dm-only">Export/Copy</span>
-          </div>
-          <div class="meta">
-            <button id="copyReceipt" class="dm-only">Copy</button>
-            <button id="exportJSON" class="dm-only">Export JSON</button>
+        <div class="actions" style="justify-content:space-between">
+          <span class="badge">Receipt</span>
+          <div class="actions dm-only" style="gap:8px">
+            <button id="copyReceipt">Copy</button>
+            <button id="exportJSON">Export JSON</button>
           </div>
         </div>
-        <textarea id="receipt" class="receipt" placeholder="Checkout generates a receipt here..." readonly></textarea>
+        <textarea id="receipt" class="receipt" placeholder="Checkout generates a receipt here…" readonly></textarea>
       </div>
 
       <div class="panel" style="margin-top:12px">
-        <div class="hd">
-          <h2>Shopkeeper</h2>
-          <div class="meta">
-            <span class="badge">Dialogue</span>
-            <span class="badge dm-only">DM Editable</span>
-          </div>
-        </div>
+        <div class="hd"><h2>Shopkeeper</h2></div>
         <div class="bd">
           <div class="split">
-            <button class="dialogue" data-key="greet">Greet</button>
-            <button class="dialogue" data-key="browse">Ask What's New</button>
-            <button class="dialogue" data-key="rumor">Ask for Rumors</button>
-            <button class="dialogue" data-key="bye">Leave</button>
+            <button class="dialogue dialogueBtn" data-key="greet">Greet</button>
+            <button class="dialogue dialogueBtn" data-key="browse">What’s New?</button>
+            <button class="dialogue dialogueBtn" data-key="rumor">Rumors</button>
+            <button class="dialogue dialogueBtn" data-key="bye">Leave</button>
           </div>
-          <p class="hint" id="dialogueOut">Click a dialogue button…</p>
+          <p class="hint" id="dialogueOut">Tap a dialogue button…</p>
 
-          <div class="dm-only" style="margin-top:10px">
-            <div class="chip" style="border-radius:14px">
-              <label for="shopkeeperName">Name</label>
-              <input id="shopkeeperName" type="text" value="Veyra the Ledgerwitch" />
-            </div>
-            <div class="chip" style="border-radius:14px;margin-top:8px">
-              <label for="shopkeeperNotes">Notes</label>
-              <input id="shopkeeperNotes" type="text" value="A velvet-voiced merchant who counts coins like prayers." />
-            </div>
-            <div class="hint">Dialogue lines can be edited in the script section under <b>dialogueLines</b>.</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="panel dm-only" style="margin-top:12px">
-        <div class="hd">
-          <h2>DM Tools</h2>
-          <div class="meta">
-            <span class="badge">Custom Items</span>
-          </div>
-        </div>
-        <div class="bd">
-          <div class="grid">
-            <div class="chip" style="border-radius:14px">
-              <label for="newName">Item Name</label>
-              <input id="newName" type="text" placeholder="e.g. Moon-Silver Dagger" />
-            </div>
-            <div class="chip" style="border-radius:14px">
-              <label for="newType">Type</label>
-              <select id="newType">
-                <option value="custom" selected>Custom</option>
-                <option value="gear">Gear</option>
-                <option value="weapon">Weapon</option>
-                <option value="armor">Armor</option>
-                <option value="ammo">Ammo</option>
-                <option value="tool">Tool</option>
-                <option value="mount">Mount</option>
-                <option value="vehicle">Vehicle</option>
-                <option value="potion">Potion</option>
-                <option value="consumable">Consumable</option>
-                <option value="magic item">Magic Item</option>
-                <option value="scroll">Scroll</option>
-                <option value="mystery">Mystery</option>
-              </select>
-            </div>
-
-            <div class="chip" style="border-radius:14px">
-              <label for="newRarity">Rarity</label>
-              <select id="newRarity">
-                <option value="common" selected>Common</option>
-                <option value="uncommon">Uncommon</option>
-                <option value="rare">Rare</option>
-                <option value="very rare">Very Rare</option>
-                <option value="legendary">Legendary</option>
-              </select>
-            </div>
-
-            <div class="chip" style="border-radius:14px">
-              <label for="newBasePrice">Base Price (gp)</label>
-              <input id="newBasePrice" type="number" min="0" value="25" />
-            </div>
-
-            <div class="chip" style="border-radius:14px">
-              <label for="newStock">Stock</label>
-              <input id="newStock" type="number" min="0" value="1" />
-            </div>
-
-            <div class="chip" style="border-radius:14px">
-              <label for="newCategory">Category</label>
-              <select id="newCategory"></select>
-            </div>
-          </div>
-
-          <div class="chip" style="border-radius:14px;margin-top:10px">
-            <label for="newDesc">Description</label>
-            <input id="newDesc" type="text" placeholder="Short flavor + effect notes…" />
-          </div>
-
-          <div class="footer-actions" style="margin-top:10px">
-            <button id="addCustom" class="btn-accent">Add Item</button>
+          <div class="dm-only" style="margin-top:10px; display:flex; flex-direction:column; gap:10px;">
+            <input id="shopkeeperName" type="text" value="Veyra the Ledgerwitch" />
+            <input id="shopkeeperNotes" type="text" value="A velvet-voiced merchant who counts coins like prayers." />
+            <p class="hint">Edit dialogue lines inside <b>dialogueLines</b> in the script.</p>
           </div>
         </div>
       </div>
@@ -543,9 +722,11 @@
  *  STORE TEMPLATE CONFIG
  *  ========================= */
 
-const STORAGE_KEY = "fantasy_storefront_v1";
+const STORAGE_KEY = "fantasy_storefront_v2";
 
-// Categories (tabs). You can add/remove freely.
+// Placeholder image (future: item.image overrides this)
+const PLACEHOLDER_IMG = "https://static.wikia.nocookie.net/forgottenrealms/images/6/62/Sleep_potion_BGIII.jpg/revision/latest/scale-to-width-down/1000?cb=20210525104751";
+
 const categories = [
   "All",
   "Gear",
@@ -561,32 +742,25 @@ const categories = [
   "Custom"
 ];
 
-// Basic seed inventory (intentionally small – template). Add your own library later.
+// Seed items (small template set). Add image per item later: { image: "..." }
 const seedItems = [
-  // Gear
   { id: uid(), name:"Rations (1 day)", type:"gear", category:"Gear", rarity:"common", basePrice:0.5, stock:20, desc:"Dry bread, salted meat, and hard cheese." },
   { id: uid(), name:"Torch", type:"gear", category:"Gear", rarity:"common", basePrice:0.1, stock:30, desc:"Burns 1 hour; bright light 20 ft." },
   { id: uid(), name:"Rope (50 ft hemp)", type:"gear", category:"Gear", rarity:"common", basePrice:1, stock:8, desc:"A classic adventurer’s lifeline." },
 
-  // Weapons
   { id: uid(), name:"Dagger", type:"weapon", category:"Weapons", rarity:"common", basePrice:2, stock:6, desc:"A small blade, easy to conceal." },
   { id: uid(), name:"Longsword", type:"weapon", category:"Weapons", rarity:"common", basePrice:15, stock:2, desc:"A practical knight’s blade." },
 
-  // Armor
   { id: uid(), name:"Leather Armor", type:"armor", category:"Armor", rarity:"common", basePrice:10, stock:2, desc:"Light armor of boiled leather." },
   { id: uid(), name:"Shield", type:"armor", category:"Armor", rarity:"common", basePrice:10, stock:3, desc:"Wood and iron, scarred by use." },
 
-  // Potions/Consumables
   { id: uid(), name:"Healing Potion (minor)", type:"potion", category:"Potions/Consumables", rarity:"common", basePrice:50, stock:2, desc:"Red liquid that warms the throat." },
 
-  // Scrolls
   { id: uid(), name:"Spell Scroll (Cantrip)", type:"scroll", category:"Scrolls", rarity:"common", basePrice:25, stock:3, desc:"A simple incantation, neatly scribed." },
 
-  // Mystery
   { id: uid(), name:"Sealed Black Vial", type:"mystery", category:"Mystery", rarity:"uncommon", basePrice:75, stock:1, desc:"Unlabeled. Cold to the touch. DM decides." }
 ];
 
-// "Rolled specials" pool: weird stuff that can appear.
 const specialsPool = [
   { name:"Charm of Shadowstep (1 use)", type:"consumable", category:"Magic Items", rarity:"uncommon", basePrice:120, stock:1, desc:"Once: teleport up to 30 ft to a space you can see." },
   { name:"Vial of Basilisk Bile", type:"consumable", category:"Potions/Consumables", rarity:"rare", basePrice:260, stock:1, desc:"Reagent prized by alchemists. Handle carefully." },
@@ -595,7 +769,6 @@ const specialsPool = [
   { name:"Mask of the Candle Saint", type:"magic item", category:"Magic Items", rarity:"very rare", basePrice:1400, stock:1, desc:"Whispered blessings in candlelight. Effects DM-defined." }
 ];
 
-// Dialogue lines (DM can edit here)
 const dialogueLines = {
   greet: [
     "“Welcome, dear traveler. Mind the ink—some of it bites.”",
@@ -615,18 +788,16 @@ const dialogueLines = {
   ]
 };
 
-// Settlement modifiers influence pricing and specials.
 const settlementMods = {
-  hamlet:     { price: 1.15, basicsStock: 0.7, specials: 0.6 },
-  village:    { price: 1.08, basicsStock: 0.85, specials: 0.8 },
-  town:       { price: 1.00, basicsStock: 1.00, specials: 1.0 },
-  city:       { price: 0.95, basicsStock: 1.15, specials: 1.25 },
-  metropolis: { price: 0.90, basicsStock: 1.25, specials: 1.5 }
+  hamlet:     { price: 1.15, basicsStock: 0.7, specials: 0.6, line:"Hamlet prices • Scarce goods" },
+  village:    { price: 1.08, basicsStock: 0.85, specials: 0.8, line:"Village prices • Limited selection" },
+  town:       { price: 1.00, basicsStock: 1.00, specials: 1.0, line:"Town prices • Standard availability" },
+  city:       { price: 0.95, basicsStock: 1.15, specials: 1.25, line:"City prices • Broad selection" },
+  metropolis: { price: 0.90, basicsStock: 1.25, specials: 1.5, line:"Metropolis prices • Exotic stock" }
 };
 
-// Scarcity modifier based on remaining stock
 function scarcityFactor(stock){
-  if (stock <= 0) return 999;     // used only to signal out-of-stock; we won't price it.
+  if (stock <= 0) return 999;
   if (stock === 1) return 1.35;
   if (stock === 2) return 1.20;
   if (stock <= 5) return 1.08;
@@ -634,7 +805,7 @@ function scarcityFactor(stock){
 }
 
 /** =========================
- *  APP STATE
+ *  STATE
  *  ========================= */
 let state = loadState() || {
   dm: false,
@@ -642,11 +813,10 @@ let state = loadState() || {
   shopType: "general",
   marketFactor: 1.00,
   storeName: "The Midnight Ledger",
-  storeTag: "A template storefront for any shop type • Player + DM mode",
+  storeTag: "Fantasy storefront template • Touch-friendly • Player + DM mode",
   shopkeeperName: "Veyra the Ledgerwitch",
   shopkeeperNotes: "A velvet-voiced merchant who counts coins like prayers.",
   activeCategory: "All",
-  filters: { rarity:"all", type:"all", maxPrice:"" },
   items: structuredClone(seedItems),
   cart: {} // { itemId: qty }
 };
@@ -657,8 +827,8 @@ let state = loadState() || {
 const el = (id)=>document.getElementById(id);
 
 const app = el("app");
-const itemsEl = el("items");
-const tabsEl = el("categoryTabs");
+const categoryBar = el("categoryBar");
+const productGrid = el("productGrid");
 
 const settlementEl = el("settlement");
 const shopTypeEl = el("shopType");
@@ -667,6 +837,7 @@ const rarityEl = el("rarityFilter");
 const typeEl = el("typeFilter");
 const maxPriceEl = el("maxPrice");
 const marketFactorEl = el("marketFactor");
+const marketLineEl = el("marketLine");
 
 const totalGpEl = el("totalGp");
 const cartCountEl = el("cartCount");
@@ -700,26 +871,24 @@ const copyReceiptEl = el("copyReceipt");
 const exportJSONEl = el("exportJSON");
 
 /** =========================
- *  INIT UI
+ *  INIT
  *  ========================= */
 function init(){
-  // Category select options for custom items
   newCategoryEl.innerHTML = categories
     .filter(c=>c!=="All")
     .map(c=>`<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join("");
   newCategoryEl.value = "Custom";
 
-  // Apply state to UI controls
   settlementEl.value = state.settlement;
   shopTypeEl.value = state.shopType;
-  marketFactorEl.value = state.marketFactor.toFixed(2);
   storeNameEl.textContent = state.storeName;
   storeTagEl.textContent = state.storeTag;
+  if (marketFactorEl) marketFactorEl.value = Number(state.marketFactor || 1).toFixed(2);
   if (shopkeeperNameEl) shopkeeperNameEl.value = state.shopkeeperName || "";
   if (shopkeeperNotesEl) shopkeeperNotesEl.value = state.shopkeeperNotes || "";
 
   applyDMClass();
-  renderTabs();
+  renderCategoryBar();
   render();
 }
 init();
@@ -727,21 +896,21 @@ init();
 /** =========================
  *  RENDER
  *  ========================= */
-function renderTabs(){
-  tabsEl.innerHTML = "";
+function renderCategoryBar(){
+  categoryBar.innerHTML = "";
   categories.forEach(cat=>{
-    const d = document.createElement("div");
-    d.className = "tab" + (state.activeCategory === cat ? " active": "");
-    d.textContent = cat;
-    d.onclick = ()=>{ state.activeCategory = cat; saveState(); render(); renderTabs(); };
-    tabsEl.appendChild(d);
+    const chip = document.createElement("div");
+    chip.className = "chip" + (state.activeCategory === cat ? " active" : "");
+    chip.textContent = cat;
+    chip.onclick = ()=>{ state.activeCategory = cat; saveState(); renderCategoryBar(); render(); };
+    categoryBar.appendChild(chip);
   });
 }
 
 function getEffectivePrice(item){
   const settlement = settlementMods[state.settlement] || settlementMods.town;
   const scarcity = scarcityFactor(item.stock);
-  if (scarcity >= 900) return null; // out-of-stock
+  if (scarcity >= 900) return null;
   const mf = clamp(Number(state.marketFactor || 1.0), 0.5, 2.0);
   const price = item.basePrice * settlement.price * scarcity * mf;
   return round2(price);
@@ -770,73 +939,106 @@ function passesFilters(item){
 }
 
 function render(){
-  // Inventory list
+  const mod = settlementMods[state.settlement] || settlementMods.town;
+  marketLineEl.textContent = mod.line;
+
   const visible = state.items.filter(passesFilters);
 
-  itemsEl.innerHTML = "";
+  productGrid.innerHTML = "";
   if (!visible.length){
-    itemsEl.innerHTML = `<div class="hint">No items match your filters.</div>`;
+    productGrid.innerHTML = `<div class="hint">No items match your filters.</div>`;
   } else {
     visible.forEach(item=>{
       const price = getEffectivePrice(item);
-      const out = (item.stock <= 0);
-      const wrap = document.createElement("div");
-      wrap.className = "item";
+      const out = item.stock <= 0;
 
-      const left = document.createElement("div");
-      left.style.minWidth = "90px";
-      left.style.display = "flex";
-      left.style.flexDirection = "column";
-      left.style.gap = "6px";
-      left.innerHTML = `
-        <span class="badge">${escapeHtml(item.rarity)}</span>
-        <span class="badge">${escapeHtml(item.type)}</span>
-      `;
+      const card = document.createElement("div");
+      card.className = "card";
 
-      const mid = document.createElement("div");
-      mid.style.flex = "1";
-      mid.innerHTML = `
-        <div class="name">${escapeHtml(item.name)}</div>
+      const img = document.createElement("img");
+      img.className = "thumb";
+      img.alt = item.name;
+      img.loading = "lazy";
+      img.src = item.image || PLACEHOLDER_IMG;
+      card.appendChild(img);
+
+      const body = document.createElement("div");
+      body.className = "cardbody";
+
+      body.innerHTML = `
+        <div class="title">${escapeHtml(item.name)}</div>
         <div class="desc">${escapeHtml(item.desc || "")}</div>
-        <div class="meta" style="margin-top:8px">
+        <div class="badges">
           <span class="badge">${escapeHtml(item.category)}</span>
+          <span class="badge">${escapeHtml(item.rarity)}</span>
+          <span class="badge">${escapeHtml(item.type)}</span>
+        </div>
+        <div class="priceRow">
+          ${out ? `<span class="price out">Out of stock</span>` : `<span class="price">${price} gp</span>`}
+          <span class="stock ${out?"out":""}">Stock: ${item.stock}</span>
         </div>
       `;
 
-      const right = document.createElement("div");
-      right.style.display = "flex";
-      right.style.flexDirection = "column";
-      right.style.gap = "8px";
-      right.style.alignItems = "flex-end";
+      // Add row: qty selector + add
+      const addRow = document.createElement("div");
+      addRow.className = "addRow";
 
-      const priceHtml = out ? `<span class="price out">Out</span>` : `<span class="price">${price} gp</span>`;
-      const stockHtml = `<span class="stock ${out ? "out":""}">Stock: ${item.stock}</span>`;
+      const qty = document.createElement("div");
+      qty.className = "qty";
+      qty.innerHTML = `
+        <button type="button" aria-label="Decrease quantity">−</button>
+        <input type="number" min="1" value="1" inputmode="numeric" aria-label="Quantity" />
+        <button type="button" aria-label="Increase quantity">+</button>
+      `;
 
-      const btn = document.createElement("button");
-      btn.textContent = "Add";
-      btn.disabled = out;
-      btn.onclick = ()=> addToCart(item.id);
+      const [minusBtn, qtyInput, plusBtn] = qty.querySelectorAll("button, input");
 
-      // DM quick edit stock/price
-      const dmEdit = document.createElement("div");
-      dmEdit.className = "dm-only";
-      dmEdit.innerHTML = `
-        <div class="meta" style="justify-content:flex-end">
+      minusBtn.onclick = ()=>{
+        const v = Math.max(1, Math.floor(Number(qtyInput.value || 1)) - 1);
+        qtyInput.value = String(v);
+      };
+      plusBtn.onclick = ()=>{
+        const v = Math.max(1, Math.floor(Number(qtyInput.value || 1)) + 1);
+        qtyInput.value = String(v);
+      };
+      qtyInput.onchange = ()=>{
+        const v = Math.max(1, Math.floor(Number(qtyInput.value || 1)));
+        qtyInput.value = String(v);
+      };
+
+      const addBtn = document.createElement("button");
+      addBtn.className = "btn-accent";
+      addBtn.textContent = "Add to cart";
+      addBtn.disabled = out;
+      addBtn.onclick = ()=>{
+        const v = Math.max(1, Math.floor(Number(qtyInput.value || 1)));
+        addToCart(item.id, v);
+      };
+
+      addRow.appendChild(qty);
+      addRow.appendChild(addBtn);
+
+      body.appendChild(addRow);
+
+      // DM inline edit (base price + stock)
+      if (state.dm){
+        const dmRow = document.createElement("div");
+        dmRow.style.display = "flex";
+        dmRow.style.gap = "10px";
+        dmRow.style.flexWrap = "wrap";
+        dmRow.style.alignItems = "center";
+        dmRow.style.marginTop = "8px";
+        dmRow.innerHTML = `
           <span class="badge">Base</span>
-          <input data-edit="base" data-id="${item.id}" type="number" min="0" step="0.1" value="${item.basePrice}" style="width:90px" />
+          <input data-edit="base" data-id="${item.id}" type="number" min="0" step="0.1" value="${item.basePrice}" style="width:120px" />
           <span class="badge">Stock</span>
-          <input data-edit="stock" data-id="${item.id}" type="number" min="0" step="1" value="${item.stock}" style="width:80px" />
-        </div>
-      `;
+          <input data-edit="stock" data-id="${item.id}" type="number" min="0" step="1" value="${item.stock}" style="width:120px" />
+        `;
+        body.appendChild(dmRow);
+      }
 
-      right.innerHTML = priceHtml + stockHtml;
-      right.appendChild(btn);
-      right.appendChild(dmEdit);
-
-      wrap.appendChild(left);
-      wrap.appendChild(mid);
-      wrap.appendChild(right);
-      itemsEl.appendChild(wrap);
+      card.appendChild(body);
+      productGrid.appendChild(card);
     });
   }
 
@@ -866,10 +1068,8 @@ function renderCart(){
     .map(([id,qty])=>{
       const item = state.items.find(x=>x.id===id);
       if (!item) return null;
-      const price = getEffectivePrice(item);
-      const unit = price ?? 0;
-      const lineTotal = round2(unit * qty);
-      return { item, qty, unit, lineTotal };
+      const unit = getEffectivePrice(item) ?? 0;
+      return { item, qty, unit, lineTotal: round2(unit * qty) };
     })
     .filter(Boolean);
 
@@ -881,58 +1081,71 @@ function renderCart(){
 
   cartLinesEl.innerHTML = "";
   if (!lines.length){
-    cartLinesEl.innerHTML = `<div class="hint">Cart is empty. Add items from the inventory.</div>`;
-  } else {
-    lines.forEach(l=>{
-      const d = document.createElement("div");
-      d.className = "cartline";
-      d.innerHTML = `
-        <div>
-          <div><b>${escapeHtml(l.item.name)}</b> <small>(${escapeHtml(l.item.category)})</small></div>
-          <small>${l.unit} gp each</small>
-        </div>
-        <div class="qty">
-          <button title="Decrease">−</button>
-          <span style="min-width:20px;text-align:center;font-family:var(--mono)">${l.qty}</span>
-          <button title="Increase">+</button>
-          <span class="price" title="Line total">${l.lineTotal} gp</span>
-        </div>
-      `;
-      const [minusBtn, plusBtn] = d.querySelectorAll("button");
-      minusBtn.onclick = ()=> setQty(l.item.id, l.qty - 1);
-      plusBtn.onclick = ()=> setQty(l.item.id, l.qty + 1);
-
-      cartLinesEl.appendChild(d);
-    });
+    cartLinesEl.innerHTML = `<div class="hint">Cart is empty. Add items from the shop.</div>`;
+    return;
   }
+
+  lines.forEach(l=>{
+    const d = document.createElement("div");
+    d.className = "cartline";
+    d.innerHTML = `
+      <div>
+        <b>${escapeHtml(l.item.name)}</b>
+        <small>${escapeHtml(l.item.category)} • ${l.unit} gp each</small>
+      </div>
+      <div class="cartQty">
+        <div class="qty" aria-label="Cart quantity controls">
+          <button type="button" aria-label="Decrease quantity">−</button>
+          <input type="number" min="1" value="${l.qty}" inputmode="numeric" aria-label="Quantity" />
+          <button type="button" aria-label="Increase quantity">+</button>
+        </div>
+        <span class="price">${l.lineTotal} gp</span>
+      </div>
+    `;
+
+    const [minusBtn, qtyInput, plusBtn] = d.querySelectorAll(".qty button, .qty input");
+
+    minusBtn.onclick = ()=> setQty(l.item.id, l.qty - 1);
+    plusBtn.onclick = ()=> setQty(l.item.id, l.qty + 1);
+    qtyInput.onchange = ()=>{
+      const v = Math.max(1, Math.floor(Number(qtyInput.value || l.qty)));
+      setQty(l.item.id, v);
+    };
+
+    cartLinesEl.appendChild(d);
+  });
 }
 
 /** =========================
  *  ACTIONS
  *  ========================= */
-function addToCart(itemId){
+function addToCart(itemId, qty){
   const it = state.items.find(x=>x.id===itemId);
   if (!it || it.stock <= 0) return;
-  state.cart[itemId] = (state.cart[itemId] || 0) + 1;
-  saveState(); renderCart();
+  const q = Math.max(1, Math.floor(Number(qty || 1)));
+  state.cart[itemId] = (state.cart[itemId] || 0) + q;
+  saveState();
+  renderCart();
 }
 
 function setQty(itemId, qty){
   if (qty <= 0) delete state.cart[itemId];
-  else state.cart[itemId] = qty;
-  saveState(); renderCart();
+  else state.cart[itemId] = Math.max(1, Math.floor(Number(qty)));
+  saveState();
+  renderCart();
 }
 
 function checkout(){
-  const lines = Object.entries(state.cart).map(([id,qty])=>{
-    const item = state.items.find(x=>x.id===id);
-    if (!item) return null;
-    const unit = getEffectivePrice(item);
-    if (unit == null) return { item, qty, unit: null, ok:false, reason:"Out of stock" };
-    // Check stock availability
-    if (item.stock < qty) return { item, qty, unit, ok:false, reason:`Only ${item.stock} in stock` };
-    return { item, qty, unit, ok:true, reason:"" };
-  }).filter(Boolean);
+  const lines = Object.entries(state.cart)
+    .map(([id,qty])=>{
+      const item = state.items.find(x=>x.id===id);
+      if (!item) return null;
+      const unit = getEffectivePrice(item);
+      if (unit == null) return { item, qty, unit:null, ok:false, reason:"Out of stock" };
+      if (item.stock < qty) return { item, qty, unit, ok:false, reason:`Only ${item.stock} in stock` };
+      return { item, qty, unit, ok:true, reason:"" };
+    })
+    .filter(Boolean);
 
   const blocked = lines.filter(l=>!l.ok);
   if (blocked.length){
@@ -940,22 +1153,17 @@ function checkout(){
     return;
   }
 
-  // Decrement stock
-  lines.forEach(l=>{
-    l.item.stock -= l.qty;
-  });
+  lines.forEach(l=>{ l.item.stock -= l.qty; });
 
   const total = round2(lines.reduce((s,l)=>s + (l.unit*l.qty), 0));
   const time = new Date().toISOString();
-
-  // Receipt text
   const shopkeeper = (state.shopkeeperName || "Shopkeeper").trim();
-  const settlement = state.settlement;
-  const receipt =
+
+  receiptEl.value =
 `=== RECEIPT ===
 Store: ${state.storeName}
 Shopkeeper: ${shopkeeper}
-Settlement: ${settlement}
+Settlement: ${state.settlement}
 Time: ${time}
 
 Items:
@@ -967,25 +1175,22 @@ Notes:
 - Stock decremented on purchase.
 - Prices were dynamic (settlement/scarcity/market factor).`;
 
-  receiptEl.value = receipt;
-
-  // Clear cart
   state.cart = {};
-  saveState(); render(); // rerender inventory + cart
+  saveState();
+  render();
 }
 
 function clearCart(){
   state.cart = {};
-  saveState(); renderCart();
+  saveState();
+  renderCart();
 }
 
 function restockBasics(){
-  // Restock seed items (basics) based on settlement
   const mod = settlementMods[state.settlement] || settlementMods.town;
   const scale = mod.basicsStock;
-
-  // For simplicity: restore each seed item to a scaled baseline, but keep any custom/special items untouched.
   const seedByName = new Map(seedItems.map(s=>[s.name, s]));
+
   state.items.forEach(it=>{
     if (seedByName.has(it.name)){
       const base = seedByName.get(it.name).stock;
@@ -993,26 +1198,28 @@ function restockBasics(){
     }
   });
 
-  saveState(); render();
+  saveState();
+  render();
 }
 
 function rollSpecials(){
   const mod = settlementMods[state.settlement] || settlementMods.town;
-  const pulls = Math.max(1, Math.round(2 * mod.specials)); // 1–3ish
+  const pulls = Math.max(1, Math.round(2 * mod.specials));
   const picks = sampleMany(specialsPool, pulls);
 
-  // Add specials if they aren't already present by name
   picks.forEach(p=>{
     if (state.items.some(x=>x.name === p.name)) return;
-    state.items.push({ id: uid(), ...p });
+    state.items.push({ id: uid(), image: PLACEHOLDER_IMG, ...p });
   });
 
-  saveState(); render();
+  saveState();
+  render();
 }
 
 function addCustom(){
   const name = (newNameEl.value || "").trim();
   if (!name) return alert("Name is required.");
+
   const type = newTypeEl.value;
   const rarity = newRarityEl.value;
   const basePrice = Math.max(0, Number(newBasePriceEl.value || 0));
@@ -1022,14 +1229,20 @@ function addCustom(){
 
   state.items.push({
     id: uid(),
-    name, type, rarity, basePrice, stock,
+    name,
+    type,
+    rarity,
+    basePrice,
+    stock,
     category,
-    desc: desc || "A custom item (DM defined)."
+    desc: desc || "A custom item (DM defined).",
+    image: PLACEHOLDER_IMG
   });
 
   newNameEl.value = "";
   newDescEl.value = "";
-  saveState(); render();
+  saveState();
+  render();
 }
 
 function toggleDM(){
@@ -1048,35 +1261,30 @@ function applyDMClass(){
 function resetAll(){
   if (!confirm("Reset store to defaults? This clears saved state.")) return;
   localStorage.removeItem(STORAGE_KEY);
+  state = null;
   state = loadState() || {
     dm:false,
     settlement:"town",
     shopType:"general",
     marketFactor:1.00,
     storeName:"The Midnight Ledger",
-    storeTag:"A template storefront for any shop type • Player + DM mode",
+    storeTag:"Fantasy storefront template • Touch-friendly • Player + DM mode",
     shopkeeperName:"Veyra the Ledgerwitch",
     shopkeeperNotes:"A velvet-voiced merchant who counts coins like prayers.",
     activeCategory:"All",
-    filters:{ rarity:"all", type:"all", maxPrice:"" },
     items: structuredClone(seedItems),
     cart: {}
   };
-  init();
+  applyDMClass();
+  renderCategoryBar();
+  render();
 }
 
 /** =========================
  *  EVENTS
  *  ========================= */
-settlementEl.onchange = ()=>{
-  state.settlement = settlementEl.value;
-  saveState(); render();
-};
-shopTypeEl.onchange = ()=>{
-  state.shopType = shopTypeEl.value;
-  // You can later hook shopType to auto-load a preset inventory set.
-  saveState(); render();
-};
+settlementEl.onchange = ()=>{ state.settlement = settlementEl.value; saveState(); render(); };
+shopTypeEl.onchange = ()=>{ state.shopType = shopTypeEl.value; saveState(); render(); };
 searchEl.oninput = ()=> render();
 rarityEl.onchange = ()=> render();
 typeEl.onchange = ()=> render();
@@ -1085,7 +1293,8 @@ maxPriceEl.oninput = ()=> render();
 if (marketFactorEl){
   marketFactorEl.oninput = ()=>{
     state.marketFactor = clamp(Number(marketFactorEl.value || 1), 0.5, 2.0);
-    saveState(); render();
+    saveState();
+    render();
   };
 }
 
@@ -1095,27 +1304,22 @@ restockEl.onclick = restockBasics;
 checkoutEl.onclick = checkout;
 clearCartEl.onclick = clearCart;
 resetAllEl.onclick = resetAll;
+addCustomEl.onclick = addCustom;
 
 document.querySelectorAll(".dialogue").forEach(btn=>{
   btn.onclick = ()=>{
     const key = btn.getAttribute("data-key");
-    const lines = dialogueLines[key] || ["…"];
+    const lines = dialogueLines[key] || ["…"]; 
     const who = (state.shopkeeperName || "Shopkeeper").trim();
     dialogueOutEl.textContent = `${who}: ${pick(lines)}`;
   };
 });
 
 if (shopkeeperNameEl){
-  shopkeeperNameEl.oninput = ()=>{
-    state.shopkeeperName = shopkeeperNameEl.value;
-    saveState();
-  };
+  shopkeeperNameEl.oninput = ()=>{ state.shopkeeperName = shopkeeperNameEl.value; saveState(); };
 }
 if (shopkeeperNotesEl){
-  shopkeeperNotesEl.oninput = ()=>{
-    state.shopkeeperNotes = shopkeeperNotesEl.value;
-    saveState();
-  };
+  shopkeeperNotesEl.oninput = ()=>{ state.shopkeeperNotes = shopkeeperNotesEl.value; saveState(); };
 }
 
 if (copyReceiptEl){
@@ -1124,7 +1328,7 @@ if (copyReceiptEl){
       await navigator.clipboard.writeText(receiptEl.value || "");
       alert("Receipt copied.");
     }catch(e){
-      alert("Copy failed (browser permissions).");
+      alert("Copy failed (browser permissions). Use manual copy.");
     }
   };
 }
@@ -1152,17 +1356,13 @@ if (exportJSONEl){
  *  PERSISTENCE
  *  ========================= */
 function saveState(){
-  try{
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  }catch(e){}
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }catch(e){}
 }
 function loadState(){
   try{
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw);
-
-    // minimal migration safety
     if (!parsed.items || !Array.isArray(parsed.items)) return null;
     if (!parsed.cart) parsed.cart = {};
     if (typeof parsed.marketFactor !== "number") parsed.marketFactor = 1.0;
