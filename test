@@ -1,1 +1,1200 @@
-test
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Fantasy Storefront Template</title>
+  <style>
+    :root{
+      --bg:#141016;
+      --panel:#1f1823;
+      --panel2:#221a27;
+      --text:#f3ead7;
+      --muted:#cdbfa4;
+      --ink:#2b1f14;
+      --paper:#f2e6c8;
+      --paper2:#e7d7b0;
+      --accent:#b68cff;
+      --accent2:#ffb86c;
+      --danger:#ff6b6b;
+      --ok:#6bff9c;
+      --shadow: 0 12px 30px rgba(0,0,0,.45);
+      --radius: 18px;
+      --radius2: 12px;
+      --border: 1px solid rgba(255,255,255,.08);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      --serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: var(--sans);
+      color: var(--text);
+      background:
+        radial-gradient(1200px 600px at 20% 0%, rgba(182,140,255,.14), transparent 55%),
+        radial-gradient(900px 520px at 85% 20%, rgba(255,184,108,.10), transparent 50%),
+        radial-gradient(900px 800px at 60% 90%, rgba(110,255,200,.06), transparent 60%),
+        linear-gradient(180deg, #0f0b10, var(--bg));
+      min-height:100vh;
+    }
+    header{
+      padding:18px 18px 10px;
+      position:sticky;
+      top:0;
+      backdrop-filter: blur(10px);
+      background: linear-gradient(180deg, rgba(20,16,22,.92), rgba(20,16,22,.75));
+      border-bottom: var(--border);
+      z-index: 10;
+    }
+    .topbar{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      justify-content:space-between;
+      flex-wrap:wrap;
+    }
+    .title{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width: 240px;
+    }
+    .sigil{
+      width:42px;height:42px;border-radius:14px;
+      background: radial-gradient(circle at 30% 30%, rgba(182,140,255,.9), rgba(255,184,108,.35) 55%, rgba(0,0,0,.0) 70%),
+                  linear-gradient(145deg, rgba(255,255,255,.10), rgba(0,0,0,.35));
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: var(--shadow);
+    }
+    h1{
+      margin:0;
+      font-family: var(--serif);
+      font-size: 18px;
+      letter-spacing:.3px;
+    }
+    .sub{
+      margin:2px 0 0;
+      font-size:12px;
+      color: var(--muted);
+    }
+    .controls{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .chip{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 10px;
+      border-radius: 999px;
+      border: var(--border);
+      background: rgba(255,255,255,.04);
+    }
+    .chip label{font-size:12px;color:var(--muted)}
+    select, input[type="text"], input[type="number"]{
+      background: rgba(0,0,0,.25);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 10px;
+      padding:8px 10px;
+      outline:none;
+    }
+    input[type="text"]{min-width: 220px}
+    button{
+      border: 1px solid rgba(255,255,255,.12);
+      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(0,0,0,.18));
+      color: var(--text);
+      padding:9px 12px;
+      border-radius: 12px;
+      cursor:pointer;
+      box-shadow: 0 8px 20px rgba(0,0,0,.25);
+    }
+    button:hover{filter: brightness(1.05)}
+    button:active{transform: translateY(1px)}
+    .btn-accent{
+      border-color: rgba(182,140,255,.35);
+      background: linear-gradient(180deg, rgba(182,140,255,.22), rgba(0,0,0,.18));
+    }
+    .btn-warn{
+      border-color: rgba(255,107,107,.35);
+      background: linear-gradient(180deg, rgba(255,107,107,.18), rgba(0,0,0,.18));
+    }
+    .layout{
+      display:grid;
+      grid-template-columns: 1.6fr 1fr;
+      gap:14px;
+      padding: 14px 14px 26px;
+    }
+    @media (max-width: 980px){
+      .layout{grid-template-columns:1fr}
+      input[type="text"]{min-width: 140px}
+    }
+    .panel{
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(0,0,0,.12));
+      border: var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .panel > .hd{
+      padding:12px 14px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      border-bottom: var(--border);
+      background: rgba(0,0,0,.18);
+    }
+    .panel .hd h2{
+      font-family: var(--serif);
+      font-size: 16px;
+      margin:0;
+    }
+    .panel .bd{padding: 12px 14px}
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap:10px;
+    }
+    @media (max-width: 640px){ .grid{grid-template-columns:1fr} }
+    .paper{
+      background: linear-gradient(180deg, var(--paper), var(--paper2));
+      color: var(--ink);
+      border-radius: var(--radius2);
+      padding: 12px;
+      border: 1px solid rgba(0,0,0,.18);
+      box-shadow: 0 10px 24px rgba(0,0,0,.25);
+    }
+    .paper .k{font-size:11px;opacity:.7;letter-spacing:.2px}
+    .paper .v{font-weight:700}
+    .tabs{
+      display:flex; gap:8px; flex-wrap:wrap;
+    }
+    .tab{
+      padding:8px 10px;
+      border-radius: 999px;
+      border: var(--border);
+      background: rgba(255,255,255,.04);
+      font-size:12px;
+      cursor:pointer;
+      user-select:none;
+    }
+    .tab.active{
+      border-color: rgba(255,184,108,.35);
+      background: rgba(255,184,108,.12);
+    }
+    .items{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin-top: 10px;
+    }
+    .item{
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      padding: 10px;
+      border-radius: var(--radius2);
+      background: rgba(0,0,0,.18);
+      border: var(--border);
+    }
+    .badge{
+      font-size:11px;
+      padding:4px 8px;
+      border-radius:999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: var(--muted);
+      white-space:nowrap;
+    }
+    .name{
+      font-weight:800;
+      letter-spacing:.2px;
+    }
+    .desc{
+      font-size:12px;
+      color: var(--muted);
+      margin-top:3px;
+      line-height:1.25rem;
+    }
+    .row{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:space-between;
+      width:100%;
+    }
+    .meta{
+      display:flex; gap:8px; flex-wrap:wrap; align-items:center;
+    }
+    .price{
+      font-family: var(--mono);
+      font-size:12px;
+      padding:6px 9px;
+      border-radius: 10px;
+      border: 1px solid rgba(182,140,255,.25);
+      background: rgba(182,140,255,.10);
+    }
+    .stock{
+      font-family: var(--mono);
+      font-size:12px;
+      padding:6px 9px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+    }
+    .out{ border-color: rgba(255,107,107,.40) !important; background: rgba(255,107,107,.12) !important; }
+    .cartline{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      padding: 8px 10px;
+      border-radius: 12px;
+      border: var(--border);
+      background: rgba(0,0,0,.14);
+    }
+    .cartline small{color: var(--muted)}
+    .qty{
+      display:flex; gap:6px; align-items:center;
+    }
+    .qty button{padding:6px 9px;border-radius:10px}
+    .receipt{
+      width:100%;
+      min-height: 120px;
+      resize: vertical;
+      font-family: var(--mono);
+      font-size: 12px;
+      padding:10px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.22);
+      color: var(--text);
+    }
+    .dm-only{display:none}
+    .dm .dm-only{display:block}
+    .dm .player-only{display:none}
+    .hint{font-size:12px;color:var(--muted);line-height:1.25rem;margin:8px 0 0}
+    .split{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+    }
+    @media (max-width: 640px){ .split{grid-template-columns:1fr} }
+    .footer-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+  </style>
+</head>
+<body>
+<header>
+  <div class="topbar">
+    <div class="title">
+      <div class="sigil" aria-hidden="true"></div>
+      <div>
+        <h1 id="storeName">The Midnight Ledger</h1>
+        <div class="sub" id="storeTag">A template storefront for any shop type • Player + DM mode</div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <div class="chip">
+        <label for="settlement">Settlement</label>
+        <select id="settlement">
+          <option value="hamlet">Hamlet</option>
+          <option value="village">Village</option>
+          <option value="town" selected>Town</option>
+          <option value="city">City</option>
+          <option value="metropolis">Metropolis</option>
+        </select>
+      </div>
+
+      <div class="chip">
+        <label for="shopType">Shop Type</label>
+        <select id="shopType">
+          <option value="general">General Store</option>
+          <option value="blacksmith">Blacksmith</option>
+          <option value="magic">Magic Shop</option>
+          <option value="alchemist">Alchemist</option>
+          <option value="curio">Curio / Antiques</option>
+          <option value="custom">Custom</option>
+        </select>
+      </div>
+
+      <div class="chip">
+        <label for="search">Search</label>
+        <input id="search" type="text" placeholder="rope, potion, scroll..." />
+      </div>
+
+      <button id="toggleDM" class="btn-accent" title="Toggle DM mode">DM Mode: Off</button>
+      <button id="resetAll" class="btn-warn" title="Reset to defaults">Reset</button>
+    </div>
+  </div>
+</header>
+
+<main class="layout" id="app">
+  <!-- LEFT: Inventory -->
+  <section class="panel">
+    <div class="hd">
+      <h2>Inventory</h2>
+      <div class="footer-actions">
+        <button id="rollSpecials" class="dm-only btn-accent">Roll Specials</button>
+        <button id="restock" class="dm-only">Restock Basics</button>
+      </div>
+    </div>
+    <div class="bd">
+      <div class="tabs" id="categoryTabs"></div>
+
+      <div class="grid" style="margin-top:10px">
+        <div class="chip">
+          <label for="rarityFilter">Rarity</label>
+          <select id="rarityFilter">
+            <option value="all" selected>All</option>
+            <option value="common">Common</option>
+            <option value="uncommon">Uncommon</option>
+            <option value="rare">Rare</option>
+            <option value="very rare">Very Rare</option>
+            <option value="legendary">Legendary</option>
+          </select>
+        </div>
+
+        <div class="chip">
+          <label for="typeFilter">Type</label>
+          <select id="typeFilter">
+            <option value="all" selected>All</option>
+            <option value="gear">Gear</option>
+            <option value="weapon">Weapon</option>
+            <option value="armor">Armor</option>
+            <option value="ammo">Ammo</option>
+            <option value="tool">Tool</option>
+            <option value="mount">Mount</option>
+            <option value="vehicle">Vehicle</option>
+            <option value="potion">Potion</option>
+            <option value="consumable">Consumable</option>
+            <option value="magic item">Magic Item</option>
+            <option value="scroll">Scroll</option>
+            <option value="mystery">Mystery</option>
+            <option value="custom">Custom</option>
+          </select>
+        </div>
+
+        <div class="chip">
+          <label for="maxPrice">Max Price (gp)</label>
+          <input id="maxPrice" type="number" min="0" placeholder="e.g. 250" />
+        </div>
+
+        <div class="chip dm-only">
+          <label for="marketFactor">Market Factor</label>
+          <input id="marketFactor" type="number" step="0.05" min="0.5" max="2.0" value="1.00" />
+        </div>
+      </div>
+
+      <div class="items" id="items"></div>
+
+      <p class="hint">
+        Pricing is <b>dynamic</b>: settlement size + scarcity + DM market factor adjust costs.
+        Stock decrements on checkout; items can become <span style="color:var(--danger)">out of stock</span>.
+      </p>
+    </div>
+  </section>
+
+  <!-- RIGHT: Cart + DM tools + Dialogue -->
+  <aside class="panel">
+    <div class="hd">
+      <h2>Cart & Receipt</h2>
+      <div class="footer-actions">
+        <button id="checkout" class="btn-accent">Checkout</button>
+        <button id="clearCart">Clear Cart</button>
+      </div>
+    </div>
+    <div class="bd">
+      <div class="paper">
+        <div class="k">Current Total</div>
+        <div class="v" style="font-size:20px;font-family:var(--mono)"><span id="totalGp">0</span> gp</div>
+        <div class="k" style="margin-top:6px">Items in Cart: <span id="cartCount">0</span></div>
+      </div>
+
+      <div style="margin-top:10px" id="cartLines"></div>
+
+      <div style="margin-top:12px">
+        <div class="row">
+          <div class="meta">
+            <span class="badge">Receipt</span>
+            <span class="badge dm-only">Export/Copy</span>
+          </div>
+          <div class="meta">
+            <button id="copyReceipt" class="dm-only">Copy</button>
+            <button id="exportJSON" class="dm-only">Export JSON</button>
+          </div>
+        </div>
+        <textarea id="receipt" class="receipt" placeholder="Checkout generates a receipt here..." readonly></textarea>
+      </div>
+
+      <div class="panel" style="margin-top:12px">
+        <div class="hd">
+          <h2>Shopkeeper</h2>
+          <div class="meta">
+            <span class="badge">Dialogue</span>
+            <span class="badge dm-only">DM Editable</span>
+          </div>
+        </div>
+        <div class="bd">
+          <div class="split">
+            <button class="dialogue" data-key="greet">Greet</button>
+            <button class="dialogue" data-key="browse">Ask What's New</button>
+            <button class="dialogue" data-key="rumor">Ask for Rumors</button>
+            <button class="dialogue" data-key="bye">Leave</button>
+          </div>
+          <p class="hint" id="dialogueOut">Click a dialogue button…</p>
+
+          <div class="dm-only" style="margin-top:10px">
+            <div class="chip" style="border-radius:14px">
+              <label for="shopkeeperName">Name</label>
+              <input id="shopkeeperName" type="text" value="Veyra the Ledgerwitch" />
+            </div>
+            <div class="chip" style="border-radius:14px;margin-top:8px">
+              <label for="shopkeeperNotes">Notes</label>
+              <input id="shopkeeperNotes" type="text" value="A velvet-voiced merchant who counts coins like prayers." />
+            </div>
+            <div class="hint">Dialogue lines can be edited in the script section under <b>dialogueLines</b>.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel dm-only" style="margin-top:12px">
+        <div class="hd">
+          <h2>DM Tools</h2>
+          <div class="meta">
+            <span class="badge">Custom Items</span>
+          </div>
+        </div>
+        <div class="bd">
+          <div class="grid">
+            <div class="chip" style="border-radius:14px">
+              <label for="newName">Item Name</label>
+              <input id="newName" type="text" placeholder="e.g. Moon-Silver Dagger" />
+            </div>
+            <div class="chip" style="border-radius:14px">
+              <label for="newType">Type</label>
+              <select id="newType">
+                <option value="custom" selected>Custom</option>
+                <option value="gear">Gear</option>
+                <option value="weapon">Weapon</option>
+                <option value="armor">Armor</option>
+                <option value="ammo">Ammo</option>
+                <option value="tool">Tool</option>
+                <option value="mount">Mount</option>
+                <option value="vehicle">Vehicle</option>
+                <option value="potion">Potion</option>
+                <option value="consumable">Consumable</option>
+                <option value="magic item">Magic Item</option>
+                <option value="scroll">Scroll</option>
+                <option value="mystery">Mystery</option>
+              </select>
+            </div>
+
+            <div class="chip" style="border-radius:14px">
+              <label for="newRarity">Rarity</label>
+              <select id="newRarity">
+                <option value="common" selected>Common</option>
+                <option value="uncommon">Uncommon</option>
+                <option value="rare">Rare</option>
+                <option value="very rare">Very Rare</option>
+                <option value="legendary">Legendary</option>
+              </select>
+            </div>
+
+            <div class="chip" style="border-radius:14px">
+              <label for="newBasePrice">Base Price (gp)</label>
+              <input id="newBasePrice" type="number" min="0" value="25" />
+            </div>
+
+            <div class="chip" style="border-radius:14px">
+              <label for="newStock">Stock</label>
+              <input id="newStock" type="number" min="0" value="1" />
+            </div>
+
+            <div class="chip" style="border-radius:14px">
+              <label for="newCategory">Category</label>
+              <select id="newCategory"></select>
+            </div>
+          </div>
+
+          <div class="chip" style="border-radius:14px;margin-top:10px">
+            <label for="newDesc">Description</label>
+            <input id="newDesc" type="text" placeholder="Short flavor + effect notes…" />
+          </div>
+
+          <div class="footer-actions" style="margin-top:10px">
+            <button id="addCustom" class="btn-accent">Add Item</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </aside>
+</main>
+
+<script>
+/** =========================
+ *  STORE TEMPLATE CONFIG
+ *  ========================= */
+
+const STORAGE_KEY = "fantasy_storefront_v1";
+
+// Categories (tabs). You can add/remove freely.
+const categories = [
+  "All",
+  "Gear",
+  "Weapons",
+  "Armor",
+  "Ammo",
+  "Tools",
+  "Mounts/Vehicles",
+  "Potions/Consumables",
+  "Magic Items",
+  "Scrolls",
+  "Mystery",
+  "Custom"
+];
+
+// Basic seed inventory (intentionally small – template). Add your own library later.
+const seedItems = [
+  // Gear
+  { id: uid(), name:"Rations (1 day)", type:"gear", category:"Gear", rarity:"common", basePrice:0.5, stock:20, desc:"Dry bread, salted meat, and hard cheese." },
+  { id: uid(), name:"Torch", type:"gear", category:"Gear", rarity:"common", basePrice:0.1, stock:30, desc:"Burns 1 hour; bright light 20 ft." },
+  { id: uid(), name:"Rope (50 ft hemp)", type:"gear", category:"Gear", rarity:"common", basePrice:1, stock:8, desc:"A classic adventurer’s lifeline." },
+
+  // Weapons
+  { id: uid(), name:"Dagger", type:"weapon", category:"Weapons", rarity:"common", basePrice:2, stock:6, desc:"A small blade, easy to conceal." },
+  { id: uid(), name:"Longsword", type:"weapon", category:"Weapons", rarity:"common", basePrice:15, stock:2, desc:"A practical knight’s blade." },
+
+  // Armor
+  { id: uid(), name:"Leather Armor", type:"armor", category:"Armor", rarity:"common", basePrice:10, stock:2, desc:"Light armor of boiled leather." },
+  { id: uid(), name:"Shield", type:"armor", category:"Armor", rarity:"common", basePrice:10, stock:3, desc:"Wood and iron, scarred by use." },
+
+  // Potions/Consumables
+  { id: uid(), name:"Healing Potion (minor)", type:"potion", category:"Potions/Consumables", rarity:"common", basePrice:50, stock:2, desc:"Red liquid that warms the throat." },
+
+  // Scrolls
+  { id: uid(), name:"Spell Scroll (Cantrip)", type:"scroll", category:"Scrolls", rarity:"common", basePrice:25, stock:3, desc:"A simple incantation, neatly scribed." },
+
+  // Mystery
+  { id: uid(), name:"Sealed Black Vial", type:"mystery", category:"Mystery", rarity:"uncommon", basePrice:75, stock:1, desc:"Unlabeled. Cold to the touch. DM decides." }
+];
+
+// "Rolled specials" pool: weird stuff that can appear.
+const specialsPool = [
+  { name:"Charm of Shadowstep (1 use)", type:"consumable", category:"Magic Items", rarity:"uncommon", basePrice:120, stock:1, desc:"Once: teleport up to 30 ft to a space you can see." },
+  { name:"Vial of Basilisk Bile", type:"consumable", category:"Potions/Consumables", rarity:"rare", basePrice:260, stock:1, desc:"Reagent prized by alchemists. Handle carefully." },
+  { name:"Moon-Silver Dagger", type:"weapon", category:"Weapons", rarity:"rare", basePrice:450, stock:1, desc:"Counts as magical vs. lycanthropes and spirits (DM call)." },
+  { name:"Scroll of Knock", type:"scroll", category:"Scrolls", rarity:"uncommon", basePrice:150, stock:1, desc:"Opens locks with a resonant boom." },
+  { name:"Mask of the Candle Saint", type:"magic item", category:"Magic Items", rarity:"very rare", basePrice:1400, stock:1, desc:"Whispered blessings in candlelight. Effects DM-defined." }
+];
+
+// Dialogue lines (DM can edit here)
+const dialogueLines = {
+  greet: [
+    "“Welcome, dear traveler. Mind the ink—some of it bites.”",
+    "“Coin speaks. Secrets listen. What are you after?”"
+  ],
+  browse: [
+    "“Fresh stock, fresh curses. I keep them separated… mostly.”",
+    "“New arrivals from the road. Some still warm.”"
+  ],
+  rumor: [
+    "“They say the river swallowed a chapel whole. Bells still ring at night.”",
+    "“A tax collector vanished near the old stones. No tracks—only feathers.”"
+  ],
+  bye: [
+    "“Spend wisely. Regret has excellent memory.”",
+    "“May your purse stay heavy and your enemies stay light.”"
+  ]
+};
+
+// Settlement modifiers influence pricing and specials.
+const settlementMods = {
+  hamlet:     { price: 1.15, basicsStock: 0.7, specials: 0.6 },
+  village:    { price: 1.08, basicsStock: 0.85, specials: 0.8 },
+  town:       { price: 1.00, basicsStock: 1.00, specials: 1.0 },
+  city:       { price: 0.95, basicsStock: 1.15, specials: 1.25 },
+  metropolis: { price: 0.90, basicsStock: 1.25, specials: 1.5 }
+};
+
+// Scarcity modifier based on remaining stock
+function scarcityFactor(stock){
+  if (stock <= 0) return 999;     // used only to signal out-of-stock; we won't price it.
+  if (stock === 1) return 1.35;
+  if (stock === 2) return 1.20;
+  if (stock <= 5) return 1.08;
+  return 1.00;
+}
+
+/** =========================
+ *  APP STATE
+ *  ========================= */
+let state = loadState() || {
+  dm: false,
+  settlement: "town",
+  shopType: "general",
+  marketFactor: 1.00,
+  storeName: "The Midnight Ledger",
+  storeTag: "A template storefront for any shop type • Player + DM mode",
+  shopkeeperName: "Veyra the Ledgerwitch",
+  shopkeeperNotes: "A velvet-voiced merchant who counts coins like prayers.",
+  activeCategory: "All",
+  filters: { rarity:"all", type:"all", maxPrice:"" },
+  items: structuredClone(seedItems),
+  cart: {} // { itemId: qty }
+};
+
+/** =========================
+ *  DOM
+ *  ========================= */
+const el = (id)=>document.getElementById(id);
+
+const app = el("app");
+const itemsEl = el("items");
+const tabsEl = el("categoryTabs");
+
+const settlementEl = el("settlement");
+const shopTypeEl = el("shopType");
+const searchEl = el("search");
+const rarityEl = el("rarityFilter");
+const typeEl = el("typeFilter");
+const maxPriceEl = el("maxPrice");
+const marketFactorEl = el("marketFactor");
+
+const totalGpEl = el("totalGp");
+const cartCountEl = el("cartCount");
+const cartLinesEl = el("cartLines");
+const receiptEl = el("receipt");
+
+const toggleDMEl = el("toggleDM");
+const rollSpecialsEl = el("rollSpecials");
+const restockEl = el("restock");
+const checkoutEl = el("checkout");
+const clearCartEl = el("clearCart");
+const resetAllEl = el("resetAll");
+
+const dialogueOutEl = el("dialogueOut");
+const storeNameEl = el("storeName");
+const storeTagEl = el("storeTag");
+
+const shopkeeperNameEl = el("shopkeeperName");
+const shopkeeperNotesEl = el("shopkeeperNotes");
+
+const newNameEl = el("newName");
+const newTypeEl = el("newType");
+const newRarityEl = el("newRarity");
+const newBasePriceEl = el("newBasePrice");
+const newStockEl = el("newStock");
+const newCategoryEl = el("newCategory");
+const newDescEl = el("newDesc");
+const addCustomEl = el("addCustom");
+
+const copyReceiptEl = el("copyReceipt");
+const exportJSONEl = el("exportJSON");
+
+/** =========================
+ *  INIT UI
+ *  ========================= */
+function init(){
+  // Category select options for custom items
+  newCategoryEl.innerHTML = categories
+    .filter(c=>c!=="All")
+    .map(c=>`<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join("");
+  newCategoryEl.value = "Custom";
+
+  // Apply state to UI controls
+  settlementEl.value = state.settlement;
+  shopTypeEl.value = state.shopType;
+  marketFactorEl.value = state.marketFactor.toFixed(2);
+  storeNameEl.textContent = state.storeName;
+  storeTagEl.textContent = state.storeTag;
+  if (shopkeeperNameEl) shopkeeperNameEl.value = state.shopkeeperName || "";
+  if (shopkeeperNotesEl) shopkeeperNotesEl.value = state.shopkeeperNotes || "";
+
+  applyDMClass();
+  renderTabs();
+  render();
+}
+init();
+
+/** =========================
+ *  RENDER
+ *  ========================= */
+function renderTabs(){
+  tabsEl.innerHTML = "";
+  categories.forEach(cat=>{
+    const d = document.createElement("div");
+    d.className = "tab" + (state.activeCategory === cat ? " active": "");
+    d.textContent = cat;
+    d.onclick = ()=>{ state.activeCategory = cat; saveState(); render(); renderTabs(); };
+    tabsEl.appendChild(d);
+  });
+}
+
+function getEffectivePrice(item){
+  const settlement = settlementMods[state.settlement] || settlementMods.town;
+  const scarcity = scarcityFactor(item.stock);
+  if (scarcity >= 900) return null; // out-of-stock
+  const mf = clamp(Number(state.marketFactor || 1.0), 0.5, 2.0);
+  const price = item.basePrice * settlement.price * scarcity * mf;
+  return round2(price);
+}
+
+function passesFilters(item){
+  const q = (searchEl.value || "").trim().toLowerCase();
+  if (q){
+    const hay = `${item.name} ${item.desc} ${item.type} ${item.category} ${item.rarity}`.toLowerCase();
+    if (!hay.includes(q)) return false;
+  }
+
+  if (state.activeCategory !== "All" && item.category !== state.activeCategory) return false;
+
+  const rf = rarityEl.value;
+  if (rf !== "all" && item.rarity !== rf) return false;
+
+  const tf = typeEl.value;
+  if (tf !== "all" && item.type !== tf) return false;
+
+  const maxP = maxPriceEl.value === "" ? null : Number(maxPriceEl.value);
+  const price = getEffectivePrice(item);
+  if (maxP != null && price != null && price > maxP) return false;
+
+  return true;
+}
+
+function render(){
+  // Inventory list
+  const visible = state.items.filter(passesFilters);
+
+  itemsEl.innerHTML = "";
+  if (!visible.length){
+    itemsEl.innerHTML = `<div class="hint">No items match your filters.</div>`;
+  } else {
+    visible.forEach(item=>{
+      const price = getEffectivePrice(item);
+      const out = (item.stock <= 0);
+      const wrap = document.createElement("div");
+      wrap.className = "item";
+
+      const left = document.createElement("div");
+      left.style.minWidth = "90px";
+      left.style.display = "flex";
+      left.style.flexDirection = "column";
+      left.style.gap = "6px";
+      left.innerHTML = `
+        <span class="badge">${escapeHtml(item.rarity)}</span>
+        <span class="badge">${escapeHtml(item.type)}</span>
+      `;
+
+      const mid = document.createElement("div");
+      mid.style.flex = "1";
+      mid.innerHTML = `
+        <div class="name">${escapeHtml(item.name)}</div>
+        <div class="desc">${escapeHtml(item.desc || "")}</div>
+        <div class="meta" style="margin-top:8px">
+          <span class="badge">${escapeHtml(item.category)}</span>
+        </div>
+      `;
+
+      const right = document.createElement("div");
+      right.style.display = "flex";
+      right.style.flexDirection = "column";
+      right.style.gap = "8px";
+      right.style.alignItems = "flex-end";
+
+      const priceHtml = out ? `<span class="price out">Out</span>` : `<span class="price">${price} gp</span>`;
+      const stockHtml = `<span class="stock ${out ? "out":""}">Stock: ${item.stock}</span>`;
+
+      const btn = document.createElement("button");
+      btn.textContent = "Add";
+      btn.disabled = out;
+      btn.onclick = ()=> addToCart(item.id);
+
+      // DM quick edit stock/price
+      const dmEdit = document.createElement("div");
+      dmEdit.className = "dm-only";
+      dmEdit.innerHTML = `
+        <div class="meta" style="justify-content:flex-end">
+          <span class="badge">Base</span>
+          <input data-edit="base" data-id="${item.id}" type="number" min="0" step="0.1" value="${item.basePrice}" style="width:90px" />
+          <span class="badge">Stock</span>
+          <input data-edit="stock" data-id="${item.id}" type="number" min="0" step="1" value="${item.stock}" style="width:80px" />
+        </div>
+      `;
+
+      right.innerHTML = priceHtml + stockHtml;
+      right.appendChild(btn);
+      right.appendChild(dmEdit);
+
+      wrap.appendChild(left);
+      wrap.appendChild(mid);
+      wrap.appendChild(right);
+      itemsEl.appendChild(wrap);
+    });
+  }
+
+  // Wire DM inline edits
+  document.querySelectorAll('input[data-edit="base"]').forEach(inp=>{
+    inp.onchange = (e)=>{
+      const id = e.target.getAttribute("data-id");
+      const v = Math.max(0, Number(e.target.value || 0));
+      const it = state.items.find(x=>x.id===id);
+      if (it){ it.basePrice = v; saveState(); render(); }
+    };
+  });
+  document.querySelectorAll('input[data-edit="stock"]').forEach(inp=>{
+    inp.onchange = (e)=>{
+      const id = e.target.getAttribute("data-id");
+      const v = Math.max(0, Math.floor(Number(e.target.value || 0)));
+      const it = state.items.find(x=>x.id===id);
+      if (it){ it.stock = v; saveState(); render(); }
+    };
+  });
+
+  renderCart();
+}
+
+function renderCart(){
+  const lines = Object.entries(state.cart)
+    .map(([id,qty])=>{
+      const item = state.items.find(x=>x.id===id);
+      if (!item) return null;
+      const price = getEffectivePrice(item);
+      const unit = price ?? 0;
+      const lineTotal = round2(unit * qty);
+      return { item, qty, unit, lineTotal };
+    })
+    .filter(Boolean);
+
+  const total = round2(lines.reduce((s,l)=>s + l.lineTotal, 0));
+  const count = lines.reduce((s,l)=>s + l.qty, 0);
+
+  totalGpEl.textContent = total;
+  cartCountEl.textContent = count;
+
+  cartLinesEl.innerHTML = "";
+  if (!lines.length){
+    cartLinesEl.innerHTML = `<div class="hint">Cart is empty. Add items from the inventory.</div>`;
+  } else {
+    lines.forEach(l=>{
+      const d = document.createElement("div");
+      d.className = "cartline";
+      d.innerHTML = `
+        <div>
+          <div><b>${escapeHtml(l.item.name)}</b> <small>(${escapeHtml(l.item.category)})</small></div>
+          <small>${l.unit} gp each</small>
+        </div>
+        <div class="qty">
+          <button title="Decrease">−</button>
+          <span style="min-width:20px;text-align:center;font-family:var(--mono)">${l.qty}</span>
+          <button title="Increase">+</button>
+          <span class="price" title="Line total">${l.lineTotal} gp</span>
+        </div>
+      `;
+      const [minusBtn, plusBtn] = d.querySelectorAll("button");
+      minusBtn.onclick = ()=> setQty(l.item.id, l.qty - 1);
+      plusBtn.onclick = ()=> setQty(l.item.id, l.qty + 1);
+
+      cartLinesEl.appendChild(d);
+    });
+  }
+}
+
+/** =========================
+ *  ACTIONS
+ *  ========================= */
+function addToCart(itemId){
+  const it = state.items.find(x=>x.id===itemId);
+  if (!it || it.stock <= 0) return;
+  state.cart[itemId] = (state.cart[itemId] || 0) + 1;
+  saveState(); renderCart();
+}
+
+function setQty(itemId, qty){
+  if (qty <= 0) delete state.cart[itemId];
+  else state.cart[itemId] = qty;
+  saveState(); renderCart();
+}
+
+function checkout(){
+  const lines = Object.entries(state.cart).map(([id,qty])=>{
+    const item = state.items.find(x=>x.id===id);
+    if (!item) return null;
+    const unit = getEffectivePrice(item);
+    if (unit == null) return { item, qty, unit: null, ok:false, reason:"Out of stock" };
+    // Check stock availability
+    if (item.stock < qty) return { item, qty, unit, ok:false, reason:`Only ${item.stock} in stock` };
+    return { item, qty, unit, ok:true, reason:"" };
+  }).filter(Boolean);
+
+  const blocked = lines.filter(l=>!l.ok);
+  if (blocked.length){
+    receiptEl.value = "Checkout blocked:\n" + blocked.map(b=>`- ${b.item.name}: ${b.reason}`).join("\n");
+    return;
+  }
+
+  // Decrement stock
+  lines.forEach(l=>{
+    l.item.stock -= l.qty;
+  });
+
+  const total = round2(lines.reduce((s,l)=>s + (l.unit*l.qty), 0));
+  const time = new Date().toISOString();
+
+  // Receipt text
+  const shopkeeper = (state.shopkeeperName || "Shopkeeper").trim();
+  const settlement = state.settlement;
+  const receipt =
+`=== RECEIPT ===
+Store: ${state.storeName}
+Shopkeeper: ${shopkeeper}
+Settlement: ${settlement}
+Time: ${time}
+
+Items:
+${lines.map(l=>`- ${l.item.name} x${l.qty} @ ${l.unit} gp = ${round2(l.unit*l.qty)} gp`).join("\n")}
+
+TOTAL: ${total} gp
+
+Notes:
+- Stock decremented on purchase.
+- Prices were dynamic (settlement/scarcity/market factor).`;
+
+  receiptEl.value = receipt;
+
+  // Clear cart
+  state.cart = {};
+  saveState(); render(); // rerender inventory + cart
+}
+
+function clearCart(){
+  state.cart = {};
+  saveState(); renderCart();
+}
+
+function restockBasics(){
+  // Restock seed items (basics) based on settlement
+  const mod = settlementMods[state.settlement] || settlementMods.town;
+  const scale = mod.basicsStock;
+
+  // For simplicity: restore each seed item to a scaled baseline, but keep any custom/special items untouched.
+  const seedByName = new Map(seedItems.map(s=>[s.name, s]));
+  state.items.forEach(it=>{
+    if (seedByName.has(it.name)){
+      const base = seedByName.get(it.name).stock;
+      it.stock = Math.max(it.stock, Math.round(base * scale));
+    }
+  });
+
+  saveState(); render();
+}
+
+function rollSpecials(){
+  const mod = settlementMods[state.settlement] || settlementMods.town;
+  const pulls = Math.max(1, Math.round(2 * mod.specials)); // 1–3ish
+  const picks = sampleMany(specialsPool, pulls);
+
+  // Add specials if they aren't already present by name
+  picks.forEach(p=>{
+    if (state.items.some(x=>x.name === p.name)) return;
+    state.items.push({ id: uid(), ...p });
+  });
+
+  saveState(); render();
+}
+
+function addCustom(){
+  const name = (newNameEl.value || "").trim();
+  if (!name) return alert("Name is required.");
+  const type = newTypeEl.value;
+  const rarity = newRarityEl.value;
+  const basePrice = Math.max(0, Number(newBasePriceEl.value || 0));
+  const stock = Math.max(0, Math.floor(Number(newStockEl.value || 0)));
+  const category = newCategoryEl.value;
+  const desc = (newDescEl.value || "").trim();
+
+  state.items.push({
+    id: uid(),
+    name, type, rarity, basePrice, stock,
+    category,
+    desc: desc || "A custom item (DM defined)."
+  });
+
+  newNameEl.value = "";
+  newDescEl.value = "";
+  saveState(); render();
+}
+
+function toggleDM(){
+  state.dm = !state.dm;
+  applyDMClass();
+  saveState();
+  render();
+}
+
+function applyDMClass(){
+  if (state.dm) app.classList.add("dm");
+  else app.classList.remove("dm");
+  toggleDMEl.textContent = `DM Mode: ${state.dm ? "On" : "Off"}`;
+}
+
+function resetAll(){
+  if (!confirm("Reset store to defaults? This clears saved state.")) return;
+  localStorage.removeItem(STORAGE_KEY);
+  state = loadState() || {
+    dm:false,
+    settlement:"town",
+    shopType:"general",
+    marketFactor:1.00,
+    storeName:"The Midnight Ledger",
+    storeTag:"A template storefront for any shop type • Player + DM mode",
+    shopkeeperName:"Veyra the Ledgerwitch",
+    shopkeeperNotes:"A velvet-voiced merchant who counts coins like prayers.",
+    activeCategory:"All",
+    filters:{ rarity:"all", type:"all", maxPrice:"" },
+    items: structuredClone(seedItems),
+    cart: {}
+  };
+  init();
+}
+
+/** =========================
+ *  EVENTS
+ *  ========================= */
+settlementEl.onchange = ()=>{
+  state.settlement = settlementEl.value;
+  saveState(); render();
+};
+shopTypeEl.onchange = ()=>{
+  state.shopType = shopTypeEl.value;
+  // You can later hook shopType to auto-load a preset inventory set.
+  saveState(); render();
+};
+searchEl.oninput = ()=> render();
+rarityEl.onchange = ()=> render();
+typeEl.onchange = ()=> render();
+maxPriceEl.oninput = ()=> render();
+
+if (marketFactorEl){
+  marketFactorEl.oninput = ()=>{
+    state.marketFactor = clamp(Number(marketFactorEl.value || 1), 0.5, 2.0);
+    saveState(); render();
+  };
+}
+
+toggleDMEl.onclick = toggleDM;
+rollSpecialsEl.onclick = rollSpecials;
+restockEl.onclick = restockBasics;
+checkoutEl.onclick = checkout;
+clearCartEl.onclick = clearCart;
+resetAllEl.onclick = resetAll;
+
+document.querySelectorAll(".dialogue").forEach(btn=>{
+  btn.onclick = ()=>{
+    const key = btn.getAttribute("data-key");
+    const lines = dialogueLines[key] || ["…"];
+    const who = (state.shopkeeperName || "Shopkeeper").trim();
+    dialogueOutEl.textContent = `${who}: ${pick(lines)}`;
+  };
+});
+
+if (shopkeeperNameEl){
+  shopkeeperNameEl.oninput = ()=>{
+    state.shopkeeperName = shopkeeperNameEl.value;
+    saveState();
+  };
+}
+if (shopkeeperNotesEl){
+  shopkeeperNotesEl.oninput = ()=>{
+    state.shopkeeperNotes = shopkeeperNotesEl.value;
+    saveState();
+  };
+}
+
+if (copyReceiptEl){
+  copyReceiptEl.onclick = async ()=>{
+    try{
+      await navigator.clipboard.writeText(receiptEl.value || "");
+      alert("Receipt copied.");
+    }catch(e){
+      alert("Copy failed (browser permissions).");
+    }
+  };
+}
+
+if (exportJSONEl){
+  exportJSONEl.onclick = ()=>{
+    const payload = {
+      storeName: state.storeName,
+      settlement: state.settlement,
+      shopType: state.shopType,
+      marketFactor: state.marketFactor,
+      items: state.items,
+      receipt: receiptEl.value || ""
+    };
+    const blob = new Blob([JSON.stringify(payload,null,2)], {type:"application/json"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "storefront-export.json";
+    a.click();
+    URL.revokeObjectURL(a.href);
+  };
+}
+
+/** =========================
+ *  PERSISTENCE
+ *  ========================= */
+function saveState(){
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }catch(e){}
+}
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+
+    // minimal migration safety
+    if (!parsed.items || !Array.isArray(parsed.items)) return null;
+    if (!parsed.cart) parsed.cart = {};
+    if (typeof parsed.marketFactor !== "number") parsed.marketFactor = 1.0;
+    if (!parsed.activeCategory) parsed.activeCategory = "All";
+    return parsed;
+  }catch(e){ return null; }
+}
+
+/** =========================
+ *  HELPERS
+ *  ========================= */
+function uid(){ return Math.random().toString(16).slice(2) + Date.now().toString(16); }
+function round2(n){ return Math.round(n*100)/100; }
+function clamp(n, a, b){ return Math.min(b, Math.max(a, n)); }
+function pick(arr){ return arr[Math.floor(Math.random()*arr.length)] || arr[0]; }
+function sampleMany(arr, n){
+  const a = [...arr];
+  const out = [];
+  while(out.length < n && a.length){
+    const i = Math.floor(Math.random()*a.length);
+    out.push(a.splice(i,1)[0]);
+  }
+  return out;
+}
+function escapeHtml(str){
+  return String(str ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+</script>
+</body>
+</html>
