@@ -150,11 +150,11 @@
     }
 
     .dm-only{display:none}
-    .dm .dm-only{display:inline-flex}
+body.dm .dm-only{display:inline-flex}
 
-    /* Reset should only be visible in DM mode */
-    #resetAll{display:none}
-    .dm #resetAll{display:inline-flex}
+/* Reset should only be visible in DM mode */
+#resetAll{display:none}
+body.dm #resetAll{display:inline-flex}
 
     /* ===== Category chips ===== */
     .catbar{
@@ -1317,12 +1317,23 @@ function checkout(){
   const time = new Date().toISOString();
 
   const receipt =
-`=== RECEIPT ===\n`+
-`Store: ${state.storeName}\n`+
-`Time: ${time}\n\n`+
-`Items:\n${lines.map(l=>`- ${l.item.name} x${l.qty} @ ${l.unit} gp = ${l.lineTotal} gp`).join("\n")}\n\n`+
-`TOTAL: ${total} gp\n\n`+
-`${state.receiptSlogan || ""}\n`+
+`=== RECEIPT ===
+`+
+`Store: ${state.storeName}
+`+
+`Time: ${time}
+
+`+
+`Items:
+${lines.map(l=>`- ${l.item.name} x${l.qty} @ ${l.unit} gp = ${l.lineTotal} gp`).join("
+")}
+
+`+
+`TOTAL: ${total} gp
+
+`+
+`${state.receiptSlogan || ""}
+`+
 `— ${state.receiptOwner || ""}`;
 
   // Commit: keep reduced stock; just clear cart
@@ -1519,9 +1530,10 @@ function toggleDM(){
 }
 
 function applyDMClass(){
-  if (state.dm) app.classList.add("dm");
-  else app.classList.remove("dm");
+  if (state.dm) document.body.classList.add("dm");
+  else document.body.classList.remove("dm");
   toggleDMEl.textContent = `DM Mode: ${state.dm ? "On" : "Off"}`;
+}`;
 }
 
 function resetAll(){
