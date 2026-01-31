@@ -8,8 +8,6 @@
     :root{
       --bg:#07040a;
       --bg2:#120a18;
-      --panel:#140c1b;
-      --panel2:#1b1024;
       --text:#f7f0df;
       --muted:#d5c8ac;
       --accent:#b68cff;
@@ -112,7 +110,7 @@
 
     .actions{display:flex; align-items:center; justify-content:flex-end; gap:10px; flex-wrap:wrap;}
 
-    select, input[type="number"], input[type="text"]{
+    select, input[type="number"], input[type="text"], textarea{
       background: rgba(0,0,0,.25);
       color: var(--text);
       border: 1px solid rgba(255,255,255,.14);
@@ -209,7 +207,6 @@
       position:relative;
     }
 
-    /* subtle fantasy ornament */
     .panel::before{
       content:"";
       position:absolute;
@@ -471,7 +468,7 @@
     .modalBackdrop.show{display:flex}
 
     .modal{
-      width: min(760px, 100%);
+      width: min(820px, 100%);
       border-radius: 18px;
       border: 1px solid rgba(255,255,255,.14);
       background:
@@ -528,6 +525,18 @@
       color: var(--text);
     }
 
+    .fieldset{
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 14px;
+      padding: 12px;
+      background: rgba(0,0,0,.14);
+    }
+
+    .fieldset h4{margin:0 0 10px; font-family: var(--serif); font-size: 14px;}
+
+    .grid2{display:grid; grid-template-columns: 1fr 1fr; gap:10px;}
+    @media (max-width: 640px){ .grid2{grid-template-columns: 1fr;} }
+
     .toast{
       position:fixed;
       left:50%;
@@ -547,6 +556,27 @@
 
     .toast.show{display:block}
 
+    /* ===== Themes (CSS-variable overrides) ===== */
+    body[data-theme="midnight"]{
+      --bg:#07040a; --bg2:#120a18;
+      --accent:#b68cff; --accent2:#ffb86c;
+      --text:#f7f0df; --muted:#d5c8ac;
+    }
+    body[data-theme="sunspire"]{
+      --bg:#09060a; --bg2:#1b0f07;
+      --accent:#ffb86c; --accent2:#ffd56b;
+      --text:#fff2d9; --muted:#f0d7b5;
+    }
+    body[data-theme="frostvale"]{
+      --bg:#05090f; --bg2:#071424;
+      --accent:#7dcfff; --accent2:#b68cff;
+      --text:#e9f6ff; --muted:#c7def0;
+    }
+    body[data-theme="bogmire"]{
+      --bg:#050a07; --bg2:#0b1611;
+      --accent:#6bff9c; --accent2:#ffb86c;
+      --text:#e9ffe9; --muted:#c8e6cc;
+    }
   </style>
 </head>
 <body>
@@ -566,6 +596,7 @@
 
     <div class="actions">
       <input id="marketFactor" class="dm-only" type="number" step="0.05" min="0.5" max="2.0" value="1.00" title="DM market multiplier" />
+      <button id="dmSettings" class="dm-only" title="DM settings">Settings</button>
       <button id="toggleDM" class="btn-accent" title="Toggle DM mode">DM Mode: Off</button>
       <button id="resetAll" class="btn-warn" title="Reset to defaults">Reset</button>
     </div>
@@ -686,7 +717,7 @@
 
       <div class="cartlines" id="cartLines"></div>
 
-      <p class="hint">Cart is simplified: item name + quantity controls only.</p>
+      <p class="hint">Cart is simplified: item name, line total, and +/- quantity.</p>
     </div>
   </aside>
 </main>
@@ -734,6 +765,58 @@
   </div>
 </div>
 
+<!-- DM Settings modal -->
+<div class="modalBackdrop" id="settingsModal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+  <div class="modal">
+    <div class="mhd">
+      <h3 id="settingsTitle">DM Settings</h3>
+      <button id="closeSettingsModal">Close</button>
+    </div>
+    <div class="mbd">
+      <div class="fieldset" style="margin-bottom:12px">
+        <h4>Theme</h4>
+        <div class="grid2">
+          <select id="themeSelect">
+            <option value="midnight">Midnight Ledger</option>
+            <option value="sunspire">Sunspire Bazaar</option>
+            <option value="frostvale">Frostvale Market</option>
+            <option value="bogmire">Bogmire Trading Post</option>
+          </select>
+          <button id="applyTheme" class="btn-accent">Apply Theme</button>
+        </div>
+        <p class="hint" style="margin:10px 0 0">Theme is saved with the shop.</p>
+      </div>
+
+      <div class="fieldset" style="margin-bottom:12px">
+        <h4>Import / Export Shop</h4>
+        <div class="grid2" style="align-items:center">
+          <button id="exportShop" class="btn-accent">Export</button>
+          <label style="display:flex; gap:10px; align-items:center; flex-wrap:wrap">
+            <input id="importFile" type="file" accept="application/json" style="min-height:auto; padding:8px 10px" />
+            <button id="importShop" type="button">Import</button>
+          </label>
+        </div>
+        <p class="hint" style="margin:10px 0 10px">Export produces a JSON you can reuse to load new shops/stock/items later.</p>
+        <textarea id="shopJson" class="receiptText" style="min-height:160px" placeholder="Exported JSON will appear here. You can also paste JSON here and click Import."></textarea>
+        <div class="actions" style="justify-content:flex-end; margin-top:10px">
+          <button id="copyShopJson" class="dm-only">Copy JSON</button>
+        </div>
+      </div>
+
+      <div class="fieldset">
+        <h4>Receipt Footer</h4>
+        <div class="grid2">
+          <input id="sloganInput" type="text" placeholder="Store slogan" />
+          <input id="ownerInput" type="text" placeholder="Store owner signature" />
+        </div>
+        <div class="actions" style="justify-content:flex-end; margin-top:10px">
+          <button id="saveFooter" class="btn-accent">Save Footer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -741,46 +824,24 @@
  *  CONFIG
  *  ========================= */
 
-const STORAGE_KEY = "fantasy_storefront_v4";
+const STORAGE_KEY = "fantasy_storefront_v5";
 
-// Placeholder image (future: item.image overrides this)
 const PLACEHOLDER_IMG = "https://static.wikia.nocookie.net/forgottenrealms/images/6/62/Sleep_potion_BGIII.jpg/revision/latest/scale-to-width-down/1000?cb=20210525104751";
 
-// Receipt footer
-const STORE_SLOGAN = "Where coin meets curiosity.";
-const STORE_OWNER = "Veyra the Ledgerwitch";
-
 const categories = [
-  "All",
-  "Gear",
-  "Weapons",
-  "Armor",
-  "Ammo",
-  "Tools",
-  "Mounts/Vehicles",
-  "Potions/Consumables",
-  "Magic Items",
-  "Scrolls",
-  "Mystery",
-  "Custom"
+  "All","Gear","Weapons","Armor","Ammo","Tools","Mounts/Vehicles","Potions/Consumables","Magic Items","Scrolls","Mystery","Custom"
 ];
 
-// Small template seed; expand freely.
 const seedItems = [
   { id: uid(), name:"Rations (1 day)", type:"gear", category:"Gear", rarity:"common", basePrice:0.5, stock:20, desc:"Dry bread, salted meat, and hard cheese." },
   { id: uid(), name:"Torch", type:"gear", category:"Gear", rarity:"common", basePrice:0.1, stock:30, desc:"Burns 1 hour; bright light 20 ft." },
   { id: uid(), name:"Rope (50 ft hemp)", type:"gear", category:"Gear", rarity:"common", basePrice:1, stock:8, desc:"A classic adventurer’s lifeline." },
-
   { id: uid(), name:"Dagger", type:"weapon", category:"Weapons", rarity:"common", basePrice:2, stock:6, desc:"A small blade, easy to conceal." },
   { id: uid(), name:"Longsword", type:"weapon", category:"Weapons", rarity:"common", basePrice:15, stock:2, desc:"A practical knight’s blade." },
-
   { id: uid(), name:"Leather Armor", type:"armor", category:"Armor", rarity:"common", basePrice:10, stock:2, desc:"Light armor of boiled leather." },
   { id: uid(), name:"Shield", type:"armor", category:"Armor", rarity:"common", basePrice:10, stock:3, desc:"Wood and iron, scarred by use." },
-
   { id: uid(), name:"Healing Potion (minor)", type:"potion", category:"Potions/Consumables", rarity:"common", basePrice:50, stock:2, desc:"Red liquid that warms the throat." },
-
   { id: uid(), name:"Spell Scroll (Cantrip)", type:"scroll", category:"Scrolls", rarity:"common", basePrice:25, stock:3, desc:"A simple incantation, neatly scribed." },
-
   { id: uid(), name:"Sealed Black Vial", type:"mystery", category:"Mystery", rarity:"uncommon", basePrice:75, stock:1, desc:"Unlabeled. Cold to the touch. DM decides." }
 ];
 
@@ -792,8 +853,9 @@ const specialsPool = [
   { name:"Mask of the Candle Saint", type:"magic item", category:"Magic Items", rarity:"very rare", basePrice:1400, stock:1, desc:"Whispered blessings in candlelight. Effects DM-defined." }
 ];
 
+const THEMES = ["midnight","sunspire","frostvale","bogmire"];
+
 function scarcityFactor(stock){
-  // stock is available stock (not including reserved-in-cart).
   if (stock <= 0) return 999;
   if (stock === 1) return 1.35;
   if (stock === 2) return 1.20;
@@ -806,15 +868,17 @@ function scarcityFactor(stock){
  *  ========================= */
 let state = loadState() || {
   dm: false,
+  theme: "midnight",
   marketFactor: 1.00,
   storeName: "The Midnight Ledger",
   storeTag: "Fantasy storefront template • Touch-friendly • DM controls",
+  receiptSlogan: "Where coin meets curiosity.",
+  receiptOwner: "Veyra the Ledgerwitch",
   activeCategory: "All",
   items: structuredClone(seedItems).map(x=>({ image: PLACEHOLDER_IMG, ...x })),
-  cart: {} // { itemId: qty } -- reserved immediately
+  cart: {}
 };
 
-// Ensure images exist for older saved states
 state.items = state.items.map(it => ({ image: it.image || PLACEHOLDER_IMG, ...it }));
 
 /** =========================
@@ -837,6 +901,7 @@ const cartCountEl = el("cartCount");
 const cartLinesEl = el("cartLines");
 
 const toggleDMEl = el("toggleDM");
+const dmSettingsEl = el("dmSettings");
 const rollSpecialsEl = el("rollSpecials");
 const restockEl = el("restock");
 const checkoutEl = el("checkout");
@@ -873,6 +938,20 @@ const closeReceiptModalEl = el("closeReceiptModal");
 const receiptTextEl = el("receiptText");
 const copyReceiptEl = el("copyReceipt");
 
+// Settings modal
+const settingsModalEl = el("settingsModal");
+const closeSettingsModalEl = el("closeSettingsModal");
+const themeSelectEl = el("themeSelect");
+const applyThemeEl = el("applyTheme");
+const exportShopEl = el("exportShop");
+const importFileEl = el("importFile");
+const importShopEl = el("importShop");
+const shopJsonEl = el("shopJson");
+const copyShopJsonEl = el("copyShopJson");
+const sloganInputEl = el("sloganInput");
+const ownerInputEl = el("ownerInput");
+const saveFooterEl = el("saveFooter");
+
 // Toast
 const toastEl = el("toast");
 
@@ -880,6 +959,7 @@ const toastEl = el("toast");
  *  INIT
  *  ========================= */
 function init(){
+  // categories for custom tool
   newCategoryEl.innerHTML = categories
     .filter(c=>c!=="All")
     .map(c=>`<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join("");
@@ -889,6 +969,12 @@ function init(){
   storeTagEl.textContent = state.storeTag;
   if (marketFactorEl) marketFactorEl.value = Number(state.marketFactor || 1).toFixed(2);
 
+  // settings modal defaults
+  themeSelectEl.value = state.theme || "midnight";
+  sloganInputEl.value = state.receiptSlogan || "";
+  ownerInputEl.value = state.receiptOwner || "";
+
+  applyTheme(state.theme || "midnight");
   applyDMClass();
   renderCategoryBar();
   render();
@@ -898,12 +984,26 @@ init();
 /** =========================
  *  PRICING
  *  ========================= */
-function getEffectivePrice(item){
+function reservedQty(itemId){
+  return Number(state.cart?.[itemId] || 0);
+}
+
+function getDisplayPrice(item){
+  // price shown on product card / stock-sensitive: uses available stock only
   const scarcity = scarcityFactor(item.stock);
   if (scarcity >= 900) return null;
   const mf = clamp(Number(state.marketFactor || 1.0), 0.5, 2.0);
-  const price = item.basePrice * scarcity * mf;
-  return round2(price);
+  return round2(item.basePrice * scarcity * mf);
+}
+
+function getCartUnitPrice(item){
+  // IMPORTANT FIX: when stock is fully reserved (item.stock == 0), cart price should not become 0.
+  // We compute scarcity on the *total inventory* = available stock + reserved quantity.
+  const totalInventory = item.stock + reservedQty(item.id);
+  const scarcity = scarcityFactor(totalInventory);
+  if (scarcity >= 900) return round2(item.basePrice * clamp(Number(state.marketFactor||1.0),0.5,2.0));
+  const mf = clamp(Number(state.marketFactor || 1.0), 0.5, 2.0);
+  return round2(item.basePrice * scarcity * mf);
 }
 
 /** =========================
@@ -925,7 +1025,7 @@ function passesFilters(item){
   if (tf !== "all" && item.type !== tf) return false;
 
   const maxP = maxPriceEl.value === "" ? null : Number(maxPriceEl.value);
-  const price = getEffectivePrice(item);
+  const price = getDisplayPrice(item);
   if (maxP != null && price != null && price > maxP) return false;
 
   return true;
@@ -953,7 +1053,7 @@ function render(){
     productGrid.innerHTML = `<div class="hint">No items match your filters.</div>`;
   } else {
     visible.forEach(item=>{
-      const price = getEffectivePrice(item);
+      const price = getDisplayPrice(item);
       const out = item.stock <= 0;
 
       const card = document.createElement("div");
@@ -961,7 +1061,6 @@ function render(){
       card.setAttribute("role", "button");
       card.setAttribute("tabindex", "0");
 
-      // Open item modal if you click the card (but not the add/qty controls)
       card.addEventListener("click", (e)=>{
         const block = e.target.closest(".addRow, .qty, button, input");
         if (block) return;
@@ -1013,7 +1112,6 @@ function render(){
 
       function clampQty(){
         const v = Math.max(1, Math.floor(Number(qtyInput.value || 1)));
-        // cannot exceed current available stock
         const capped = Math.min(v, Math.max(1, item.stock));
         qtyInput.value = String(capped);
         return capped;
@@ -1035,7 +1133,7 @@ function render(){
       addBtn.disabled = out;
       addBtn.onclick = (e)=>{
         e.stopPropagation();
-        if (item.stock <= 0) return;
+        if (item.stock <= 0) return toast("Out of stock.");
         const desired = clampQty();
         addToCart(item.id, desired);
         qtyInput.value = "1";
@@ -1045,7 +1143,6 @@ function render(){
       addRow.appendChild(addBtn);
       body.appendChild(addRow);
 
-      // DM inline edit
       if (state.dm){
         const dmRow = document.createElement("div");
         dmRow.style.display = "flex";
@@ -1068,7 +1165,6 @@ function render(){
     });
   }
 
-  // DM edit wiring
   document.querySelectorAll('input[data-edit="base"]').forEach(inp=>{
     inp.onchange = (e)=>{
       const id = e.target.getAttribute("data-id");
@@ -1094,7 +1190,7 @@ function renderCart(){
     .map(([id,qty])=>{
       const item = state.items.find(x=>x.id===id);
       if (!item) return null;
-      const unit = getEffectivePrice(item) ?? 0;
+      const unit = getCartUnitPrice(item); // FIXED
       return { item, qty, unit, lineTotal: round2(unit * qty) };
     })
     .filter(Boolean);
@@ -1127,7 +1223,6 @@ function renderCart(){
     `;
 
     const [minusBtn, plusBtn] = d.querySelectorAll("button");
-
     minusBtn.onclick = ()=> setQty(l.item.id, l.qty - 1);
     plusBtn.onclick = ()=> setQty(l.item.id, l.qty + 1);
 
@@ -1137,13 +1232,7 @@ function renderCart(){
 
 /** =========================
  *  STOCK + CART LOGIC
- *  =========================
- *  - Adding to cart RESERVES items immediately (stock decreases)
- *  - Removing from cart returns items (stock increases)
- *  - Cart increases are capped by available stock
- *  - After checkout, stock is committed (cart clears; nothing returns)
- */
-
+ *  ========================= */
 function addToCart(itemId, qty){
   const it = state.items.find(x=>x.id===itemId);
   if (!it) return;
@@ -1152,9 +1241,9 @@ function addToCart(itemId, qty){
   if (it.stock <= 0) return toast("Out of stock.");
 
   const canTake = Math.min(q, it.stock);
-  if (canTake < q) toast("Only part of that quantity was available.");
+  if (canTake < q) toast("Not enough stock.");
 
-  it.stock -= canTake; // reserve
+  it.stock -= canTake;
   state.cart[itemId] = (state.cart[itemId] || 0) + canTake;
 
   saveState();
@@ -1165,13 +1254,12 @@ function setQty(itemId, newQty){
   const it = state.items.find(x=>x.id===itemId);
   if (!it) return;
 
-  const current = state.cart[itemId] || 0;
+  const current = Number(state.cart[itemId] || 0);
   if (current <= 0) return;
 
   const target = Math.max(0, Math.floor(Number(newQty || 0)));
 
   if (target === 0){
-    // return all
     it.stock += current;
     delete state.cart[itemId];
     saveState();
@@ -1183,14 +1271,12 @@ function setQty(itemId, newQty){
   if (delta === 0) return;
 
   if (delta > 0){
-    // reserve more, but cap by available stock
     if (it.stock <= 0) return toast("No more in stock.");
     const canTake = Math.min(delta, it.stock);
     if (canTake < delta) toast("No more in stock.");
     it.stock -= canTake;
     state.cart[itemId] = current + canTake;
   } else {
-    // return some
     const giveBack = Math.min(current, Math.abs(delta));
     it.stock += giveBack;
     const next = current - giveBack;
@@ -1203,13 +1289,11 @@ function setQty(itemId, newQty){
 }
 
 function clearCart(){
-  // return all reserved items
   Object.entries(state.cart).forEach(([id, qty])=>{
     const it = state.items.find(x=>x.id===id);
-    if (it) it.stock += qty;
+    if (it) it.stock += Number(qty || 0);
   });
   state.cart = {};
-
   saveState();
   render();
 }
@@ -1219,8 +1303,8 @@ function checkout(){
     .map(([id,qty])=>{
       const item = state.items.find(x=>x.id===id);
       if (!item) return null;
-      const unit = getEffectivePrice(item) ?? 0;
-      return { item, qty, unit, lineTotal: round2(unit * qty) };
+      const unit = getCartUnitPrice(item);
+      return { item, qty:Number(qty||0), unit, lineTotal: round2(unit * Number(qty||0)) };
     })
     .filter(Boolean);
 
@@ -1229,7 +1313,6 @@ function checkout(){
     return;
   }
 
-  // Stock is already reserved and reduced. Checkout commits by clearing cart without restoring stock.
   const total = round2(lines.reduce((s,l)=>s + l.lineTotal, 0));
   const time = new Date().toISOString();
 
@@ -1239,13 +1322,13 @@ function checkout(){
 `Time: ${time}\n\n`+
 `Items:\n${lines.map(l=>`- ${l.item.name} x${l.qty} @ ${l.unit} gp = ${l.lineTotal} gp`).join("\n")}\n\n`+
 `TOTAL: ${total} gp\n\n`+
-`${STORE_SLOGAN}\n`+
-`— ${STORE_OWNER}`;
+`${state.receiptSlogan || ""}\n`+
+`— ${state.receiptOwner || ""}`;
 
+  // Commit: keep reduced stock; just clear cart
   state.cart = {};
   saveState();
   render();
-
   openReceiptModal(receipt);
 }
 
@@ -1256,7 +1339,7 @@ function openItemModal(itemId){
   const item = state.items.find(x=>x.id===itemId);
   if (!item) return;
 
-  const price = getEffectivePrice(item);
+  const price = getDisplayPrice(item);
   itemTitleEl.textContent = item.name;
   itemImgEl.src = item.image || PLACEHOLDER_IMG;
   itemImgEl.alt = item.name;
@@ -1272,20 +1355,118 @@ function openItemModal(itemId){
   itemModalEl.classList.add("show");
 }
 
-function closeItemModal(){
-  itemModalEl.classList.remove("show");
-}
+function closeItemModal(){ itemModalEl.classList.remove("show"); }
 
 /** =========================
  *  RECEIPT MODAL
  *  ========================= */
-function openReceiptModal(text){
-  receiptTextEl.value = text;
-  receiptModalEl.classList.add("show");
+function openReceiptModal(text){ receiptTextEl.value = text; receiptModalEl.classList.add("show"); }
+function closeReceiptModal(){ receiptModalEl.classList.remove("show"); }
+
+/** =========================
+ *  SETTINGS MODAL
+ *  ========================= */
+function openSettings(){
+  themeSelectEl.value = state.theme || "midnight";
+  sloganInputEl.value = state.receiptSlogan || "";
+  ownerInputEl.value = state.receiptOwner || "";
+  settingsModalEl.classList.add("show");
+}
+function closeSettings(){ settingsModalEl.classList.remove("show"); }
+
+function applyTheme(theme){
+  const t = THEMES.includes(theme) ? theme : "midnight";
+  document.body.setAttribute("data-theme", t);
+  state.theme = t;
+  saveState();
 }
 
-function closeReceiptModal(){
-  receiptModalEl.classList.remove("show");
+function exportShop(){
+  const payload = {
+    version: 1,
+    theme: state.theme,
+    marketFactor: state.marketFactor,
+    storeName: state.storeName,
+    storeTag: state.storeTag,
+    receiptSlogan: state.receiptSlogan,
+    receiptOwner: state.receiptOwner,
+    activeCategory: "All",
+    items: state.items,
+    cart: {} // exported shops start with empty cart
+  };
+  const json = JSON.stringify(payload, null, 2);
+  shopJsonEl.value = json;
+  downloadText(`${safeFile(state.storeName||"shop")}.json`, json);
+  toast("Exported shop JSON.");
+}
+
+async function copyShopJson(){
+  try{ await navigator.clipboard.writeText(shopJsonEl.value || ""); toast("Copied JSON."); }
+  catch(e){ toast("Copy failed."); }
+}
+
+async function importShop(){
+  try{
+    let jsonText = (shopJsonEl.value || "").trim();
+
+    // If a file is selected, prefer it
+    if (importFileEl.files && importFileEl.files[0]){
+      jsonText = await importFileEl.files[0].text();
+    }
+
+    if (!jsonText) return toast("Paste JSON or choose a file.");
+
+    const parsed = JSON.parse(jsonText);
+    if (!parsed || !Array.isArray(parsed.items)) return toast("Invalid shop JSON.");
+
+    // Basic normalization
+    const next = {
+      dm: state.dm,
+      theme: THEMES.includes(parsed.theme) ? parsed.theme : (state.theme || "midnight"),
+      marketFactor: typeof parsed.marketFactor === "number" ? parsed.marketFactor : 1.0,
+      storeName: String(parsed.storeName || "The Midnight Ledger"),
+      storeTag: String(parsed.storeTag || "Fantasy storefront template • Touch-friendly • DM controls"),
+      receiptSlogan: String(parsed.receiptSlogan || "Where coin meets curiosity."),
+      receiptOwner: String(parsed.receiptOwner || "Veyra the Ledgerwitch"),
+      activeCategory: "All",
+      items: parsed.items.map(it=>({
+        id: String(it.id || uid()),
+        name: String(it.name || "Unnamed"),
+        type: String(it.type || "custom"),
+        category: String(it.category || "Custom"),
+        rarity: String(it.rarity || "common"),
+        basePrice: Math.max(0, Number(it.basePrice || 0)),
+        stock: Math.max(0, Math.floor(Number(it.stock || 0))),
+        desc: String(it.desc || ""),
+        image: String(it.image || PLACEHOLDER_IMG)
+      })),
+      cart: {}
+    };
+
+    // Swap state
+    state = next;
+
+    // UI sync
+    storeNameEl.textContent = state.storeName;
+    storeTagEl.textContent = state.storeTag;
+    if (marketFactorEl) marketFactorEl.value = Number(state.marketFactor || 1).toFixed(2);
+    applyTheme(state.theme);
+
+    renderCategoryBar();
+    saveState();
+    render();
+    toast("Imported shop.");
+
+  }catch(e){
+    toast("Import failed (bad JSON).");
+  }
+}
+
+function saveFooter(){
+  state.receiptSlogan = (sloganInputEl.value || "").trim();
+  state.receiptOwner = (ownerInputEl.value || "").trim();
+  saveState();
+  toast("Saved receipt footer.");
 }
 
 /** =========================
@@ -1293,18 +1474,13 @@ function closeReceiptModal(){
  *  ========================= */
 function restockBasics(){
   const seedByName = new Map(seedItems.map(s=>[s.name, s.stock]));
-  state.items.forEach(it=>{
-    if (seedByName.has(it.name)){
-      it.stock = Math.max(it.stock, seedByName.get(it.name));
-    }
-  });
+  state.items.forEach(it=>{ if (seedByName.has(it.name)) it.stock = Math.max(it.stock, seedByName.get(it.name)); });
   saveState();
   render();
 }
 
 function rollSpecials(){
-  const pulls = 2;
-  const picks = sampleMany(specialsPool, pulls);
+  const picks = sampleMany(specialsPool, 2);
   picks.forEach(p=>{
     if (state.items.some(x=>x.name === p.name)) return;
     state.items.push({ id: uid(), image: PLACEHOLDER_IMG, ...p });
@@ -1317,22 +1493,15 @@ function addCustom(){
   const name = (newNameEl.value || "").trim();
   if (!name) return alert("Name is required.");
 
-  const type = newTypeEl.value;
-  const rarity = newRarityEl.value;
-  const basePrice = Math.max(0, Number(newBasePriceEl.value || 0));
-  const stock = Math.max(0, Math.floor(Number(newStockEl.value || 0)));
-  const category = newCategoryEl.value;
-  const desc = (newDescEl.value || "").trim();
-
   state.items.push({
     id: uid(),
     name,
-    type,
-    rarity,
-    basePrice,
-    stock,
-    category,
-    desc: desc || "A custom item (DM defined).",
+    type: newTypeEl.value,
+    rarity: newRarityEl.value,
+    basePrice: Math.max(0, Number(newBasePriceEl.value || 0)),
+    stock: Math.max(0, Math.floor(Number(newStockEl.value || 0))),
+    category: newCategoryEl.value,
+    desc: (newDescEl.value || "").trim() || "A custom item (DM defined).",
     image: PLACEHOLDER_IMG
   });
 
@@ -1360,14 +1529,20 @@ function resetAll(){
   localStorage.removeItem(STORAGE_KEY);
   state = {
     dm: state.dm,
+    theme: state.theme || "midnight",
     marketFactor: 1.00,
     storeName: "The Midnight Ledger",
     storeTag: "Fantasy storefront template • Touch-friendly • DM controls",
+    receiptSlogan: "Where coin meets curiosity.",
+    receiptOwner: "Veyra the Ledgerwitch",
     activeCategory: "All",
     items: structuredClone(seedItems).map(x=>({ image: PLACEHOLDER_IMG, ...x })),
     cart: {}
   };
   if (marketFactorEl) marketFactorEl.value = "1.00";
+  applyTheme(state.theme);
+  storeNameEl.textContent = state.storeName;
+  storeTagEl.textContent = state.storeTag;
   renderCategoryBar();
   saveState();
   render();
@@ -1390,6 +1565,7 @@ if (marketFactorEl){
 }
 
 toggleDMEl.onclick = toggleDM;
+dmSettingsEl.onclick = openSettings;
 rollSpecialsEl.onclick = rollSpecials;
 restockEl.onclick = restockBasics;
 checkoutEl.onclick = checkout;
@@ -1397,29 +1573,35 @@ clearCartEl.onclick = clearCart;
 resetAllEl.onclick = resetAll;
 addCustomEl.onclick = addCustom;
 
-// Modals: backdrop click closes
+// Settings modal
+applyThemeEl.onclick = ()=>{ applyTheme(themeSelectEl.value); toast("Theme applied."); };
+exportShopEl.onclick = exportShop;
+importShopEl.onclick = importShop;
+copyShopJsonEl.onclick = copyShopJson;
+saveFooterEl.onclick = saveFooter;
+
+closeSettingsModalEl.onclick = closeSettings;
+settingsModalEl.addEventListener("click", (e)=>{ if (e.target === settingsModalEl) closeSettings(); });
+
+// Item modal
 itemModalEl.addEventListener("click", (e)=>{ if (e.target === itemModalEl) closeItemModal(); });
 closeItemModalEl.onclick = closeItemModal;
 
+// Receipt modal
 receiptModalEl.addEventListener("click", (e)=>{ if (e.target === receiptModalEl) closeReceiptModal(); });
 closeReceiptModalEl.onclick = closeReceiptModal;
 
-// Copy receipt (DM only)
 copyReceiptEl.onclick = async ()=>{
-  try{
-    await navigator.clipboard.writeText(receiptTextEl.value || "");
-    toast("Copied.");
-  }catch(e){
-    toast("Copy failed. Use manual copy.");
-  }
+  try{ await navigator.clipboard.writeText(receiptTextEl.value || ""); toast("Copied."); }
+  catch(e){ toast("Copy failed."); }
 };
 
 // ESC closes modals
-document.addEventListener("keydown", (e)=>{
-  if (e.key === "Escape"){
-    if (itemModalEl.classList.contains("show")) closeItemModal();
-    if (receiptModalEl.classList.contains("show")) closeReceiptModal();
-  }
+addEventListener("keydown", (e)=>{
+  if (e.key !== "Escape") return;
+  if (itemModalEl.classList.contains("show")) closeItemModal();
+  if (receiptModalEl.classList.contains("show")) closeReceiptModal();
+  if (settingsModalEl.classList.contains("show")) closeSettings();
 });
 
 /** =========================
@@ -1449,6 +1631,9 @@ function loadState(){
     if (!parsed.cart) parsed.cart = {};
     if (typeof parsed.marketFactor !== "number") parsed.marketFactor = 1.0;
     if (!parsed.activeCategory) parsed.activeCategory = "All";
+    if (!parsed.theme) parsed.theme = "midnight";
+    if (!parsed.receiptSlogan) parsed.receiptSlogan = "Where coin meets curiosity.";
+    if (!parsed.receiptOwner) parsed.receiptOwner = "Veyra the Ledgerwitch";
     return parsed;
   }catch(e){ return null; }
 }
@@ -1475,6 +1660,20 @@ function escapeHtml(str){
     .replaceAll(">","&gt;")
     .replaceAll('"',"&quot;")
     .replaceAll("'","&#039;");
+}
+function safeFile(name){
+  return String(name||"shop").toLowerCase().replace(/[^a-z0-9\-\_]+/g,"-").replace(/\-+/g,"-").replace(/^\-+|\-+$/g,"") || "shop";
+}
+function downloadText(filename, text){
+  const blob = new Blob([text], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=> URL.revokeObjectURL(url), 800);
 }
 </script>
 </body>
