@@ -1,0 +1,3577 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="gilded-midnight">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>D&D Shop Biography Builder — Potion Shop Test</title>
+  <style>
+    :root{
+      --bg:#07060b;
+      --bg2:#0b0a12;
+      --panel:#101426;
+      --panel2:#0c1020;
+      --text:#f6f2e9;
+      --muted:#c3bbad;
+      --border:#2e2b45;
+      --accent:#d7b36a;
+      --accent2:#7fb7ff;
+      --good:#41d7a1;
+      --warn:#ffcc66;
+      --bad:#ff6b6b;
+      --shadow: 0 18px 54px rgba(0,0,0,.62);
+      --radius: 18px;
+      --radius2: 14px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+      --fz: 14px;
+      --fzSmall: 12.5px;
+      --fzH1: 16px;
+      --fzH2: 15px;
+      --fzH3: 14px;
+      --lh: 1.5;
+    }
+    html[data-theme="forest-apothecary"]{
+      --bg:#061009;
+      --bg2:#07160c;
+      --panel:#0e2017;
+      --panel2:#0a1a12;
+      --text:#f1f6ef;
+      --muted:#b7c7bb;
+      --border:#214233;
+      --accent:#7bd389;
+      --accent2:#d7b36a;
+    }
+    html[data-theme="arcane-ice"]{
+      --bg:#050b12;
+      --bg2:#07121e;
+      --panel:#0b1a2e;
+      --panel2:#081427;
+      --text:#eef5ff;
+      --muted:#bbcadb;
+      --border:#1f3a55;
+      --accent:#7fb7ff;
+      --accent2:#d7b36a;
+    }
+    
+    html[data-theme="iron-forge"]{
+      --bg:#0a0a0b; --bg2:#101013; --panel:#15161a; --panel2:#0f1013;
+      --text:#f3f0ea; --muted:#c6c0b5; --border:#3a2f2b;
+      --accent:#d07a34; --accent2:#b9c5d4;
+    }
+    html[data-theme="sunlit-bazaar"]{
+      --bg:#0b0b10; --bg2:#141026; --panel:#1b1536; --panel2:#140f2b;
+      --text:#f8f3ea; --muted:#d0c6b7; --border:#3a2c55;
+      --accent:#ffcc66; --accent2:#7bd389;
+    }
+    html[data-theme="shadow-bazaar"]{
+      --bg:#05060a; --bg2:#080a12; --panel:#0c1020; --panel2:#080c18;
+      --text:#f1f2f7; --muted:#b7bccb; --border:#1d2440;
+      --accent:#a78bfa; --accent2:#ff6b6b;
+    }
+    html[data-theme="celestial-chapel"]{
+      --bg:#070a10; --bg2:#0b1020; --panel:#0f1830; --panel2:#0b1226;
+      --text:#eef5ff; --muted:#c0ccde; --border:#223b66;
+      --accent:#7fb7ff; --accent2:#d7b36a;
+    }
+    html[data-theme="storm-docks"]{
+      --bg:#070b10; --bg2:#0a1320; --panel:#0e1b2e; --panel2:#0a1426;
+      --text:#eef5ff; --muted:#bccbe0; --border:#1f3a55;
+      --accent:#66d9ff; --accent2:#ffcc66;
+    }
+    html[data-theme="fey-bloom"]{
+      --bg:#050b08; --bg2:#07120d; --panel:#0c1b14; --panel2:#081510;
+      --text:#f0fff7; --muted:#bcd7c7; --border:#214233;
+      --accent:#7bd389; --accent2:#ff89c6;
+    }
+    html[data-theme="dragon-hoard"]{
+      --bg:#09060a; --bg2:#120a10; --panel:#1b111a; --panel2:#140c12;
+      --text:#fff4e6; --muted:#d6c5b8; --border:#4a2136;
+      --accent:#ffcc66; --accent2:#ff6b6b;
+    }
+    html[data-theme="gloom-crypt"]{
+      --bg:#040407; --bg2:#070714; --panel:#0b0b1a; --panel2:#080815;
+      --text:#f2f0ff; --muted:#c3bddb; --border:#2a2550;
+      --accent:#a78bfa; --accent2:#7fb7ff;
+    }
+
+    html[data-theme="parchment"]{
+      --bg:#f4ecd9;
+      --bg2:#efe3c7;
+      --panel:#fff7e6;
+      --panel2:#fff2d5;
+      --text:#1f1b12;
+      --muted:#554b3a;
+      --border:#d8c8a2;
+      --accent:#8a5a1f;
+      --accent2:#2a5e9b;
+      --shadow: 0 12px 36px rgba(0,0,0,.18);
+    }
+
+    *{ box-sizing:border-box; }
+    html, body{ height:100%; }
+    body{
+      margin:0;
+      color:var(--text);
+      font-family:var(--sans);
+      font-size: var(--fz);
+      line-height: var(--lh);
+      overflow:hidden;
+      background:
+        radial-gradient(900px 520px at 15% 0%, color-mix(in oklab, var(--accent) 28%, transparent), transparent 60%),
+        radial-gradient(880px 520px at 95% 10%, color-mix(in oklab, var(--accent2) 22%, transparent), transparent 55%),
+        radial-gradient(700px 500px at 50% 110%, color-mix(in oklab, var(--good) 10%, transparent), transparent 60%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+    }
+
+    .app{ height:100vh; width:100vw; display:flex; flex-direction:column; }
+    header{
+      flex:0 0 auto;
+      position:sticky;
+      top:0;
+      z-index:60;
+      backdrop-filter: blur(10px);
+      background: linear-gradient(180deg, color-mix(in oklab, var(--bg) 82%, transparent), color-mix(in oklab, var(--bg) 62%, transparent));
+      border-bottom:1px solid color-mix(in oklab, var(--border) 92%, transparent);
+    }
+    
+    .headerInner{
+      width: min(1480px, calc(100vw - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar{
+      display:flex; align-items:center; justify-content:space-between; gap:14px;
+      padding: 12px 16px;
+      flex-wrap:wrap;
+    }
+    .brand{ display:flex; flex-direction:column; gap:4px; min-width: 280px; }
+    .brand h1{ margin:0; font-size: var(--fzH1); letter-spacing:.35px; font-weight: 740; }
+    .brand .sub{ color:var(--muted); font-size: var(--fzSmall); opacity:.95; }
+
+    .controls{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+
+    .btn{
+      background: color-mix(in oklab, var(--panel) 58%, transparent);
+      border:1px solid color-mix(in oklab, var(--border) 96%, transparent);
+      color:var(--text);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      cursor:pointer;
+      transition: .12s ease;
+      user-select:none;
+      white-space:nowrap;
+      box-shadow: var(--shadow);
+    }
+    .btn:hover{ border-color: color-mix(in oklab, var(--accent) 92%, transparent); transform: translateY(-1px); }
+    .btn:active{ transform: translateY(0px); }
+    .btn.primary{
+      background: color-mix(in oklab, var(--accent) 18%, transparent);
+      border-color: color-mix(in oklab, var(--accent) 82%, transparent);
+    }
+    .btn.ghost{ background: color-mix(in oklab, var(--panel) 34%, transparent); }
+    .btn.bad{
+      background: color-mix(in oklab, var(--bad) 12%, transparent);
+      border-color: color-mix(in oklab, var(--bad) 54%, transparent);
+    }
+
+    .toggle{
+      display:flex; align-items:center; gap:10px;
+      padding: 9px 12px;
+      border-radius: 999px;
+      border:1px solid color-mix(in oklab, var(--border) 96%, transparent);
+      background: color-mix(in oklab, var(--panel) 56%, transparent);
+      box-shadow: var(--shadow);
+      cursor:pointer;
+      user-select:none;
+    }
+    .toggle input{ display:none; }
+    .switch{
+      width:44px; height:24px;
+      border-radius:999px;
+      border:1px solid color-mix(in oklab, var(--border) 96%, transparent);
+      background: color-mix(in oklab, var(--bg) 82%, transparent);
+      position:relative;
+      flex:0 0 auto;
+    }
+    .knob{
+      width:20px; height:20px; border-radius:50%;
+      background: color-mix(in oklab, var(--muted) 92%, transparent);
+      position:absolute; top:1px; left:1px;
+      transition: .18s ease;
+      box-shadow: 0 8px 22px rgba(0,0,0,.45);
+    }
+    .toggle input:checked + .switch .knob{
+      left:22px;
+      background: color-mix(in oklab, var(--accent) 92%, transparent);
+    }
+    .toggle .tlabel{ font-size: 13px; color:var(--muted); white-space:nowrap; }
+    .kbd{
+      font-family: var(--mono);
+      font-size: 12px;
+      background: color-mix(in oklab, var(--bg) 80%, transparent);
+      border: 1px solid color-mix(in oklab, var(--border) 96%, transparent);
+      padding: 2px 7px;
+      border-radius: 999px;
+      color: var(--text);
+    }
+
+    .tabs{ display:flex; gap:8px; flex-wrap:wrap; padding: 0 16px 14px; }
+    .tabbtn{
+      background: color-mix(in oklab, var(--panel) 40%, transparent);
+      border:1px solid color-mix(in oklab, var(--border) 94%, transparent);
+      color:var(--text);
+      border-radius: 999px;
+      padding: 9px 13px;
+      font-size: 13px;
+      cursor:pointer;
+      transition: .12s ease;
+    }
+    .tabbtn:hover{ border-color: color-mix(in oklab, var(--accent2) 78%, transparent); }
+    .tabbtn[aria-selected="true"]{
+      border-color: color-mix(in oklab, var(--accent) 90%, transparent);
+      background: color-mix(in oklab, var(--accent) 14%, transparent);
+    }
+
+    main{ flex:1 1 auto; min-height:0; overflow:auto; padding: 14px 16px 84px; }
+
+    .panel{
+      background: linear-gradient(180deg,
+        color-mix(in oklab, var(--panel) 86%, transparent),
+        color-mix(in oklab, var(--panel2) 86%, transparent)
+      );
+      border:1px solid color-mix(in oklab, var(--border) 96%, transparent);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      width: min(1480px, calc(100vw - 32px));
+      margin: 0 auto 16px;
+    }
+    .panelHead{
+      padding: 14px 16px;
+      border-bottom: 1px solid color-mix(in oklab, var(--border) 86%, transparent);
+      display:flex; justify-content:space-between; align-items:flex-start; gap:10px; flex-wrap:wrap;
+    }
+    .panelHead h2{ margin:0; font-size: var(--fzH2); letter-spacing:.2px; font-weight:740; }
+    .panelHead .hint{ color:var(--muted); font-size: var(--fzSmall); }
+
+    .jumpbar{
+      display:flex; gap:8px; flex-wrap:wrap; padding: 10px 16px;
+      border-bottom: 1px solid color-mix(in oklab, var(--border) 80%, transparent);
+      background: color-mix(in oklab, var(--bg) 78%, transparent);
+    }
+    .jumpbar .jbtn{
+      font-size: 12.5px;
+      padding: 8px 11px;
+      border-radius: 999px;
+      border:1px solid color-mix(in oklab, var(--border) 92%, transparent);
+      background: color-mix(in oklab, var(--panel) 34%, transparent);
+      color: var(--text);
+      cursor:pointer;
+    }
+    .jumpbar .jbtn:hover{ border-color: color-mix(in oklab, var(--accent) 86%, transparent); }
+
+    .panelBody{ padding: 14px 16px 18px; }
+
+    details{
+      border:1px solid color-mix(in oklab, var(--border) 92%, transparent);
+      border-radius: var(--radius2);
+      background: color-mix(in oklab, var(--bg) 82%, transparent);
+      margin: 12px 0;
+      overflow:hidden;
+    }
+    summary{
+      cursor:pointer;
+      padding: 12px 12px;
+      list-style:none;
+      display:flex; justify-content:space-between; align-items:center; gap:10px;
+      user-select:none;
+    }
+    summary::-webkit-details-marker{ display:none; }
+    summary .stitle{ font-weight: 750; font-size: 13.5px; letter-spacing:.2px; }
+    summary .smeta{ color:var(--muted); font-size: 12.5px; }
+    details .content{
+      border-top:1px solid color-mix(in oklab, var(--border) 78%, transparent);
+      padding: 12px;
+    }
+
+    .grid{ display:grid; grid-template-columns: repeat(12, 1fr); gap: 12px; }
+    .field{ grid-column: span 6; display:flex; flex-direction:column; gap:7px; }
+    .field.small{ grid-column: span 3; }
+    .field.full{ grid-column: span 12; }
+    .field label{ font-size: 12.5px; color:var(--muted); }
+
+    input[type="text"], textarea, select{
+      background: color-mix(in oklab, var(--bg) 76%, transparent);
+      border:1px solid color-mix(in oklab, var(--border) 96%, transparent);
+      border-radius: 14px;
+      color: var(--text);
+      padding: 11px 12px;
+      font-size: 13.5px;
+      outline:none;
+    }
+    textarea{ min-height: 104px; resize: vertical; }
+    input:focus, textarea:focus, select:focus{
+      border-color: color-mix(in oklab, var(--accent) 92%, transparent);
+      box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent) 18%, transparent);
+    }
+
+    .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    .muted{ color:var(--muted); }
+
+    .twoCol{ display:grid; grid-template-columns: 1fr; gap:12px; }
+    @media (min-width: 980px){ .twoCol{ grid-template-columns: 1fr 1fr; } }
+
+    .card{
+      border:1px solid color-mix(in oklab, var(--border) 92%, transparent);
+      background: color-mix(in oklab, var(--bg) 82%, transparent);
+      border-radius: var(--radius2);
+      padding: 13px;
+    }
+    .card h3{ margin:0 0 9px; font-size: var(--fzH3); letter-spacing:.2px; font-weight:740; }
+
+    body:not(.editMode) input,
+    body:not(.editMode) textarea,
+    body:not(.editMode) select{
+      pointer-events:none;
+      opacity:.86;
+      filter: saturate(.95);
+    }
+
+    /* Allow NPC Notes to remain editable while Locked */
+    body:not(.editMode) .npcCard textarea[data-npc-key="notes"]{
+      pointer-events:auto !important;
+      opacity: 1 !important;
+      filter: none !important;
+    }
+    body:not(.editMode) [contenteditable="true"]{
+      pointer-events:none;
+      opacity:.86;
+    }
+
+    .readaloud{
+      font-family: var(--mono);
+      font-size: 12.75px;
+      white-space: pre-wrap;
+      background: color-mix(in oklab, var(--bg) 74%, transparent);
+      border:1px dashed color-mix(in oklab, var(--border) 96%, transparent);
+      border-radius: 14px;
+      padding: 12px;
+      min-height: 92px;
+    }
+
+    .imgGrid{ display:grid; grid-template-columns: 1fr; gap:12px; }
+    @media (min-width: 980px){ .imgGrid{ grid-template-columns: 1fr 1fr; } }
+    .imgBox{ display:flex; gap:12px; align-items:flex-start; flex-wrap:wrap; }
+    .imgPreview{
+      width: 240px;
+      aspect-ratio: 4 / 3;
+      border-radius: 16px;
+      border: 1px solid color-mix(in oklab, var(--border) 96%, transparent);
+      background: color-mix(in oklab, var(--bg) 78%, transparent);
+      overflow:hidden;
+      position:relative;
+      box-shadow: 0 12px 30px rgba(0,0,0,.40);
+    }
+    .imgPreview img{ width:100%; height:100%; object-fit:cover; display:block; }
+    .imgPreview .placeholder{
+      position:absolute; inset:0;
+      display:flex; align-items:center; justify-content:center;
+      color: var(--muted);
+      font-size: 12.5px;
+      text-align:center;
+      padding: 10px;
+    }
+
+    .tableWrap{
+      overflow:auto;
+      border-radius: 14px;
+      border:1px solid color-mix(in oklab, var(--border) 96%, transparent);
+    }
+    table{
+      width:100%;
+      border-collapse: collapse;
+      min-width: 720px;
+      background: color-mix(in oklab, var(--bg) 74%, transparent);
+    }
+    th, td{
+      border-bottom: 1px solid color-mix(in oklab, var(--border) 78%, transparent);
+      padding: 11px 12px;
+      text-align:left;
+      font-size: 13px;
+      vertical-align:top;
+    }
+    th{ color: var(--muted); font-weight:750; }
+    td[contenteditable="true"]{ outline:none; }
+    td[contenteditable="true"]:focus{
+      box-shadow: inset 0 0 0 2px color-mix(in oklab, var(--accent) 22%, transparent);
+      border-radius: 10px;
+    }
+
+    .history{
+      display:flex;
+      flex-direction:column;
+      gap:9px;
+      max-height: 240px;
+      overflow:auto;
+      padding-right:4px;
+    }
+    .historyItem{
+      border:1px solid color-mix(in oklab, var(--border) 92%, transparent);
+      background: color-mix(in oklab, var(--bg) 78%, transparent);
+      border-radius: 16px;
+      padding: 11px 12px;
+      font-size: 12.75px;
+      color: var(--text);
+    }
+    .historyItem .meta{ color: var(--muted); font-size: 11.75px; margin-bottom: 6px; }
+
+    .toast{
+      position: fixed;
+      bottom: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: color-mix(in oklab, var(--panel) 92%, transparent);
+      border:1px solid color-mix(in oklab, var(--border) 96%, transparent);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 999px;
+      box-shadow: var(--shadow);
+      font-size: 12.5px;
+      opacity:0;
+      pointer-events:none;
+      transition: .18s ease;
+      z-index: 200;
+    }
+    .toast.show{ opacity:1; }
+    .hidden{ display:none !important; }
+
+    .backdrop{
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.55);
+      display:none;
+      z-index: 500;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+    }
+    .backdrop.show{ display:flex; }
+    .modal{
+      width: min(900px, 100%);
+      max-height: min(82vh, 720px);
+      overflow:auto;
+      border-radius: 18px;
+      background: linear-gradient(180deg,
+        color-mix(in oklab, var(--panel) 96%, transparent),
+        color-mix(in oklab, var(--panel2) 96%, transparent)
+      );
+      border: 1px solid color-mix(in oklab, var(--border) 96%, transparent);
+      box-shadow: var(--shadow);
+    }
+    .modalHead{
+      position: sticky;
+      top: 0;
+      background: inherit;
+      border-bottom: 1px solid color-mix(in oklab, var(--border) 86%, transparent);
+      padding: 14px 16px;
+      display:flex;
+      justify-content: space-between;
+      align-items:center;
+      gap: 10px;
+      z-index: 1;
+    }
+    .modalHead h3{ margin:0; font-size: 14.5px; font-weight: 800; letter-spacing:.2px; }
+    .modalBody{ padding: 14px 16px 16px; }
+    .modalClose{ padding: 9px 12px; }
+
+    html[data-theme="parchment"] body{
+      background:
+        radial-gradient(900px 520px at 15% 0%, rgba(138,90,31,.10), transparent 60%),
+        radial-gradient(880px 520px at 95% 10%, rgba(42,94,155,.08), transparent 55%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+    }
+  
+    
+    .wikiLayout{ display:grid; grid-template-columns: 1fr; gap:12px; align-items:start; }
+    @media (min-width: 980px){ .wikiLayout{ grid-template-columns: 1fr 360px; } }
+    .infobox{ position: relative; }
+    @media (min-width: 980px){
+      .infobox{ position: sticky; top: 112px; }
+    }
+    .infobox .kv{ display:grid; grid-template-columns: 110px 1fr; gap:8px 10px; font-size: 13px; }
+    .infobox .k{ color: var(--muted); font-weight: 700; }
+    .infobox .v{ color: var(--text); }
+    .imgPreview.square{ aspect-ratio: 1 / 1; width: 100%; max-width: 320px; }
+
+    /* Settings modal should remain interactive even when the page is locked */
+    body:not(.editMode) .modal input,
+    body:not(.editMode) .modal textarea,
+    body:not(.editMode) .modal select,
+    body:not(.editMode) .modal button,
+    body:not(.editMode) .modal [contenteditable="true"]{
+      pointer-events:auto !important;
+      opacity: 1 !important;
+      filter: none !important;
+    }
+
+  
+    body:not(.editMode) .portraitUrlControls{ display:none; }
+
+  
+    .npcHeaderRow{ display:flex; align-items:stretch; justify-content:space-between; gap:14px; }
+    .npcThumb{ width:160px !important; height:160px !important; flex:0 0 160px; border-radius:16px; overflow:hidden; border:1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.12));
+      box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    }
+    .npcThumb img{ width:100%; height:100%; object-fit:cover; display:block; }
+    .npcThumb .ph{ width:100%; height:100%; display:flex; align-items:center; justify-content:center; color:var(--muted);
+      font-size:11px; text-align:center; padding:8px; }
+
+  
+    
+    /* Override global .field grid-span inside compact layouts */
+    .compactRow > .field{ grid-column: auto !important; }
+    .compactRow > .compactField{ grid-column: auto !important; }
+    .statRow > .field{ grid-column: auto !important; }
+
+
+    /* NPC compact rows */
+    .compactRow{ display:grid; width:100%; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, .8fr); gap:8px; }
+    .compactField{ min-width:0; }
+    .compactField label{ font-size:10.5px !important; opacity:.85; }
+
+    .compactField input{ padding:7px 8px !important; font-size:12.5px !important; width:100%; }
+
+    .statRow{ display:flex; gap:8px; flex-wrap:nowrap; overflow-x:auto; padding-bottom:4px; }
+    .statField{ min-width: 82px; }
+    .statField label{ font-size:10.5px !important; opacity:.85; }
+    .statField input{ padding:6px 7px !important; font-size:12px !important; }
+
+
+    /* NPC right column actions + footer */
+    .npcRightRow{ display:flex; align-items:flex-start; gap:10px; justify-content:flex-end; }
+.npcRightCol{ display:flex; flex-direction:column; gap:10px; align-items:stretch; }
+    .npcActionsTop{ display:flex; gap:8px; justify-content:flex-end; flex-wrap:wrap; }
+    .npcFooterBar{ display:flex; justify-content:space-between; align-items:center; gap:12px; margin-top:12px; }
+        .npcFooterLeft, .npcFooterRight{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+.npcFooterBar .btn.small{ padding:7px 10px; }
+    .npcDeleteBtn{ border-color: rgba(220,38,38,.35); color: rgb(220,38,38); }
+    .npcDeleteBtn:hover{ background: rgba(220,38,38,.10); }
+    body:not(.editMode) .npcActionsTop,
+    body:not(.editMode) .npcFooterBar,
+    body:not(.editMode) .npcFieldRollBtn{ display:none !important; }
+
+    .chip{ font-size:11px; padding:3px 8px; border-radius:999px; border:1px solid var(--border); background: rgba(255,255,255,.04); }
+
+    /* NPCs tab (v42 rebuild) */
+    .npcToolbar{
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      padding: 12px 14px;
+      border:1px solid color-mix(in oklab, var(--border) 92%, transparent);
+      background: color-mix(in oklab, var(--panel) 58%, transparent);
+      border-radius: var(--radius2);
+      margin-bottom: 12px;
+    }
+    .npcHeading{ margin:0; font-size: 18px; letter-spacing:.2px; }
+    .npcToolbarRight{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+
+    .btn.small{ padding:7px 10px; font-size:12px; }
+    .npcList{ display:grid; grid-template-columns: 1fr; gap: 12px; }
+    @media (min-width: 980px){
+      .npcList{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    .npcTitleRow{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom: 10px; }
+
+
+    /* NPC header layout (portrait top-right) */
+    .npcTopGrid{ display:grid; grid-template-columns: minmax(0, 1fr) auto; gap:14px; align-items:start; }
+    @media (max-width: 640px){
+      .npcTopGrid{ grid-template-columns: 1fr; }
+      .npcThumb{ justify-self:start; }
+    }
+    .npcTopBar{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:10px; }
+    .npcActions{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; justify-content:flex-start; }
+
+    /* Hide NPC action/roll controls when Locked */
+    body:not(.editMode) .npcActions,
+    body:not(.editMode) .npcFieldRollBtn{ display:none !important; }
+
+    /* Field label row (label + roll button) */
+    .fieldLabelRow{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+    .fieldLabelRow label{ margin:0; }
+
+    /* Stats: prevent overlap + keep gaps */
+    .statRow{ display:grid; grid-template-columns: repeat(6, minmax(56px, 1fr)); gap:8px; align-items:end; overflow-x:auto; padding-bottom:0; }
+    .statField{ min-width:0; }
+    .statField input{ width:100%; box-sizing:border-box; }
+.npcActions{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; justify-content:flex-end; }
+.npcDeleteBtn{ border-color: rgba(220,38,38,.35); color: rgb(220,38,38); }
+.npcDeleteBtn:hover{ background: rgba(220,38,38,.10); }
+    .npcTitle{ font-size: var(--fzH3); font-weight: 740; letter-spacing:.2px; }
+
+    .npcIdentity{ flex: 1 1 auto; min-width: 0; }
+    .npcIdentity .field{ margin:0; }
+    .npcIdentity .field input{ width:100%; }
+
+    /* Make NPC inputs feel compact */
+    .npcCard input[type="text"], .npcCard textarea{
+      padding: 8px 9px;
+      font-size: 12.8px;
+    }
+    .npcCard textarea{ min-height: 88px; }
+
+    .npcDetails summary .smeta{ opacity:.9; }
+
+  </style>
+</head>
+<body class="editMode">
+<div class="app">
+  <header>
+    <div class="headerInner">
+      <div class="topbar">
+      <div class="brand">
+        <h1>🜁 Shop Biography Builder (Template)</h1>
+        <div class="sub">DM-only • Fullscreen • Edit lock • Settings: themes + JSON import/export • (Test data: potion store)</div>
+      </div>
+      <div class="controls">
+        <label class="toggle" title="Lock/unlock editing for all fields">
+          <input id="editToggle" type="checkbox" checked />
+          <span class="switch"><span class="knob"></span></span>
+          <span class="tlabel"><span class="kbd">Unlocked</span></span>
+        </label>
+        <button class="btn ghost" id="btnSettings" title="Themes, import/export JSON, reset">⚙️ Settings</button>
+      </div>
+      </div>
+
+      <div class="tabs" role="tablist" aria-label="Shop Builder Tabs">
+      <button class="tabbtn" role="tab" aria-selected="true" data-tab="overview">Overview</button>
+      <button class="tabbtn" role="tab" aria-selected="false" data-tab="readaloud">Read-Aloud</button>
+      <button class="tabbtn" role="tab" aria-selected="false" data-tab="shopkeeper">Shopkeeper</button>
+      <button class="tabbtn" role="tab" aria-selected="false" data-tab="layout">Layout</button>
+      <button class="tabbtn" role="tab" aria-selected="false" data-tab="npcs">NPCs</button>
+      <button class="tabbtn" role="tab" aria-selected="false" data-tab="social">Social</button>
+      <button class="tabbtn" role="tab" aria-selected="false" data-tab="hooks">Hooks</button>
+      <button class="tabbtn" role="tab" aria-selected="false" data-tab="tables">Tables</button>
+      <button class="tabbtn" role="tab" aria-selected="false" data-tab="cheat">Cheat Sheet</button>
+      <button class="tabbtn" role="tab" aria-selected="false" data-tab="export">Export</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="panel tab" id="tab-overview" data-tab="overview">
+      <div class="panelHead">
+        <div>
+          <h2>Overview</h2>
+          <div class="hint">Core identity + images. Autosaves locally.</div>
+        </div>
+        <div class="row">
+          <span class="muted">Autosave:</span>
+          <span class="kbd" id="autosaveStatus">On</span>
+        </div>
+      </div>
+
+      <div class="jumpbar" aria-label="Jump to sections">
+        <button class="jbtn" data-jump="#ov-identity">Identity</button>
+        <button class="jbtn" data-jump="#ov-ownership">Ownership</button>
+        <button class="jbtn" data-jump="#ov-images">Images</button>
+      </div>
+
+      <div class="panelBody">
+        <details open id="ov-identity">
+          <summary><span class="stitle">Identity</span><span class="smeta">Name, type, location, reputation</span></summary>
+          <div class="content">
+            <div class="grid">
+              <div class="field">
+                <label for="shopName">Shop Name</label>
+                <input id="shopName" data-key="shopName" type="text" />
+              </div>
+              <div class="field">
+                <label for="shopType">Shop Type</label>
+                <select id="shopType" data-key="shopType">
+                  <option value="">— Choose —</option>
+                  <option>General Goods</option>
+                  <option>Specialist Craft</option>
+                  <option>Apothecary / Alchemy</option>
+                  <option>Magic-Adjacent</option>
+                  <option>Black Market / Discreet</option>
+                  <option>Service / Broker</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="location">Location (city/district/landmarks)</label>
+                <input id="location" data-key="location" type="text" />
+              </div>
+              <div class="field">
+                <label for="reputation">Reputation (what locals say)</label>
+                <input id="reputation" data-key="reputation" type="text" />
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details open id="ov-ownership">
+          <summary><span class="stitle">Ownership & Affiliations</span><span class="smeta">Who backs the shop</span></summary>
+          <div class="content">
+            <div class="grid">
+              <div class="field">
+                <label for="ownership">Ownership / Affiliation</label>
+                <input id="ownership" data-key="ownership" type="text" />
+              </div>
+              <div class="field">
+                <label for="years">Years in Operation</label>
+                <input id="years" data-key="years" type="text" />
+              </div>
+              <div class="field full">
+                <label for="rumors">Rumors / Street Talk</label>
+                <textarea id="rumors" data-key="rumors"></textarea>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details open id="ov-images">
+          <summary><span class="stitle">Images</span><span class="smeta">Shop + shopkeeper portraits</span></summary>
+          <div class="content">
+            <div class="imgGrid">
+              <div class="card">
+                <h3>Shop Image</h3>
+                <div class="imgBox">
+                  <div class="imgPreview" id="shopImgPreview">
+                    <div class="placeholder">No image yet.<br/>Upload a shop exterior/interior image.</div>
+                    <img class="hidden" alt="Shop image preview" />
+                  </div>
+                  <div style="flex:1; min-width:240px;">
+                    <div class="row">
+                      <button class="btn primary" id="btnShopImg">Upload</button>
+                      <button class="btn bad" id="btnShopImgClear">Remove</button>
+                      <input id="shopImgFile" type="file" accept="image/*" class="hidden" />
+                    </div>
+                    <div class="grid" style="margin-top:12px;">
+                      <div class="field full">
+                        <label for="shopImgCaption">Caption / notes (optional)</label>
+                        <textarea id="shopImgCaption" data-key="shopImgCaption"></textarea>
+                      </div>
+                    </div>
+                    <div class="muted" style="font-size:12.5px;">Stored locally in your browser via autosave.</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card">
+                <h3>Shopkeeper Image</h3>
+                <div class="imgBox">
+                  <div class="imgPreview" id="keeperImgPreview">
+                    <div class="placeholder">No image yet.<br/>Upload a shopkeeper portrait.</div>
+                    <img class="hidden" alt="Shopkeeper image preview" />
+                  </div>
+                  <div style="flex:1; min-width:240px;">
+                    <div class="row">
+                      <button class="btn primary" id="btnKeeperImg">Upload</button>
+                      <button class="btn bad" id="btnKeeperImgClear">Remove</button>
+                      <input id="keeperImgFile" type="file" accept="image/*" class="hidden" />
+                    </div>
+                    <div class="grid" style="margin-top:12px;">
+                      <div class="field full">
+                        <label for="keeperImgCaption">Caption / notes (optional)</label>
+                        <textarea id="keeperImgCaption" data-key="keeperImgCaption"></textarea>
+                      </div>
+                    </div>
+                    <div class="muted" style="font-size:12.5px;">Stored locally in your browser via autosave.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <section class="panel tab hidden" id="tab-readaloud" data-tab="readaloud">
+      <div class="panelHead">
+        <div>
+          <h2>Read-Aloud</h2>
+          <div class="hint">No tone system. Exterior + interior create a preview you can copy.</div>
+        </div>
+        <div class="row">
+          <button class="btn" id="btnCopyAllReadaloud">Copy All</button>
+        </div>
+      </div>
+
+      <div class="jumpbar" aria-label="Jump to sections">
+        <button class="jbtn" data-jump="#ra-exterior">Exterior</button>
+        <button class="jbtn" data-jump="#ra-interior">Interior</button>
+        <button class="jbtn" data-jump="#ra-dm">DM Notes</button>
+      </div>
+
+      <div class="panelBody">
+        <details open id="ra-exterior">
+          <summary><span class="stitle">Arrival / Exterior (Read Aloud)</span><span class="smeta">Visual + sensory + people + mystery</span></summary>
+          <div class="content twoCol">
+            <div class="card">
+              <h3>Prompt fields</h3>
+              <div class="grid">
+                <div class="field full">
+                  <label for="extVisual">Visuals (architecture, signage)</label>
+                  <textarea id="extVisual" data-key="extVisual"></textarea>
+                </div>
+                <div class="field full">
+                  <label for="extSensory">Sound / smell</label>
+                  <textarea id="extSensory" data-key="extSensory"></textarea>
+                </div>
+                <div class="field full">
+                  <label for="extPeople">People / foot traffic</label>
+                  <textarea id="extPeople" data-key="extPeople"></textarea>
+                </div>
+                <div class="field full">
+                  <label for="extMystery">Mystery cues</label>
+                  <textarea id="extMystery" data-key="extMystery"></textarea>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <h3>Read-aloud preview</h3>
+              <div class="readaloud" id="previewExterior"></div>
+              <div class="row" style="margin-top:12px;">
+                <button class="btn" data-copy="#previewExterior">Copy</button>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details open id="ra-interior">
+          <summary><span class="stitle">Interior First Impression (Read Aloud)</span><span class="smeta">Layout + mood + social + sensory</span></summary>
+          <div class="content twoCol">
+            <div class="card">
+              <h3>Prompt fields</h3>
+              <div class="grid">
+                <div class="field full">
+                  <label for="intLayout">Layout clarity</label>
+                  <textarea id="intLayout" data-key="intLayout"></textarea>
+                </div>
+                <div class="field full">
+                  <label for="intMood">Mood</label>
+                  <textarea id="intMood" data-key="intMood"></textarea>
+                </div>
+                <div class="field full">
+                  <label for="intSocial">Social scene</label>
+                  <textarea id="intSocial" data-key="intSocial"></textarea>
+                </div>
+                <div class="field full">
+                  <label for="intSensory">Sensory hook</label>
+                  <textarea id="intSensory" data-key="intSensory"></textarea>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <h3>Read-aloud preview</h3>
+              <div class="readaloud" id="previewInterior"></div>
+              <div class="row" style="margin-top:12px;">
+                <button class="btn" data-copy="#previewInterior">Copy</button>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details open id="ra-dm">
+          <summary><span class="stitle">DM Notes (Read-Aloud)</span><span class="smeta">Optional guidance</span></summary>
+          <div class="content">
+            <div class="grid">
+              <div class="field full">
+                <label for="readAloudDM">DM-only notes (what to emphasize, what to conceal)</label>
+                <textarea id="readAloudDM" data-key="readAloudDM"></textarea>
+              </div>
+            </div>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <section class="panel tab hidden" id="tab-shopkeeper" data-tab="shopkeeper">
+      <div class="panelHead">
+        <div>
+          <h2>Shopkeeper</h2>
+          <div class="hint">Full profile + 4 context introductions.</div>
+        </div>
+        <div class="row">
+          </div>
+      </div>
+
+      <div class="jumpbar" aria-label="Jump to sections">
+        <button class="jbtn" data-jump="#sk-basics">Basics</button>
+        <button class="jbtn" data-jump="#sk-where">Where are they?</button>
+        <button class="jbtn" data-jump="#sk-secrets">Secrets</button>
+      </div>
+
+      <div class="panelBody">
+        <div class="wikiLayout">
+          <div class="wikiMain">
+
+        <details open id="sk-basics">
+          <summary><span class="stitle">Shopkeeper Basics</span><span class="smeta">DM-facing</span></summary>
+          <div class="content">
+            <div class="grid">
+              <div class="field">
+                <label for="keeperName">Name</label>
+                <input id="keeperName" data-key="keeperName" type="text" />
+              </div>
+              <div class="field">
+                <label for="keeperRace">Race/Species</label>
+                <input id="keeperRace" data-key="keeperRace" type="text" />
+              </div>
+              <div class="field">
+                <label for="keeperRole">Role</label>
+                <input id="keeperRole" data-key="keeperRole" type="text" />
+              </div>
+              <div class="field">
+                <label for="keeperPosture">Default attitude</label>
+                <select id="keeperPosture" data-key="keeperPosture">
+                  <option>Neutral professional</option>
+                  <option>Hospitable / welcoming</option>
+                  <option>Suspicious / guarded</option>
+                  <option>Performative / theatrical</option>
+                  <option>Hostile unless provoked</option>
+                </select>
+              </div>
+
+              <div class="field full">
+                <label for="keeperAppearance">Appearance</label>
+                <textarea id="keeperAppearance" data-key="keeperAppearance"></textarea>
+              </div>
+              <div class="field full">
+                <label for="keeperPersonality">Personality</label>
+                <textarea id="keeperPersonality" data-key="keeperPersonality"></textarea>
+              </div>
+              <div class="field full">
+                <label for="keeperMotivation">Motivations</label>
+                <textarea id="keeperMotivation" data-key="keeperMotivation"></textarea>
+              </div>
+              <div class="field full">
+                <label for="keeperPower">Power / deterrence</label>
+                <textarea id="keeperPower" data-key="keeperPower"></textarea>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details open id="sk-where">
+          <summary><span class="stitle">Where Is the Shopkeeper?</span><span class="smeta">Random (one result shown)</span></summary>
+          <div class="content">
+            <div class="row" style="margin-bottom:10px;">
+              <button class="btn primary" id="btnWhereKeeper">Where is the shopkeeper?</button>
+              <button class="btn" id="btnCopyWhereKeeper" title="Copy the current result">Copy</button>
+            </div>
+            <div class="readaloud" id="whereKeeperOut" style="min-height:70px;">—</div>
+            <div class="muted" style="font-size:12.5px; margin-top:8px;">
+              Click to randomly determine where the shopkeeper is when the party enters. (Only one result is shown.)
+            </div>
+          </div>
+        </details>
+
+<details open id="sk-secrets">
+          <summary><span class="stitle">Secrets / Fears / Ethics</span><span class="smeta">DM-only</span></summary>
+          <div class="content">
+            <div class="grid">
+              <div class="field full">
+                <label for="keeperSecrets">Secrets</label>
+                <textarea id="keeperSecrets" data-key="keeperSecrets"></textarea>
+              </div>
+              <div class="field full">
+                <label for="keeperFears">Fears</label>
+                <textarea id="keeperFears" data-key="keeperFears"></textarea>
+              </div>
+              <div class="field">
+                <label for="keeperEthics">Ethical leaning</label>
+                <input id="keeperEthics" data-key="keeperEthics" type="text" />
+              </div>
+            </div>
+          </div>
+        </details>
+      
+          </div>
+
+          <aside class="card infobox" aria-label="Shopkeeper infobox">
+            <h3 style="margin-top:0;">Shopkeeper</h3>
+
+            <div class="imgPreview square" id="keeperPortraitPreview" style="margin-bottom:12px;">
+              <div class="placeholder">No portrait yet.<br/>Set a URL (or use the uploaded image from Overview).</div>
+              <img class="hidden" alt="Shopkeeper portrait preview" />
+            </div>
+
+            <div class="portraitUrlControls">
+            <div class="row" style="margin-bottom:10px;">
+              <button class="btn primary" id="btnApplyPortraitUrl" title="Apply the portrait URL (unlocked mode)">Apply URL</button>
+              <button class="btn bad" id="btnClearPortraitUrl" title="Clear portrait URL">Clear</button>
+            </div>
+
+            <div class="grid">
+              <div class="field full">
+                <label for="keeperPortraitUrl">Portrait URL (edit mode)</label>
+                <input id="keeperPortraitUrl" data-key="keeperPortraitUrl" type="text" placeholder="(Portrait URL e.g., https://...)" />
+              </div>
+            </div>
+          </div>
+
+            <div class="card" style="margin-top:12px;">
+              <div class="kv">
+                <div class="k">Name</div><div class="v" id="ib_name">—</div>
+                <div class="k">Species</div><div class="v" id="ib_race">—</div>
+                <div class="k">Role</div><div class="v" id="ib_role">—</div>
+                <div class="k">Attitude</div><div class="v" id="ib_posture">—</div>
+                <div class="k">Ethics</div><div class="v" id="ib_ethics">—</div>
+              </div>
+            </div>
+
+            <div class="muted" style="font-size:12.5px; margin-top:10px;">
+              Tip: URL portrait is stored in JSON for import/export.
+            </div>
+          </aside>
+        </div>
+</div>
+    </section>
+
+    <section class="panel tab hidden" id="tab-layout" data-tab="layout">
+      <div class="panelHead">
+        <div>
+          <h2>Layout</h2>
+          <div class="hint">Exterior + interior structure + security.</div>
+        </div>
+      </div>
+
+      <div class="jumpbar" aria-label="Jump to sections">
+        <button class="jbtn" data-jump="#ly-exterior">Exterior</button>
+        <button class="jbtn" data-jump="#ly-interior">Interior</button>
+        <button class="jbtn" data-jump="#ly-floorplan">Floorplan</button>
+        <button class="jbtn" data-jump="#ly-security">Security</button>
+      </div>
+
+      <div class="panelBody">
+        <details open id="ly-exterior">
+          <summary><span class="stitle">Exterior</span><span class="smeta">DM-facing</span></summary>
+          <div class="content">
+            <div class="grid">
+              <div class="field full">
+                <label for="extStyle">Building style / signage / street presence</label>
+                <textarea id="extStyle" data-key="extStyle"></textarea>
+              </div>
+              <div class="field">
+                <label for="windows">Windows / visibility</label>
+                <input id="windows" data-key="windows" type="text" />
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details open id="ly-interior">
+          <summary><span class="stitle">Interior Layout</span><span class="smeta">Rooms, floors, storage</span></summary>
+          <div class="content">
+            <div class="grid">
+              <div class="field">
+                <label for="floors">Floors</label>
+                <input id="floors" data-key="floors" type="text" />
+              </div>
+              <div class="field">
+                <label for="primaryAreas">Primary areas</label>
+                <input id="primaryAreas" data-key="primaryAreas" type="text" />
+              </div>
+              <div class="field full">
+                <label for="secondaryRooms">Secondary rooms</label>
+                <textarea id="secondaryRooms" data-key="secondaryRooms"></textarea>
+              </div>
+              <div class="field full">
+                <label for="hiddenAreas">Hidden / restricted areas</label>
+                <textarea id="hiddenAreas" data-key="hiddenAreas"></textarea>
+              </div>
+              <div class="field full">
+                <label for="storage">Storage areas</label>
+                <textarea id="storage" data-key="storage"></textarea>
+              </div>
+            </div>
+          </div>
+        </details>
+
+<details open id="ly-floorplan">
+          <summary><span class="stitle">Floorplan (ASCII)</span><span class="smeta">Quick improv map</span></summary>
+          <div class="content">
+            <div class="grid">
+              <div class="field full">
+                <label for="floorplanAscii">ASCII floorplan</label>
+                <textarea id="floorplanAscii" data-key="floorplanAscii" class="readaloud" style="min-height:220px;" placeholder="+-------------------------+
+|  FRONT / STREET         |
+|  [Display]   [Counter]  |
+|     ____        ____    |
+|    |____|      |____|   |
+|                         |
+|  [Shelves]   [Nook]     |
+|                         |
+|   +-----+   +--------+  |
+|   |LAB  |---|CELLAR  |  |
+|   +-----+   +--------+  |
++-------------------------+"></textarea>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details open id="ly-security">
+          <summary><span class="stitle">Entrances, Exits, Security</span><span class="smeta">DM-only</span></summary>
+          <div class="content">
+            <div class="grid">
+              <div class="field full">
+                <label for="entries">Entrances & exits</label>
+                <textarea id="entries" data-key="entries"></textarea>
+              </div>
+              <div class="field full">
+                <label for="security">Security & deterrents</label>
+                <textarea id="security" data-key="security"></textarea>
+              </div>
+            </div>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <section class="panel tab hidden" id="tab-npcs" data-tab="npcs">
+  <div class="npcToolbar" role="region" aria-label="NPCs controls">
+    <div class="npcToolbarLeft">
+      <h2 class="npcHeading">NPCs</h2>
+    </div>
+    <div class="npcToolbarRight">
+      <button class="btn primary" id="btnNpcCreate" type="button">Create new</button>
+    </div>
+  </div>
+
+  <div class="panelBody">
+    <div id="npcList" class="npcList" aria-label="NPC list"></div>
+  </div>
+</section>
+
+    <section class="panel tab hidden" id="tab-social" data-tab="social">
+      <div class="panelHead">
+        <div>
+          <h2>Social</h2>
+          <div class="hint">Negotiation + escalation notes.</div>
+        </div>
+      </div>
+
+      <div class="jumpbar" aria-label="Jump to sections">
+        <button class="jbtn" data-jump="#so-negotiation">Negotiation</button>
+        <button class="jbtn" data-jump="#so-escalation">Escalation</button>
+      </div>
+
+      <div class="panelBody">
+        <details open id="so-negotiation">
+          <summary><span class="stitle">Negotiation & Standing</span><span class="smeta">Roleplay-first</span></summary>
+          <div class="content">
+            <div class="grid">
+              <div class="field full"><label for="politenessRewards">How politeness is rewarded</label><textarea id="politenessRewards" data-key="politenessRewards"></textarea></div>
+              <div class="field full"><label for="reputationService">How reputation affects service</label><textarea id="reputationService" data-key="reputationService"></textarea></div>
+              <div class="field full"><label for="resentmentTriggers">What earns favor or resentment</label><textarea id="resentmentTriggers" data-key="resentmentTriggers"></textarea></div>
+            </div>
+          </div>
+        </details>
+
+        <details open id="so-escalation">
+          <summary><span class="stitle">Conflict & Escalation</span><span class="smeta">Consequences</span></summary>
+          <div class="content">
+            <div class="grid">
+              <div class="field full"><label for="warningSigns">Early warning signs</label><textarea id="warningSigns" data-key="warningSigns"></textarea></div>
+              <div class="field full"><label for="immediateConsequences">Immediate consequences</label><textarea id="immediateConsequences" data-key="immediateConsequences"></textarea></div>
+              <div class="field full"><label for="longTermFallout">Long-term fallout</label><textarea id="longTermFallout" data-key="longTermFallout"></textarea></div>
+              <div class="field full"><label for="affiliationEscalation">Affiliation-based response notes</label><textarea id="affiliationEscalation" data-key="affiliationEscalation"></textarea></div>
+            </div>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <section class="panel tab hidden" id="tab-hooks" data-tab="hooks">
+      <div class="panelHead">
+        <div>
+          <h2>Hooks</h2>
+          <div class="hint">Light hook density by default (1–2). Add more as needed.</div>
+        </div>
+        <div class="row">
+          <button class="btn" id="btnAddHook">Add Hook</button>
+          <button class="btn" id="btnClearHooks">Clear Hooks</button>
+        </div>
+      </div>
+
+      <div class="jumpbar" aria-label="Jump to sections">
+        <button class="jbtn" data-jump="#hk-hooks">Hooks</button>
+        <button class="jbtn" data-jump="#hk-secrets">Secrets</button>
+      </div>
+
+      <div class="panelBody">
+        <details open id="hk-hooks">
+          <summary><span class="stitle">Story Hooks</span><span class="smeta">Pre-filled for potion shop</span></summary>
+          <div class="content"><div class="grid" id="hooksGrid"></div></div>
+        </details>
+
+        <details open id="hk-secrets">
+          <summary><span class="stitle">Hidden Truths (Optional)</span><span class="smeta">DM-only</span></summary>
+          <div class="content">
+            <div class="grid">
+              <div class="field full"><label for="hiddenTruths">Hidden truths</label><textarea id="hiddenTruths" data-key="hiddenTruths"></textarea></div>
+              <div class="field full"><label for="secretAffiliation">Secret affiliation</label><textarea id="secretAffiliation" data-key="secretAffiliation"></textarea></div>
+              <div class="field full"><label for="debtCrime">Debt / crime / compromise</label><textarea id="debtCrime" data-key="debtCrime"></textarea></div>
+            </div>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <section class="panel tab hidden" id="tab-tables" data-tab="tables">
+      <div class="panelHead">
+        <div>
+          <h2>Tables</h2>
+          <div class="hint">Rolls pick a random option from each table. Add/remove options. Each table keeps Last Roll History.</div>
+        </div>
+        <div class="row">
+          <button class="btn primary" id="btnRollScene">Roll Scene (multi-table)</button>
+          <button class="btn" id="btnClearHistory">Clear History</button>
+        </div>
+      </div>
+
+      <div class="jumpbar" aria-label="Jump to sections" id="tablesJump"></div>
+      <div class="panelBody" id="tablesHost"></div>
+    </section>
+
+    <section class="panel tab hidden" id="tab-cheat" data-tab="cheat">
+      <div class="panelHead">
+        <div>
+          <h2>Cheat Sheet</h2>
+          <div class="hint">At-a-glance cards + “If the players do X…”</div>
+        </div>
+        <div class="row"><button class="btn" id="btnCopyCheat">Copy Cheat Sheet</button></div>
+      </div>
+
+      <div class="jumpbar" aria-label="Jump to sections">
+        <button class="jbtn" data-jump="#cs-glance">At-a-glance</button>
+        <button class="jbtn" data-jump="#cs-ifs">If the players do X…</button>
+      </div>
+
+      <div class="panelBody">
+        <div class="twoCol">
+          <div class="card" id="cs-glance">
+            <h3>At-a-glance</h3>
+            <div class="grid">
+              <div class="field full"><label for="vibe">Overall vibe</label><input id="vibe" data-key="vibe" type="text" /></div>
+              <div class="field full"><label for="keeperOneLine">Shopkeeper in one sentence</label><input id="keeperOneLine" data-key="keeperOneLine" type="text" /></div>
+              <div class="field full"><label for="mostImportantNpc">Most important NPC</label><input id="mostImportantNpc" data-key="mostImportantNpc" type="text" /></div>
+              <div class="field full"><label for="oneSecret">One secret</label><input id="oneSecret" data-key="oneSecret" type="text" /></div>
+              <div class="field full"><label for="oneThingWrong">One thing that can go wrong</label><input id="oneThingWrong" data-key="oneThingWrong" type="text" /></div>
+            </div>
+          </div>
+
+          <div class="card" id="cs-ifs">
+            <h3>If the players do X…</h3>
+            <div class="grid">
+              <div class="field full"><label for="ifSnoop">If they snoop</label><textarea id="ifSnoop" data-key="ifSnoop"></textarea></div>
+              <div class="field full"><label for="ifBribe">If they bribe</label><textarea id="ifBribe" data-key="ifBribe"></textarea></div>
+              <div class="field full"><label for="ifThreaten">If they threaten</label><textarea id="ifThreaten" data-key="ifThreaten"></textarea></div>
+              <div class="field full"><label for="ifReturn">If they leave and return later</label><textarea id="ifReturn" data-key="ifReturn"></textarea></div>
+            </div>
+          </div>
+        </div>
+
+        <details open>
+          <summary><span class="stitle">DM Notes (Cheat Sheet)</span><span class="smeta">Optional</span></summary>
+          <div class="content">
+            <div class="grid"><div class="field full"><label for="cheatDM">DM-only quick notes</label><textarea id="cheatDM" data-key="cheatDM"></textarea></div></div>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <section class="panel tab hidden" id="tab-export" data-tab="export">
+      <div class="panelHead">
+        <div>
+          <h2>Export</h2>
+          <div class="hint">Markdown export for your notes. JSON import/export lives in Settings.</div>
+        </div>
+        <div class="row">
+          <button class="btn primary" id="btnBuildMarkdown">Build Markdown</button>
+          <button class="btn" id="btnCopyMarkdown">Copy Markdown</button>
+        </div>
+      </div>
+
+      <div class="jumpbar" aria-label="Jump to sections">
+        <button class="jbtn" data-jump="#ex-md">Markdown</button>
+      </div>
+
+      <div class="panelBody">
+        <details open id="ex-md">
+          <summary><span class="stitle">Markdown Preview</span><span class="smeta">Notion/Obsidian-friendly</span></summary>
+          <div class="content">
+            <textarea id="markdownOut" class="readaloud" style="min-height:280px; width:100%;" readonly></textarea>
+          </div>
+        </details>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast"></div>
+
+  <div class="backdrop" id="settingsBackdrop" role="dialog" aria-modal="true" aria-label="Settings">
+    <div class="modal">
+      <div class="modalHead">
+        <h3>⚙️ Settings</h3>
+        <button class="btn modalClose" id="btnCloseSettings">Close</button>
+      </div>
+      <div class="modalBody">
+        <div class="grid">
+          <div class="field">
+            <label for="themeSelect">Theme</label>
+            <select id="themeSelect">
+              <option value="gilded-midnight">Gilded Midnight (default)</option>
+              <option value="forest-apothecary">Forest Apothecary (alchemy)</option>
+              <option value="arcane-ice">Arcane Ice (wizardry)</option>
+              <option value="parchment">Parchment (scribe / library)</option>
+
+              <option value="iron-forge">Iron Forge (smithy)</option>
+              <option value="sunlit-bazaar">Sunlit Bazaar (general goods)</option>
+              <option value="shadow-bazaar">Shadow Bazaar (black market)</option>
+              <option value="celestial-chapel">Celestial Chapel (temple / relics)</option>
+              <option value="storm-docks">Storm Docks (shipwright / trade)</option>
+              <option value="fey-bloom">Fey Bloom (druid / fey)</option>
+              <option value="dragon-hoard">Dragon Hoard (luxury / rare)</option>
+              <option value="gloom-crypt">Gloom Crypt (occult)</option>
+</select>
+          </div>
+
+          <div class="field full">
+            <label for="demographicsProfile">NPC demographics profile</label>
+            <select id="demographicsProfile">
+              <option value="Human_30">Human 30% (balanced)</option>
+              <option value="Elf_40">Elf 40% (elven region)</option>
+            </select>
+            <div class="muted" style="font-size:12px; margin-top:6px;">Used by NPC “Roll” buttons when selecting a race.</div>
+          </div>
+
+
+          
+          <div class="field full">
+            <label class="row" style="justify-content:space-between; align-items:center;">
+              <span>Debugger</span>
+              <span class="chip">Beta</span>
+            </label>
+            <label class="row" style="gap:10px; align-items:center; margin-top:6px;">
+              <input type="checkbox" id="debugToggle" />
+              <span class="muted">Show debug panel and log roll events.</span>
+            </label>
+          </div>
+<div class="field">
+            <label>Autosave</label>
+            <div class="row">
+              <button class="btn" id="btnForceSave">Save now</button>
+              <button class="btn bad" id="btnResetAll">Reset (clear autosave)</button>
+            </div>
+          </div>
+
+          
+          <div class="field full">
+            <label>Import / Export</label>
+            <div class="row" style="align-items:flex-end;">
+              <div style="min-width:240px; flex:0 0 auto;">
+                <label for="exportSelect" class="muted" style="display:block; margin-bottom:6px;">Export format</label>
+                <select id="exportSelect">
+                  <option value="json">JSON (builder data)</option>
+                  <option value="obsidian">Obsidian Markdown (.md)</option>
+                  <option value="markdown">Plain Markdown (.md)</option>
+                </select>
+              </div>
+              <button class="btn primary" id="btnExport">Export</button>
+              <button class="btn" id="btnImportJson">Import JSON</button>
+              <input id="importFile" type="file" accept="application/json" class="hidden" />
+              <span class="muted">Import replaces current fields/tables/images stored in the JSON.</span>
+            </div>
+          </div>
+</div>
+
+          <div class="field full">
+            <label>About</label>
+            <div class="card">
+              <div class="muted" style="font-size:13px;">
+                This is a reusable D&D shop template builder. It stores data locally in your browser (localStorage).
+                Use <span class="kbd">Export JSON</span> to move a shop between devices or save versions.
+                Use <span class="kbd">Locked</span> mode during play to avoid accidental edits.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const $ = (sel, root=document) => root.querySelector(sel);
+const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
+const STORAGE_KEY = "dnd_shop_builder_dm_only_v3";
+
+
+let localState = { meta:{}, fields:{}, tables:{} }; // init early to avoid TDZ
+function toast(msg){
+  const t = $("#toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toast._t);
+  toast._t = setTimeout(()=>t.classList.remove("show"), 1400);
+}
+function safeText(v){ return (v ?? "").toString(); }
+
+function downloadText(filename, text){
+  const blob = new Blob([text], {type:"application/json;charset=utf-8"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 500);
+}
+
+/* Tabs */
+function setTab(tabName){
+  $$(".tabbtn").forEach(b => b.setAttribute("aria-selected", b.dataset.tab === tabName ? "true" : "false"));
+  $$(".tab").forEach(s => s.classList.toggle("hidden", s.dataset.tab !== tabName));
+  history.replaceState(null, "", "#"+tabName);
+  document.querySelector("main").scrollTo({top:0, behavior:"instant"});
+}
+$$(".tabbtn").forEach(btn => btn.addEventListener("click", () => setTab(btn.dataset.tab)));
+
+/* Jump buttons */
+function jumpTo(selector){
+  const target = document.querySelector(selector);
+  if(!target) return;
+  if(target.tagName.toLowerCase() === "details") target.open = true;
+  const main = document.querySelector("main");
+  const rect = target.getBoundingClientRect();
+  const mainRect = main.getBoundingClientRect();
+  const y = (rect.top - mainRect.top) + main.scrollTop - 10;
+  main.scrollTo({top:y, behavior:"smooth"});
+}
+document.addEventListener("click", (e) => {
+  const jb = e.target.closest("[data-jump]");
+  if(!jb) return;
+  jumpTo(jb.getAttribute("data-jump"));
+});
+
+/* Copy buttons */
+document.addEventListener("click", async (e) => {
+  const btn = e.target.closest("[data-copy]");
+  if(!btn) return;
+  const target = btn.getAttribute("data-copy");
+  const el = document.querySelector(target);
+  if(!el) return;
+  const text = el.value !== undefined ? el.value : el.textContent;
+  try{ await navigator.clipboard.writeText(text); toast("Copied."); }
+  catch{ toast("Copy failed (browser permission)."); }
+});
+
+/* Edit mode lock */
+const editToggle = $("#editToggle");
+function applyEdit(){
+  document.body.classList.toggle("editMode", !!editToggle.checked);
+  $(".tlabel", editToggle.closest(".toggle")).innerHTML = editToggle.checked ? '<span class="kbd">Unlocked</span>' : '<span class="kbd">Locked</span>';
+  const editable = !!editToggle.checked;
+  $$("[contenteditable]").forEach(el => el.setAttribute("contenteditable", editable ? "true" : "false"));
+}
+editToggle.addEventListener("change", () => { applyEdit();
+applyDebuggerUI(); saveAll(); });
+
+/* Settings modal + theme */
+const settingsBackdrop = $("#settingsBackdrop");
+const btnSettings = $("#btnSettings");
+const btnCloseSettings = $("#btnCloseSettings");
+const themeSelect = $("#themeSelect");
+const demographicsProfileSelect = $("#demographicsProfile");
+
+function openSettings(){
+  settingsBackdrop.classList.add("show");
+  themeSelect.value = document.documentElement.getAttribute("data-theme") || "gilded-midnight";
+  if (demographicsProfileSelect) demographicsProfileSelect.value = getDemographicsProfile();
+}
+function closeSettings(){ settingsBackdrop.classList.remove("show"); }
+
+btnSettings.addEventListener("click", openSettings);
+btnCloseSettings.addEventListener("click", closeSettings);
+settingsBackdrop.addEventListener("click", (e) => { if(e.target === settingsBackdrop) closeSettings(); });
+
+themeSelect.addEventListener("change", () => {
+  document.documentElement.setAttribute("data-theme", themeSelect.value);
+  localState.meta.theme = themeSelect.value;
+  saveAll();
+  toast("Theme set.");
+});
+
+if (demographicsProfileSelect){
+  demographicsProfileSelect.addEventListener("change", () => {
+    localState.meta.demographicsProfile = demographicsProfileSelect.value;
+    saveAll();
+    toast("Demographics profile set.");
+  });
+}
+
+/* NPC Cards */
+const npcHost = $("#npcGrid");
+const NPC_COUNT = 6;
+const npcRoleOptions = [
+  "Assistant / clerk","Guard / bouncer","Customer (regular)","Customer (outsider)","Courier / messenger",
+  "Rival / competitor","Spy / observer","Family member","Supplier / vendor","Official / inspector"
+];
+function npcCard(i){
+  const idx = i+1;
+  const el = document.createElement("div");
+  el.className = "card";
+  el.style.gridColumn = "span 6";
+  el.innerHTML = `
+    <div class="npcHeaderRow">
+      <div style="flex:1 1 auto; min-width:0;">
+        <div class="row" style="justify-content:space-between; align-items:center; margin:0 0 10px 0;">
+          <h3 style="margin:0;">NPC Slot ${idx}</h3>
+          <button class="btn primary" id="btnNpcRoll_${idx}" type="button">Roll</button>
+        </div>
+
+        <div class="grid" style="margin:0;">
+          <!-- Row 1: Name -->
+          <div class="field full">
+            <label>Name</label>
+            <input type="text" data-key="npc_${idx}_full_name" placeholder="(Name)" />
+          </div>
+
+          <!-- Row 2: Race + Age (human equivalent) -->
+          <div class="compactRow" style="width:100%; grid-column:1 / -1;">
+          <div class="field compactField">
+            <label>Race / species</label>
+            <input type="text" data-key="npc_${idx}_race" placeholder="(Race / species)" />
+          </div>
+          <div class="field compactField">
+            <label>Class</label>
+            <input type="text" data-key="npc_${idx}_class" placeholder="(Class)" />
+          </div>
+          <div class="field compactField">
+            <label>Age (human equiv.)</label>
+            <input type="text" data-key="npc_${idx}_age_human_equivalent_years" placeholder="(years)" />
+          </div>
+        </div>
+        </div>
+      </div>
+
+      <div class="npcThumb" id="npcPortraitPreview_${idx}" aria-label="NPC portrait thumbnail" style="width:160px;height:160px;flex:0 0 160px;">
+        <div class="ph">No image</div>
+        <img class="hidden" alt="NPC portrait" />
+      </div>
+    </div>
+
+    <!-- Collapsed by default: In-scene -->
+    <details style="margin-top:12px;">
+      <summary><span class="stitle">In-scene</span><span class="smeta">What they’re doing, why they’re here</span></summary>
+      <div class="content">
+        <div class="grid">
+          <div class="field full">
+            <label>What are they doing?</label>
+            <textarea data-key="npc_${idx}_doing" placeholder="(What they are doing right now)"></textarea>
+          </div>
+
+          <div class="field full">
+            <label>Reason for being here (right now)</label>
+            <textarea data-key="npc_${idx}_reason" placeholder="(Reason)"></textarea>
+          </div>
+        </div>
+      </div>
+    </details>
+<!-- Collapsed by default: Description -->
+    <details style="margin-top:12px;">
+      <summary><span class="stitle">Description</span><span class="smeta">Appearance, personality, secret</span></summary>
+      <div class="content">
+        <div class="grid">
+          <div class="field full"><label>Appearance</label><textarea data-key="npc_${idx}_appearance" placeholder="(Appearance)"></textarea></div>
+          <div class="field full"><label>Personality</label><textarea data-key="npc_${idx}_personality" placeholder="(Personality)"></textarea></div>
+          <div class="field full"><label>Secret</label><textarea data-key="npc_${idx}_secret" placeholder="(Secret)"></textarea></div>
+        </div>
+      </div>
+    </details>
+
+    <!-- Collapsed by default: Background -->
+    <details style="margin-top:12px;">
+      <summary><span class="stitle">Background</span><span class="smeta">Profession, socials, class, alignment</span></summary>
+      <div class="content">
+        <div class="grid">
+          <div class="field"><label>Profession</label><input type="text" data-key="npc_${idx}_profession" placeholder="(Profession)" /></div>
+          <div class="field"><label>Social</label><input type="text" data-key="npc_${idx}_social" placeholder="(Social standing)" /></div>
+<div class="field"><label>Alignment</label><input type="text" data-key="npc_${idx}_alignment" placeholder="(Alignment)" /></div>
+
+          <div class="field"><label>Orientation</label><input type="text" data-key="npc_${idx}_orientation" placeholder="(Orientation)" /></div>
+          <div class="field"><label>Relationship</label><input type="text" data-key="npc_${idx}_relationship" placeholder="(Relationship)" /></div>
+          <div class="field small"><label>Gold (gp)</label><input type="text" data-key="npc_${idx}_gold_gp" placeholder="(gp)" /></div>
+
+          <div class="field full">
+            <label>Stats</label>
+            <div class="statRow">
+              <div class="field statField" style="margin:0;"><label style="font-size:11px; opacity:.8;">STR</label><input type="text" data-key="npc_${idx}_stat_str" placeholder="(11 [+0])" /></div>
+              <div class="field statField" style="margin:0;"><label style="font-size:11px; opacity:.8;">DEX</label><input type="text" data-key="npc_${idx}_stat_dex" placeholder="(10 [+0])" /></div>
+              <div class="field statField" style="margin:0;"><label style="font-size:11px; opacity:.8;">CON</label><input type="text" data-key="npc_${idx}_stat_con" placeholder="(15 [+2])" /></div>
+              <div class="field statField" style="margin:0;"><label style="font-size:11px; opacity:.8;">INT</label><input type="text" data-key="npc_${idx}_stat_int" placeholder="(9 [-1])" /></div>
+              <div class="field statField" style="margin:0;"><label style="font-size:11px; opacity:.8;">WIS</label><input type="text" data-key="npc_${idx}_stat_wis" placeholder="(14 [+2])" /></div>
+              <div class="field statField" style="margin:0;"><label style="font-size:11px; opacity:.8;">CHA</label><input type="text" data-key="npc_${idx}_stat_cha" placeholder="(12 [+1])" /></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <!-- Collapsed by default: Physical & gear -->
+    <details style="margin-top:12px;">
+      <summary><span class="stitle">Physical & gear</span><span class="smeta">Measurements, clothing, items</span></summary>
+      <div class="content">
+        <div class="grid">
+          <div class="field small"><label>Height (cm)</label><input type="text" data-key="npc_${idx}_height_cm" placeholder="(cm)" /></div>
+          <div class="field small"><label>Height (ft/in)</label><input type="text" data-key="npc_${idx}_height_ft_in" placeholder="(e.g., 6'2&quot;)" /></div>
+          <div class="field small"><label>Weight (kg)</label><input type="text" data-key="npc_${idx}_weight_kg" placeholder="(kg)" /></div>
+
+          <div class="field small"><label>Eye color</label><input type="text" data-key="npc_${idx}_eye_color" placeholder="(Eye color)" /></div>
+          <div class="field small"><label>Hair color</label><input type="text" data-key="npc_${idx}_hair_color" placeholder="(Hair color)" /></div>
+
+          <div class="field small"><label>Age (race years)</label><input type="text" data-key="npc_${idx}_age_race_years" placeholder="(years)" /></div>
+
+          <div class="field full"><label>Clothing</label><input type="text" data-key="npc_${idx}_clothing" placeholder="(Clothing)" /></div>
+
+          <div class="field full"><label>Interesting items (one per line)</label><textarea data-key="npc_${idx}_interesting_items" placeholder="(item 1)
+(item 2)"></textarea></div>
+          <div class="field full"><label>Weaponry (one per line)</label><textarea data-key="npc_${idx}_weaponry" placeholder="(weapon 1)
+(weapon 2)"></textarea></div>
+          <div class="field full"><label>Equipment (one per line)</label><textarea data-key="npc_${idx}_equipment" placeholder="(equipment 1)
+(equipment 2)"></textarea></div>
+        </div>
+      </div>
+    </details>
+  `;
+  
+  // Bind Roll button without inline handlers (CSP-safe)
+  try{
+    const rollBtn = el.querySelector(`#btnNpcRoll_${idx}`);
+    if(rollBtn){
+      rollBtn.addEventListener("click", () => {
+        try{
+          if(typeof debugClick === "function") debugClick("btnNpcRoll_" + idx);
+          if(typeof window.rollNpcRace === "function") window.rollNpcRace(idx);
+          else if(typeof rollNpcRace === "function") rollNpcRace(idx);
+        }catch(err){
+          console.error(err);
+          try{ toast("Roll error: " + (err?.message || err)); }catch{}
+        }
+      });
+    }
+  }catch(err){
+    console.error(err);
+  }
+
+return el;
+}
+function buildNpcCards(){
+  if(!npcHost) return;
+  npcHost.innerHTML = "";
+  for(let i=0;i<NPC_COUNT;i++) npcHost.appendChild(npcCard(i));
+  applyAutoPlaceholders(npcHost);
+  refreshNpcPortraits();
+}
+if(npcHost){ buildNpcCards(); applyEdit(); }
+
+const btnClearNpcs = $("#btnClearNpcs");
+if(btnClearNpcs) btnClearNpcs.addEventListener("click", () => {
+  for(let i=1;i<=NPC_COUNT;i++){
+    $$(`[data-key^="npc_${i}_"]`).forEach(el => {
+      el.value = "";
+    });
+  }
+  toast("Cleared NPCs.");
+  saveAll();
+});
+
+
+/* Hooks */
+const hooksHost = $("#hooksGrid");
+let hookCount = 2;
+function hookRow(i){
+  const idx = i+1;
+  const el = document.createElement("div");
+  el.className = "card";
+  el.style.gridColumn = "span 12";
+  el.innerHTML = `
+    <h3>Hook ${idx}</h3>
+    <div class="grid">
+      <div class="field small"><label>Type</label>
+        <select data-key="hook_${idx}_type">
+          <option value="">— Choose —</option>
+          <option>Quest</option><option>Rumor</option><option>Hidden threat</option><option>Moral dilemma</option><option>Personal NPC arc</option>
+        </select>
+      </div>
+      <div class="field"><label>Short pitch</label><input type="text" data-key="hook_${idx}_pitch" placeholder="(Short pitch)" /></div>
+      <div class="field full"><label>DM notes (optional)</label><textarea data-key="hook_${idx}_dm" placeholder="(DM notes)"></textarea></div>
+    </div>`;
+  return el;
+}
+
+/* Auto-placeholders: ensure every input/textarea has a placeholder */
+function applyAutoPlaceholders(root=document){
+  $$("input[type='text'][data-key], textarea[data-key]", root).forEach(el => {
+    if(el.getAttribute("placeholder")) return;
+    // Try to find an associated label nearby
+    let label = "";
+    const field = el.closest(".field");
+    const lab = field ? field.querySelector("label") : null;
+    if(lab) label = (lab.textContent || "").trim();
+    if(!label) label = el.dataset.key || "Enter text...";
+    el.setAttribute("placeholder", `(${label})`);
+  });
+}
+
+function bindAllInputs(root=document){
+  $$("input[data-key], textarea[data-key], select[data-key]", root).forEach(el => {
+    el.addEventListener("input", saveAll);
+    el.addEventListener("change", saveAll);
+  });
+}
+function rebuildHooks(){
+  hooksHost.innerHTML = "";
+  for(let i=0;i<hookCount;i++) hooksHost.appendChild(hookRow(i));
+  bindAllInputs(hooksHost);
+  applyAutoPlaceholders(hooksHost);
+  loadAll();
+  applyEdit();
+}
+$("#btnAddHook").addEventListener("click", () => {
+  hookCount = Math.min(24, hookCount + 1);
+  localState.meta.hookCount = hookCount;
+  rebuildHooks();
+  toast("Added a hook.");
+  saveAll();
+});
+$("#btnClearHooks").addEventListener("click", () => {
+  for(let i=1;i<=hookCount;i++){
+    $$(`[data-key^="hook_${i}_"]`).forEach(inp => { inp.value = ""; });
+  }
+  toast("Cleared hooks.");
+  saveAll();
+});
+rebuildHooks();
+
+/* Read-aloud previews */
+function buildExteriorReadaloud(){
+  const parts = [$("#extVisual").value,$("#extSensory").value,$("#extPeople").value,$("#extMystery").value]
+    .map(safeText).filter(x => x.trim().length);
+  return parts.length ? parts.join("\n") : "[Describe the exterior: architecture, signage, sounds, smells, foot traffic.]";
+}
+function buildInteriorReadaloud(){
+  const parts = [$("#intLayout").value,$("#intMood").value,$("#intSocial").value,$("#intSensory").value]
+    .map(safeText).filter(x => x.trim().length);
+  return parts.length ? parts.join("\n") : "[What the party sees immediately upon entry: layout, lighting, activity, mood.]";
+}
+function updateReadaloudPreviews(){
+  $("#previewExterior").textContent = buildExteriorReadaloud();
+  $("#previewInterior").textContent = buildInteriorReadaloud();
+}
+function buildReadaloudBundle(){
+  return ["Arrival / Exterior (Read Aloud)", buildExteriorReadaloud(), "", "Interior First Impression (Read Aloud)", buildInteriorReadaloud()].join("\n");
+}
+$("#btnCopyAllReadaloud").addEventListener("click", async () => {
+  const text = buildReadaloudBundle();
+  try{ await navigator.clipboard.writeText(text); toast("Copied read-aloud."); }
+  catch{ toast("Copy failed."); }
+});
+$("#btnCopyKeeperIntros")?.addEventListener("click", async () => {
+  const text = [
+    "Shopkeeper — On the sales floor", safeText($("#introFloor").value), "",
+    "Shopkeeper — Unseen / back rooms", safeText($("#introBack").value), "",
+    "Shopkeeper — Interrupting mid-scene", safeText($("#introInterrupt").value), "",
+    "Shopkeeper — Refuses to appear (optional)", safeText($("#introRefuse").value)
+  ].join("\n");
+  try{ await navigator.clipboard.writeText(text); toast("Copied shopkeeper intros."); }
+  catch{ toast("Copy failed."); }
+});
+
+
+
+/* NPC portrait thumbnails (read-only; populated via JSON import later) */
+function refreshNpcPortraits(){
+  for(let i=1;i<=NPC_COUNT;i++){
+    const wrap = document.getElementById(`npcPortraitPreview_${i}`);
+    if(!wrap) continue;
+    const url = (localState.fields[`npc_${i}_portraitUrl`] || "").trim();
+    const img = wrap.querySelector("img");
+    const ph = wrap.querySelector(".ph");
+    if(url){
+      img.src = url;
+      img.classList.remove("hidden");
+      ph && ph.classList.add("hidden");
+    }else{
+      img.removeAttribute("src");
+      img.classList.add("hidden");
+      ph && ph.classList.remove("hidden");
+    }
+  }
+}
+
+
+
+/* NPC Demographics Profiles (built-in) */
+var DEMOGRAPHICS = {
+  "Human_30": [{"race": "Human", "percentage": 30.0}, {"race": "Dwarf", "percentage": 12.0}, {"race": "Elf", "percentage": 10.0}, {"race": "Halfling", "percentage": 8.0}, {"race": "HalfElf", "percentage": 7.0}, {"race": "Dragonborn", "percentage": 4.0}, {"race": "Gnome", "percentage": 4.0}, {"race": "HalfOrc", "percentage": 3.0}, {"race": "Tiefling", "percentage": 3.0}, {"race": "Goblin", "percentage": 2.0}, {"race": "Orc", "percentage": 2.0}, {"race": "Kobold", "percentage": 1.5}, {"race": "Aasimar", "percentage": 1.0}, {"race": "Triton", "percentage": 1.0}, {"race": "Warforged", "percentage": 1.0}, {"race": "Centaur", "percentage": 0.8}, {"race": "Tabaxi", "percentage": 0.8}, {"race": "YuanTi", "percentage": 0.8}, {"race": "AirGenasi", "percentage": 0.7}, {"race": "Changeling", "percentage": 0.7}, {"race": "EarthGenasi", "percentage": 0.7}, {"race": "FireGenasi", "percentage": 0.7}, {"race": "Kenku", "percentage": 0.7}, {"race": "Lizardfolk", "percentage": 0.7}, {"race": "WaterGenasi", "percentage": 0.7}, {"race": "Aarakocra", "percentage": 0.6}, {"race": "Leonin", "percentage": 0.6}, {"race": "Minotaur", "percentage": 0.6}, {"race": "DeepGnome", "percentage": 0.5}, {"race": "Owlin", "percentage": 0.5}, {"race": "Fairy", "percentage": 0.4}],
+  "Elf_40": [{"race": "Elf", "percentage": 40.0}, {"race": "HalfElf", "percentage": 20.0}, {"race": "Human", "percentage": 10.0}, {"race": "Dwarf", "percentage": 6.8}, {"race": "Halfling", "percentage": 4.5}, {"race": "Dragonborn", "percentage": 2.3}, {"race": "Gnome", "percentage": 2.3}, {"race": "HalfOrc", "percentage": 1.7}, {"race": "Tiefling", "percentage": 1.7}, {"race": "Goblin", "percentage": 1.1}, {"race": "Orc", "percentage": 1.1}, {"race": "Kobold", "percentage": 0.8}, {"race": "Aasimar", "percentage": 0.6}, {"race": "Triton", "percentage": 0.6}, {"race": "Warforged", "percentage": 0.6}, {"race": "Centaur", "percentage": 0.5}, {"race": "Tabaxi", "percentage": 0.5}, {"race": "YuanTi", "percentage": 0.5}, {"race": "AirGenasi", "percentage": 0.4}, {"race": "Changeling", "percentage": 0.4}, {"race": "EarthGenasi", "percentage": 0.4}, {"race": "FireGenasi", "percentage": 0.4}, {"race": "Kenku", "percentage": 0.4}, {"race": "Lizardfolk", "percentage": 0.4}, {"race": "WaterGenasi", "percentage": 0.4}, {"race": "Aarakocra", "percentage": 0.3}, {"race": "Leonin", "percentage": 0.3}, {"race": "Minotaur", "percentage": 0.3}, {"race": "DeepGnome", "percentage": 0.3}, {"race": "Owlin", "percentage": 0.3}, {"race": "Fairy", "percentage": 0.1}]
+};
+
+function weightedPickRace(profileKey){
+  const base = (typeof DEMOGRAPHICS === "object" && DEMOGRAPHICS) ? DEMOGRAPHICS : {};
+  const list = (base[profileKey] || base["Human_30"] || [{race:"Human", percentage:100}]);
+  const total = list.reduce((a,x)=>a + (Number(x.percentage)||0), 0) || 1;
+  let r = Math.random() * total;
+  for(const item of list){
+    r -= (Number(item.percentage)||0);
+    if(r <= 0) return item.race;
+  }
+  return list[list.length-1].race;
+}
+
+function getDemographicsProfile(){
+  // Prefer the current UI selection (the "active" profile), then fall back to saved state.
+  const uiVal = (typeof demographicsProfileSelect !== "undefined" && demographicsProfileSelect) ? demographicsProfileSelect.value : "";
+  const raw = (uiVal || (localState && localState.meta && localState.meta.demographicsProfile) || "Human_30");
+  const key = (raw || "Human_30").toString().trim();
+
+  // Only allow known profiles; otherwise fall back safely.
+  try{
+    if(typeof DEMOGRAPHICS === "object" && DEMOGRAPHICS && (key in DEMOGRAPHICS)) return key;
+  }catch(e){}
+  return "Human_30";
+}
+function rollNpcRace(slotIdx){
+  dbg(`Roll clicked for NPC ${slotIdx}. editToggle.checked=${(editToggle && editToggle.checked)}`);
+  // Rolling should work even when inputs are locked; we still update state + field values.
+  if(!(editToggle && editToggle.checked)){
+    dbg("Note: rolling while locked mode is ON (inputs locked).");
+  }
+  const prof = getDemographicsProfile();
+  const race = weightedPickRace(prof);
+  const key = `npc_${slotIdx}_race`;
+
+  if(!localState.fields) localState.fields = {};
+  localState.fields[key] = race;
+
+  const el = document.querySelector(`[data-key="${key}"]`);
+  if(el){
+    el.value = race;
+    el.dispatchEvent(new Event("input", { bubbles:true }));
+    el.dispatchEvent(new Event("change", { bubbles:true }));
+    dbg(`Set ${key} -> ${race}`);
+  }else{
+    dbg(`ERROR: could not find input with data-key=${key}`);
+    toast("Race field not found for NPC " + slotIdx);
+  }
+
+  toast(`Rolled race: ${race}`);
+  saveAll();
+}
+window.rollNpcRace = rollNpcRace;
+
+
+
+/* Where is the shopkeeper? generator */
+const WHERE_KEEPER_OPTIONS = [
+  "Already present on the sales floor — polishing glass, watching the door, ready to greet or assess newcomers.",
+  "Unseen in the back rooms — voices and clinks behind a curtain; they respond before they appear (or send an assistant).",
+  "Interrupts mid-scene — the party has already begun browsing when the shopkeeper emerges, taking stock of everything.",
+  "Refuses to appear — communicates through notes, intermediaries, or a muffled voice; only ‘approved’ customers see them."
+];
+function rollWhereKeeper(){
+  const pick = WHERE_KEEPER_OPTIONS[Math.floor(Math.random()*WHERE_KEEPER_OPTIONS.length)];
+  $("#whereKeeperOut").textContent = pick;
+  localState.fields.whereKeeperLast = pick;
+  saveAll();
+  toast("Generated.");
+}
+$("#btnWhereKeeper")?.addEventListener("click", rollWhereKeeper);
+$("#btnCopyWhereKeeper")?.addEventListener("click", async () => {
+  const text = $("#whereKeeperOut").textContent || "—";
+  try{ await navigator.clipboard.writeText(text); toast("Copied."); }
+  catch{ toast("Copy failed."); }
+});
+
+
+/* Image handling */
+function setPreview(previewEl, dataUrl){
+  const img = previewEl.querySelector("img");
+  const ph = previewEl.querySelector(".placeholder");
+  if(dataUrl){
+    img.src = dataUrl;
+    img.classList.remove("hidden");
+    ph.classList.add("hidden");
+  }else{
+    img.removeAttribute("src");
+    img.classList.add("hidden");
+    ph.classList.remove("hidden");
+  }
+}
+function readFileAsDataUrl(file){
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(new Error("read failed"));
+    reader.readAsDataURL(file);
+  });
+}
+const shopImgPreview = $("#shopImgPreview");
+const keeperImgPreview = $("#keeperImgPreview");
+
+/* Shopkeeper portrait URL (Shopkeeper tab infobox) */
+const keeperPortraitPreview = $("#keeperPortraitPreview");
+const keeperPortraitUrlInput = $("#keeperPortraitUrl");
+function setKeeperPortraitFromUrl(){
+  const url = (keeperPortraitUrlInput?.value || "").trim();
+  localState.fields.keeperPortraitUrl = url;
+  // Prefer URL if present; otherwise fall back to uploaded keeper image (Overview)
+  const toUse = url || (localState.fields.keeperImageDataUrl || "");
+  setPreview(keeperPortraitPreview, toUse);
+  toast(url ? "Portrait URL applied." : "Portrait URL cleared.");
+  saveAll();
+}
+function refreshKeeperInfobox(){
+  const f = {...localState.fields, ...collectFields()};
+  $("#ib_name").textContent = (f.keeperName || "—").trim() || "—";
+  $("#ib_race").textContent = (f.keeperRace || "—").trim() || "—";
+  $("#ib_role").textContent = (f.keeperRole || "—").trim() || "—";
+  $("#ib_posture").textContent = (f.keeperPosture || "—").trim() || "—";
+  $("#ib_ethics").textContent = (f.keeperEthics || "—").trim() || "—";
+  const url = (f.keeperPortraitUrl || "").trim();
+  const toUse = url || (f.keeperImageDataUrl || "");
+  setPreview(keeperPortraitPreview, toUse);
+}
+$("#btnApplyPortraitUrl")?.addEventListener("click", () => {
+  if(!editToggle.checked){ toast("Unlock to edit portrait URL."); return; }
+  setKeeperPortraitFromUrl();
+});
+$("#btnClearPortraitUrl")?.addEventListener("click", () => {
+  if(!editToggle.checked){ toast("Unlock to edit portrait URL."); return; }
+  keeperPortraitUrlInput.value = "";
+  setKeeperPortraitFromUrl();
+});
+keeperPortraitUrlInput?.addEventListener("input", () => {
+  // live update only in edit mode to avoid accidental changes mid-session
+  if(editToggle.checked) refreshKeeperInfobox();
+  refreshNpcPortraits();
+});
+
+
+$("#btnShopImg").addEventListener("click", () => $("#shopImgFile").click());
+$("#btnKeeperImg").addEventListener("click", () => $("#keeperImgFile").click());
+
+$("#shopImgFile").addEventListener("change", async (e) => {
+  const file = e.target.files?.[0];
+  if(!file) return;
+  try{
+    const url = await readFileAsDataUrl(file);
+    localState.fields.shopImageDataUrl = url;
+    setPreview(shopImgPreview, url);
+    toast("Shop image set.");
+    saveAll();
+  }catch{ toast("Upload failed."); }
+  finally{ e.target.value = ""; }
+});
+$("#keeperImgFile").addEventListener("change", async (e) => {
+  const file = e.target.files?.[0];
+  if(!file) return;
+  try{
+    const url = await readFileAsDataUrl(file);
+    localState.fields.keeperImageDataUrl = url;
+    setPreview(keeperImgPreview, url);
+    toast("Shopkeeper image set.");
+    saveAll();
+  }catch{ toast("Upload failed."); }
+  finally{ e.target.value = ""; }
+});
+$("#btnShopImgClear").addEventListener("click", () => {
+  localState.fields.shopImageDataUrl = "";
+  setPreview(shopImgPreview, "");
+  toast("Shop image removed.");
+  saveAll();
+});
+$("#btnKeeperImgClear").addEventListener("click", () => {
+  localState.fields.keeperImageDataUrl = "";
+  localState.fields.keeperPortraitUrl = "";
+  setPreview(keeperImgPreview, "");
+  toast("Shopkeeper image removed.");
+  saveAll();
+});
+
+/* Tables */
+const tablesHost = $("#tablesHost");
+const tablesJump = $("#tablesJump");
+const TABLE_DEFS = [
+  { key:"whoHere", title:"Who Is Currently Here?", hint:"Seeds the immediate vibe." },
+  { key:"moodToday", title:"NPC Mood Today", hint:"Sets patience/openness." },
+  { key:"unexpectedEvent", title:"Unexpected Event", hint:"Interrupt the scene." },
+  { key:"complication", title:"Complication", hint:"A snag that raises stakes." },
+  { key:"hiddenDiscovery", title:"Hidden Discovery", hint:"Clue, stash, or tell." },
+  { key:"socialTension", title:"Social Tension", hint:"The room feels off." },
+  { key:"keeperReaction", title:"Shopkeeper Reaction", hint:"Their response to the party." }
+];
+const POTION_DEFAULT_ROWS = {
+  whoHere:[
+    "A jittery adventurer clutching a torn map",
+    "A weary guard buying burn salve in secret",
+    "A cloaked scholar comparing vial labels",
+    "A local parent seeking fever remedy for a child",
+    "A rival apothecary’s runner “just browsing”",
+    "A courier with a sealed crate marked with a sigil",
+    "A hooded figure lingering near the back shelves"
+  ],
+  moodToday:["Warm and patient","Brisk and businesslike","Distracted by an ongoing brew","Guarded (something feels off)","Unusually generous with advice"],
+  unexpectedEvent:["A vial pops—harmless colored smoke fills the room","A bell chimes as a potion delivery arrives early","A customer accuses another of swapping labels","A stray cat darts in and knocks over an empty rack","A sudden gust snuffs candles and the air turns cold"],
+  complication:["A key ingredient is backordered (supply caravan delayed)","A recent batch spoiled—refunds are tense","An inspector demands to see permits and ledgers","A rival spread rumors of ‘tainted tonics’","A desperate customer tries to steal a healing draught"],
+  hiddenDiscovery:["A hidden drawer of rare reagents under the counter","A coded note tucked into a label: ‘MIDNIGHT • DO NOT DRINK’","A small blood-stain on an otherwise clean apron","A faint transmutation aura clinging to a mundane tonic","A secret recipe ledger written in druidic shorthand"],
+  socialTension:["Two customers keep glancing at the same satchel","Someone is clearly eavesdropping on prices and names","A muted argument about ‘dangerous brews’","A hush whenever the shopkeeper mentions certain suppliers","A nervous laugh that doesn’t match the mood"],
+  keeperReaction:["All charm, no discounts","Kind, but firm on safety","Suspicious of newcomers","Professional and helpful","Protective of the shop’s reputation"]
+};
+function makeTableState(){
+  const state = {};
+  for(const def of TABLE_DEFS){
+    state[def.key] = { rows: (POTION_DEFAULT_ROWS[def.key]||[]).map(t=>({text:t})), history:[] };
+  }
+  return state;
+}
+// localState was initialized earlier; ensure required sub-objects exist now that table defs are available
+if(!localState) localState = { meta:{}, fields:{}, tables:{} };
+if(!localState.meta) localState.meta = {};
+if(!localState.fields) localState.fields = {};
+if(!localState.tables || !Object.keys(localState.tables).length) localState.tables = makeTableState();
+
+function escapeHtml(str){
+  return safeText(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+function tableBlock(def){
+  const wrap = document.createElement("details");
+  wrap.open = true;
+  wrap.id = `tbl-${def.key}`;
+  wrap.innerHTML = `
+    <summary>
+      <span class="stitle">${def.title}</span>
+      <span class="smeta"><span class="kbd">Random pick</span> • <span class="kbd">Add options</span> • <span class="kbd">History</span></span>
+    </summary>
+    <div class="content">
+      <div class="row" style="margin-bottom:12px;">
+        <button class="btn primary" data-roll="${def.key}">Roll</button>
+        <button class="btn" data-addrow="${def.key}">Add Option</button>
+        <button class="btn bad" data-clearhist="${def.key}">Clear History</button>
+        <span class="muted">${def.hint}</span>
+      </div>
+      <div class="tableWrap">
+        <table>
+          <thead><tr><th style="width:48px;">#</th><th>Option (editable)</th><th style="width:120px;">Remove</th></tr></thead>
+          <tbody id="tbody_${def.key}"></tbody>
+        </table>
+      </div>
+      <div class="twoCol" style="margin-top:12px;">
+        <div class="card"><h3>Last roll</h3><div class="readaloud" id="last_${def.key}">—</div></div>
+        <div class="card"><h3>Last Roll History</h3><div class="history" id="hist_${def.key}"></div></div>
+      </div>
+    </div>`;
+  return wrap;
+}
+function renderTableRows(key){
+  const tbody = $(`#tbody_${key}`);
+  tbody.innerHTML = "";
+  const rows = localState.tables[key].rows;
+  rows.forEach((r, idx) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td>${idx+1}</td>
+      <td contenteditable="true" data-tblkey="${key}" data-row="${idx}" data-field="text">${escapeHtml(r.text)}</td>
+      <td><button class="btn bad" data-delrow="${key}" data-row="${idx}">Remove</button></td>`;
+    tbody.appendChild(tr);
+  });
+  applyEdit();
+}
+function renderHistory(key){
+  const host = $(`#hist_${key}`);
+  host.innerHTML = "";
+  const hist = localState.tables[key].history;
+  if(!hist.length){
+    host.innerHTML = `<div class="muted" style="font-size:12.5px;">No rolls yet.</div>`;
+    return;
+  }
+  hist.slice(0,25).forEach(item => {
+    const div = document.createElement("div");
+    div.className = "historyItem";
+    div.innerHTML = `<div class="meta">${new Date(item.at).toLocaleString()}</div><div>${escapeHtml(item.result)}</div>`;
+    host.appendChild(div);
+  });
+}
+function renderAllTables(){
+  tablesHost.innerHTML = "";
+  tablesJump.innerHTML = "";
+  for(const def of TABLE_DEFS){
+    tablesHost.appendChild(tableBlock(def));
+    const jb = document.createElement("button");
+    jb.className = "jbtn";
+    jb.textContent = def.title;
+    jb.setAttribute("data-jump", `#tbl-${def.key}`);
+    tablesJump.appendChild(jb);
+    renderTableRows(def.key);
+    renderHistory(def.key);
+    $(`#last_${def.key}`).textContent = localState.tables[def.key].history[0]?.result ?? "—";
+  }
+}
+function addRow(key, text="New option..."){
+  localState.tables[key].rows.push({text});
+  renderTableRows(key);
+  saveAll();
+  toast("Added option.");
+}
+function deleteRow(key, idx){
+  const rows = localState.tables[key].rows;
+  if(rows.length <= 1){ toast("Keep at least one option."); return; }
+  rows.splice(idx,1);
+  renderTableRows(key);
+  saveAll();
+  toast("Removed option.");
+}
+function rollFromTable(key){
+  const rows = localState.tables[key].rows.map(r=>(r.text||"").trim()).filter(Boolean);
+  if(!rows.length){ toast("No options to roll."); return; }
+  const pick = rows[Math.floor(Math.random()*rows.length)];
+  localState.tables[key].history.unshift({at:new Date().toISOString(), result: pick});
+  localState.tables[key].history = localState.tables[key].history.slice(0,60);
+  $(`#last_${key}`).textContent = pick;
+  renderHistory(key);
+  saveAll();
+  toast("Rolled.");
+}
+function clearHistory(key){
+  localState.tables[key].history = [];
+  $(`#last_${key}`).textContent = "—";
+  renderHistory(key);
+  saveAll();
+  toast("History cleared.");
+}
+document.addEventListener("click", (e) => {
+  const r = e.target.closest("[data-roll]"); if(r) return rollFromTable(r.dataset.roll);
+  const a = e.target.closest("[data-addrow]"); if(a) return addRow(a.dataset.addrow);
+  const d = e.target.closest("[data-delrow]"); if(d) return deleteRow(d.dataset.delrow, parseInt(d.dataset.row,10));
+  const c = e.target.closest("[data-clearhist]"); if(c) return clearHistory(c.dataset.clearhist);
+});
+$("#btnRollScene").addEventListener("click", () => {
+  ["whoHere","moodToday","socialTension","keeperReaction","unexpectedEvent"].forEach(rollFromTable);
+  toast("Rolled a scene set.");
+});
+$("#btnClearHistory").addEventListener("click", () => {
+  TABLE_DEFS.forEach(def => localState.tables[def.key].history = []);
+  TABLE_DEFS.forEach(def => { $(`#last_${def.key}`).textContent = "—"; renderHistory(def.key); });
+  saveAll();
+  toast("Cleared all history.");
+});
+document.addEventListener("input", (e) => {
+  const cell = e.target.closest("td[contenteditable]");
+  if(!cell) return;
+  const key = cell.dataset.tblkey;
+  const row = parseInt(cell.dataset.row,10);
+  const field = cell.dataset.field;
+  if(localState.tables[key]?.rows?.[row]){
+    localState.tables[key].rows[row][field] = cell.textContent;
+    saveAll();
+  }
+});
+
+/* Autosave */
+function collectFields(){
+  const fields = {};
+  $$("[data-key]").forEach(el => { fields[el.dataset.key] = el.value; });
+  return fields;
+}
+function saveAll(){
+  try{
+    localState.meta = {
+      version: 3,
+      savedAt: new Date().toISOString(),
+      editMode: editToggle.checked,
+      hookCount,
+      theme: document.documentElement.getAttribute("data-theme") || "gilded-midnight",
+      demographicsProfile: getDemographicsProfile(),
+      debug: !!(localState.meta && localState.meta.debug)
+    };
+    localState.fields = {...localState.fields, ...collectFields()};
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(localState));
+    $("#autosaveStatus").textContent = "Saved";
+    setTimeout(()=>$("#autosaveStatus").textContent="On", 500);
+    updateReadaloudPreviews();
+    updateExportPreviews();
+    refreshKeeperInfobox();
+  }catch(e){
+    $("#autosaveStatus").textContent = "Off";
+  }
+}
+function applyData(data){
+  if(!data) return;
+  localState = { meta: data.meta || {}, fields: data.fields || {}, tables: data.tables || makeTableState() };
+  ensureNpcTableState();
+  if(localState.meta && Number.isFinite(localState.meta.hookCount)){
+    hookCount = Math.max(1, Math.min(24, localState.meta.hookCount));
+  }
+  rebuildHooks();
+  if(typeof localState.meta.editMode === "boolean") editToggle.checked = localState.meta.editMode;
+  applyEdit();
+  const theme = localState.meta.theme || "gilded-midnight";
+  document.documentElement.setAttribute("data-theme", theme);
+  if (demographicsProfileSelect){
+    demographicsProfileSelect.value = (localState.meta && localState.meta.demographicsProfile) ? localState.meta.demographicsProfile : "Human_30";
+  }
+  $$("[data-key]").forEach(el => {
+    const key = el.dataset.key;
+    if(key in localState.fields) el.value = safeText(localState.fields[key]);
+  });
+  setPreview(shopImgPreview, localState.fields.shopImageDataUrl || "");
+  setPreview(keeperImgPreview, localState.fields.keeperImageDataUrl || "");
+  if($("#keeperPortraitUrl")) $("#keeperPortraitUrl").value = safeText(localState.fields.keeperPortraitUrl || "");
+  refreshKeeperInfobox();
+  if($('#whereKeeperOut')) $('#whereKeeperOut').textContent = safeText(localState.fields.whereKeeperLast || '—') || '—';
+  renderAllTables();
+  updateReadaloudPreviews();
+  updateExportPreviews();
+}
+function loadAll(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return false;
+    const data = JSON.parse(raw);
+    applyData(data);
+    return true;
+  }catch(e){ return false; }
+}
+
+/* JSON import/export */
+$("#btnExport").addEventListener("click", () => {
+  saveAll();
+  const fmt = ($("#exportSelect").value || "json").toLowerCase();
+  if(fmt === "json"){
+    downloadText("dnd-shop-details.json", JSON.stringify(localState, null, 2));
+    toast("Exported JSON.");
+    return;
+  }
+  // Markdown exports
+  const md = buildMarkdown();
+  const filename = fmt === "obsidian" ? "dnd-shop-export-obsidian.md" : "dnd-shop-export.md";
+  const blob = new Blob([md], {type:"text/markdown;charset=utf-8"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 500);
+  toast("Exported Markdown.");
+});
+$("#btnImportJson").addEventListener("click", () => $("#importFile").click());
+$("#importFile").addEventListener("change", async (e) => {
+  const file = e.target.files?.[0];
+  if(!file) return;
+  try{
+    const text = await file.text();
+    const data = JSON.parse(text);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    applyData(data);
+    toast("Imported JSON.");
+    closeSettings();
+  }catch{ toast("Import failed."); }
+  finally{ $("#importFile").value = ""; }
+});
+$("#btnResetAll").addEventListener("click", () => {
+  if(confirm("Reset all fields and clear autosave?")){
+    localStorage.removeItem(STORAGE_KEY);
+    location.reload();
+  }
+});
+$("#btnForceSave").addEventListener("click", () => { saveAll(); toast("Saved."); });
+
+/* Markdown export */
+function mdLine(label, value){
+  const v = (value || "").trim();
+  return v ? `- **${label}:** ${v}` : `- **${label}:**`;
+}
+function codeBlock(txt){ return "```\n" + (txt || "").trim() + "\n```"; }
+function buildMarkdown(){
+  const f = {...localState.fields, ...collectFields()};
+  const npcMd = [];
+  for(let i=1;i<=NPC_COUNT;i++){
+    const full = (f[`npc_${i}_full_name`]||"").trim();
+    const doing = (f[`npc_${i}_doing`]||"").trim();
+    const why = (f[`npc_${i}_reason`]||"").trim();
+
+    const prof = (f[`npc_${i}_profession`]||"").trim();
+    const social = (f[`npc_${i}_social`]||"").trim();
+    const cls = (f[`npc_${i}_class`]||"").trim();
+    const align = (f[`npc_${i}_alignment`]||"").trim();
+    const rel = (f[`npc_${i}_relationship`]||"").trim();
+    const ori = (f[`npc_${i}_orientation`]||"").trim();
+    const gold = (f[`npc_${i}_gold_gp`]||"").trim();
+
+    const str = (f[`npc_${i}_stat_str`]||"").trim();
+    const dex = (f[`npc_${i}_stat_dex`]||"").trim();
+    const con = (f[`npc_${i}_stat_con`]||"").trim();
+    const intl = (f[`npc_${i}_stat_int`]||"").trim();
+    const wis = (f[`npc_${i}_stat_wis`]||"").trim();
+    const cha = (f[`npc_${i}_stat_cha`]||"").trim();
+    const statsAny = [str,dex,con,intl,wis,cha].some(x=>x && x.length);
+    const statsLine = statsAny ? `Str ${str} | Dex ${dex} | Con ${con} | Int ${intl} | Wis ${wis} | Cha ${cha}` : "";
+
+    const app = (f[`npc_${i}_appearance`]||"").trim();
+    const per = (f[`npc_${i}_personality`]||"").trim();
+    const sec = (f[`npc_${i}_secret`]||"").trim();
+
+    const clothing = (f[`npc_${i}_clothing`]||"").trim();
+    const items = (f[`npc_${i}_interesting_items`]||"").trim();
+    const weap = (f[`npc_${i}_weaponry`]||"").trim();
+    const eq = (f[`npc_${i}_equipment`]||"").trim();
+
+    const any = [full,doing,why,prof,social,cls,align,rel,ori,gold,statsLine,app,per,sec,clothing,items,weap,eq].some(x=>x && x.length);
+    if(!any) continue;
+
+    npcMd.push(
+      `### NPC Slot ${i}`,
+      mdLine("Name", full),
+      mdLine("What they're doing", doing),
+      mdLine("Reason for being here", why),
+      "",
+      "#### Background",
+      mdLine("Profession", prof),
+      mdLine("Social", social),
+      mdLine("Class", cls),
+      mdLine("Alignment", align),
+      mdLine("Orientation", ori),
+      mdLine("Relationship", rel),
+      mdLine("Gold (gp)", gold),
+      statsLine ? mdLine("Stats", statsLine) : "",
+      "",
+      "#### Description",
+      "**Appearance**",
+      app || "(none)",
+      "",
+      "**Personality**",
+      per || "(none)",
+      "",
+      "**Secret**",
+      sec || "(none)",
+      "",
+      "#### Physical & gear",
+      mdLine("Clothing", clothing),
+      items ? `**Interesting items**
+${items.split("\n").map(x=>`- ${x}`).join("\n")}` : `**Interesting items**
+- (none)`,
+      weap ? `**Weaponry**
+${weap.split("\n").map(x=>`- ${x}`).join("\n")}` : `**Weaponry**
+- (none)`,
+      eq ? `**Equipment**
+${eq.split("\n").map(x=>`- ${x}`).join("\n")}` : `**Equipment**
+- (none)`,
+      "",
+      ""
+    ).filter(Boolean);
+  }
+  const hooksMd = [];
+  for(let i=1;i<=hookCount;i++){
+    const type = (f[`hook_${i}_type`]||"").trim();
+    const pitch = (f[`hook_${i}_pitch`]||"").trim();
+    const dm = (f[`hook_${i}_dm`]||"").trim();
+    if(!(type||pitch||dm)) continue;
+    hooksMd.push(`- **${type || "Hook"}:** ${pitch || ""}${dm ? ` _(DM: ${dm})_` : ""}`);
+  }
+  const tablesMd = [];
+  for(const def of TABLE_DEFS){
+    const t = localState.tables[def.key];
+    const opts = (t?.rows||[]).map(r=>(r.text||"").trim()).filter(Boolean);
+    const hist = (t?.history||[]).slice(0,5);
+    tablesMd.push(`### ${def.title}`);
+    tablesMd.push(opts.length ? opts.map(o=>`- ${o}`).join("\n") : "- (No options)");
+    if(hist.length){
+      tablesMd.push("");
+      tablesMd.push("**Recent rolls:**");
+      tablesMd.push(hist.map(h=>`- ${new Date(h.at).toLocaleString()}: ${h.result}`).join("\n"));
+    }
+    tablesMd.push("");
+  }
+  const md = [
+`# 🏪 D&D Shop Template — Builder Export
+
+## 🪧 Shop Overview
+${mdLine("Shop Name", f.shopName)}
+${mdLine("Shop Type", f.shopType)}
+${mdLine("Location", f.location)}
+${mdLine("Ownership / Affiliation", f.ownership)}
+${mdLine("Years in Operation", f.years)}
+${mdLine("Reputation", f.reputation)}
+
+### Rumors / Street Talk
+${(f.rumors || "").trim() || "(none)"}
+
+## 🖼️ Images
+- **Shop Image:** ${f.shopImageDataUrl ? "(uploaded)" : "(none)"}
+- **Shop Image Caption:** ${safeText(f.shopImgCaption).trim()}
+- **Shopkeeper Image:** ${f.keeperImageDataUrl ? "(uploaded)" : "(none)"}
+- **Shopkeeper Image Caption:** ${safeText(f.keeperImgCaption).trim()}
+
+## 📜 Read-Aloud Text
+### Arrival / Exterior
+${codeBlock(buildExteriorReadaloud())}
+
+### Interior First Impression
+${codeBlock(buildInteriorReadaloud())}
+
+## 🧑‍💼 Shopkeeper
+${mdLine("Name", f.keeperName)}
+${mdLine("Race/Species", f.keeperRace)}
+${mdLine("Role", f.keeperRole)}
+${mdLine("Default attitude", f.keeperPosture)}
+
+**Appearance**
+${(f.keeperAppearance||"").trim() || "(none)"}
+
+**Personality**
+${(f.keeperPersonality||"").trim() || "(none)"}
+
+**Motivations**
+${(f.keeperMotivation||"").trim() || "(none)"}
+
+**Power / deterrence**
+${(f.keeperPower||"").trim() || "(none)"}
+
+**Secrets**
+${(f.keeperSecrets||"").trim() || "(none)"}
+
+**Fears**
+${(f.keeperFears||"").trim() || "(none)"}
+
+${mdLine("Ethical leaning", f.keeperEthics)}
+
+## 🧑‍💼 Shopkeeper Introductions
+### On the sales floor
+${codeBlock(f.introFloor || "")}
+### Unseen / back rooms
+${codeBlock(f.introBack || "")}
+### Interrupting mid-scene
+${codeBlock(f.introInterrupt || "")}
+### Refuses to appear (optional)
+${codeBlock(f.introRefuse || "")}
+
+## 🏗️ Layout
+**Exterior**
+${(f.extStyle||"").trim() || "(none)"}
+
+${mdLine("Windows / visibility", f.windows)}
+
+${mdLine("Floors", f.floors)}
+${mdLine("Primary areas", f.primaryAreas)}
+
+**Secondary rooms**
+${(f.secondaryRooms||"").trim() || "(none)"}
+
+**Floorplan (ASCII)**
+${(f.floorplanAscii||"").trim() || "(none)"}
+
+**Hidden / restricted areas**
+${(f.hiddenAreas||"").trim() || "(none)"}
+
+**Storage**
+${(f.storage||"").trim() || "(none)"}
+
+**Entrances & exits**
+${(f.entries||"").trim() || "(none)"}
+
+**Security & deterrents**
+${(f.security||"").trim() || "(none)"}
+
+## 👥 NPCs
+${npcMd.length ? npcMd.join("\n") : "_(No NPC slots filled yet.)_\n"}
+
+## 💬 NPC Interaction Prompts
+- **If approached politely:** ${(f.npcPolite||"").trim()}
+- **If questioned about the shop:** ${(f.npcShopQ||"").trim()}
+- **If questioned about the city:** ${(f.npcCityQ||"").trim()}
+- **If intimidated or bribed:** ${(f.npcBribe||"").trim()}
+- **If violence seems imminent:** ${(f.npcViolence||"").trim()}
+
+## 🗣️ Social Dynamics
+- **How politeness is rewarded:** ${(f.politenessRewards||"").trim()}
+- **How reputation affects service:** ${(f.reputationService||"").trim()}
+- **What earns favor or resentment:** ${(f.resentmentTriggers||"").trim()}
+
+### Escalation
+- **Early warning signs:** ${(f.warningSigns||"").trim()}
+- **Immediate consequences:** ${(f.immediateConsequences||"").trim()}
+- **Long-term fallout:** ${(f.longTermFallout||"").trim()}
+- **Affiliation response notes:** ${(f.affiliationEscalation||"").trim()}
+
+## 🧩 Hooks & Secrets
+### Hooks
+${hooksMd.length ? hooksMd.join("\n") : "(none)"}
+
+### Hidden Truths
+${(f.hiddenTruths||"").trim() || "(none)"}
+${(f.secretAffiliation||"").trim() ? "\n**Secret affiliation:**\n"+(f.secretAffiliation||"").trim() : ""}
+${(f.debtCrime||"").trim() ? "\n**Debt / crime / compromise:**\n"+(f.debtCrime||"").trim() : ""}
+
+## 🎲 Random Tables
+${tablesMd.join("\n")}
+
+## 🧾 Cheat Sheet
+- **Overall vibe:** ${(f.vibe||"").trim()}
+- **Shopkeeper in one sentence:** ${(f.keeperOneLine||"").trim()}
+- **Most important NPC:** ${(f.mostImportantNpc||"").trim()}
+- **One secret:** ${(f.oneSecret||"").trim()}
+- **One thing that can go wrong:** ${(f.oneThingWrong||"").trim()}
+
+## 🔁 If the Players Do X…
+- **If they snoop:** ${(f.ifSnoop||"").trim()}
+- **If they bribe:** ${(f.ifBribe||"").trim()}
+- **If they threaten:** ${(f.ifThreaten||"").trim()}
+- **If they leave and return later:** ${(f.ifReturn||"").trim()}
+
+### DM Notes
+${(f.cheatDM||"").trim() || "(none)"}
+`
+  ].join("\n").replace(/\n{3,}/g, "\n\n");
+  return md;
+}
+function updateExportPreviews(){
+  if(($("#markdownOut").value || "").trim().length){
+    $("#markdownOut").value = buildMarkdown();
+  }
+}
+$("#btnBuildMarkdown").addEventListener("click", () => { $("#markdownOut").value = buildMarkdown(); toast("Built Markdown."); saveAll(); });
+$("#btnCopyMarkdown").addEventListener("click", async () => {
+  const text = $("#markdownOut").value || buildMarkdown();
+  try{ await navigator.clipboard.writeText(text); toast("Copied Markdown."); }
+  catch{ toast("Copy failed."); }
+});
+
+/* Cheat sheet copy */
+function buildCheatSheetText(){
+  const f = {...localState.fields, ...collectFields()};
+  return [
+    "Quick-Run Cheat Sheet",
+    `Overall Vibe: ${safeText(f.vibe).trim()}`,
+    `Shopkeeper in One Sentence: ${safeText(f.keeperOneLine).trim()}`,
+    `Most Important NPC: ${safeText(f.mostImportantNpc).trim()}`,
+    `One Secret: ${safeText(f.oneSecret).trim()}`,
+    `One Thing That Can Go Wrong: ${safeText(f.oneThingWrong).trim()}`,
+    "",
+    "If the players do X…",
+    `If they snoop: ${safeText(f.ifSnoop).trim()}`,
+    `If they bribe: ${safeText(f.ifBribe).trim()}`,
+    `If they threaten: ${safeText(f.ifThreaten).trim()}`,
+    `If they leave and return later: ${safeText(f.ifReturn).trim()}`
+  ].join("\n");
+}
+$("#btnCopyCheat").addEventListener("click", async () => {
+  const text = buildCheatSheetText();
+  try{ await navigator.clipboard.writeText(text); toast("Copied cheat sheet."); }
+  catch{ toast("Copy failed."); }
+});
+
+/* Potion shop test data */
+function potionShopSeed(){
+  const seed = {
+    shopName: "The Phial & Fern Apothecary",
+    shopType: "Apothecary / Alchemy",
+    location: "Riverside Market Ward, under the ivy-wrapped clockbridge",
+    reputation: "Trusted remedies, honest warnings, and surprisingly fair prices—if you mind the rules",
+    ownership: "Independently owned • quietly endorsed by the Healers’ Guild",
+    years: "12 years (plus older ‘back-room’ history)",
+    rumors: "• A ‘moon-bloom’ tincture is sold only on certain nights.\n• Someone keeps buying antidotes in bulk.\n• The shopkeeper once treated a notorious outlaw—and regrets it.",
+    shopImgCaption: "A narrow storefront of dark wood and green glass. Brass windchimes shaped like leaves. A painted sign: a fern sprouting from a corked vial.",
+    keeperImgCaption: "Soft smile, sharp eyes. Fingers stained with tinctures. Speaks like every word is measured.",
+
+    keeperPortraitUrl: "",
+
+    extVisual: "A slim, ivy-laced storefront sits beneath the clockbridge, its windows tinted green like bottle glass. A brass sign swings gently: a fern sprouting from a corked vial.",
+    extSensory: "The air smells of crushed mint, beeswax, and something citrus-bright. Tiny chimes sing whenever the door opens.",
+    extPeople: "A short line forms and dissolves—messengers, guards, and nervous travelers. A slate board by the door lists today’s ‘safe brews’ and ‘limited distillations’.",
+    extMystery: "A small charm of bone and amber hangs inside the frame, turning slightly even when the wind is still.",
+
+    intLayout: "Shelves curve like a library’s stacks, but every row is bottles: clear, smoky, and jewel-toned. A long oak counter divides customers from a workbench of mortars, scales, and copper coils.",
+    intMood: "Warm and bright, but careful—like a place that has seen accidents and learned from them.",
+    intSocial: "Customers whisper requests by category—‘sleep, courage, stomach, burns’—while assistants label new batches with meticulous loops of ink.",
+    intSensory: "Steam curls from a kettle of tonic water; the scent changes every few breaths—lavender, rosemary, bitter root, then honey.",
+    readAloudDM: "Keep the shop calm but alert. Mention safety signage and the ledger to foreshadow consequences for theft or sabotage.",
+
+    keeperName: "Eilwen Sableleaf",
+    keeperRace: "Half-elf",
+    keeperRole: "Owner-apothecary (master brewer)",
+    keeperPosture: "Hospitable / welcoming",
+    keeperAppearance: "Long dark hair pinned with a copper needle. Linen apron over traveling leathers. A ring of tiny keys on a chain at her belt; fingertips faintly stained violet.",
+    keeperPersonality: "Patient teacher energy; speaks in short, confident sentences. Won’t be rushed on safety. Warm humor when customers are honest.",
+    keeperMotivation: "Keep the shop reputable and safe, protect her suppliers, and quietly track who is buying antidotes and why.",
+    keeperPower: "Healers’ Guild favor, a discreet city watch contact, and a ‘no questions’ supplier who expects repayment in unusual ingredients.",
+    keeperSecrets: "She can brew a restricted ‘memory-dulling draught’—and has done it once recently.\nHer back room contains a sealed chest tied to an old debt.",
+    keeperFears: "A batch going wrong in public.\nA supplier being exposed.\nA rival framing her with tainted product.",
+    keeperEthics: "Pragmatic good: safety first, but willing to bend rules to prevent worse harm.",
+
+    introFloor: "Behind the counter, Eilwen sets down a ladle with a practiced calm, wipes her hands, and offers a small, steady smile. “Welcome. Tell me what you need—and what you can’t risk.”",
+    introBack: "The shop looks momentarily unattended. From behind a beaded curtain comes the clink of glass and a measured voice: “Mind the left shelf. The green vials bite.” Footsteps approach—unhurried, confident.",
+    introInterrupt: "As you examine the shelves, a quiet cough sounds from the back. Eilwen appears with a tray of steaming cups, eyes flicking over your hands and packs. “Browsing is fine,” she says lightly, “so long as you don’t unstopper anything.”",
+    introRefuse: "A bell tinkles, but no one comes. Instead, a neat note slides through a slot in the counter: ‘State your request in writing. Dangerous brews require disclosure.’",
+
+    extStyle: "Dark wood reinforced with iron bands. Green-tinted bottle glass set into the windows. Brass windchimes; a slate board of ‘today’s safe brews’. A rain awning stitched with herb motifs.",
+    windows: "Green bottle-glass panes; clear view only near the counter",
+    floors: "One main floor; steep steps down to a cool cellar lab",
+    primaryAreas: "Sales floor • consultation nook • counter + ledger station",
+    secondaryRooms: "Back lab with copper stills, drying racks of herbs, and a small sink basin fed by a hand pump.\nA consultation nook with two chairs and a privacy screen for sensitive needs.",
+    hiddenAreas: "A locked cabinet of restricted reagents; a false-bottom drawer beneath the ledger; a sealed chest in the cellar (old debt).",
+    storage: "Crated glassware, waxed corks, and burlap sacks of roots in the cellar. A small ‘quarantine shelf’ for suspicious returns.",
+    entries: "Front door with chime charm; back delivery door shared with the neighboring tea house; cellar hatch under the lab mat.",
+    security: "Subtle alarm rune on the restricted cabinet; ledger of names; a ‘shatter-safe’ ward that dampens explosive reactions near the counter.",
+
+    npcPolite: "They brighten and offer practical advice: dosage, timing, and alternatives. A polite customer earns a ‘free stopper’ and a warning about side effects.",
+    npcShopQ: "They explain categories (healing, utility, resistance) and insist on safety: “Tell us allergies. Tell us curses. Don’t lie.”",
+    npcCityQ: "They share local routes for herbs, which alleys are patrolled, and which docks are ‘quiet’—but avoid naming criminals.",
+    npcBribe: "They refuse cash bribes; favors and ingredients are discussed privately. Brute intimidation triggers calm escalation and a discreet bell-charm.",
+    npcViolence: "The room freezes. Assistants step back. A ward hums. Someone runs for the back door before blades clear sheaths.",
+
+    politenessRewards: "Clear explanations, better recommendations, and a small courtesy item (bandage roll, stopper, or tea sachet).",
+    reputationService: "Known heroes get priority and honest warnings. Known troublemakers get ‘only safe stock’ and must pay upfront.",
+    resentmentTriggers: "Unstoppering bottles, lying about conditions, mocking safety rules, or pushing for restricted brews in public.",
+
+    warningSigns: "Assistants stop talking. The kettle goes quiet. The shopkeeper’s smile fades but her voice stays even.",
+    immediateConsequences: "Service ends; a watch contact may be alerted; the shop refuses future sales or sells only innocuous items.",
+    longTermFallout: "Guild blacklisting, rumors of ‘unsafe customers’, and difficulty buying medical supplies in the district.",
+    affiliationEscalation: "Healers’ Guild files complaints; City Watch issues warnings; the supplier network goes cold.",
+
+    hiddenTruths: "Restricted brews exist, but only by appointment and with a paper trail.\nSomeone is buying antidotes in bulk for a coming event.",
+    secretAffiliation: "Eilwen’s supplier is tied to an old druid circle—legal, but politically inconvenient.",
+    debtCrime: "A past client demanded memory-dulling draughts; Eilwen complied once to prevent a killing.",
+
+    vibe: "Warm apothecary calm with razor-sharp safety instincts",
+    keeperOneLine: "Eilwen Sableleaf, a kind-but-firm master brewer who treats potion-making like medicine, not commerce",
+    mostImportantNpc: "Merrit the assistant (the one who notices everything)",
+    oneSecret: "A sealed chest in the cellar ties Eilwen to a past favor she never repaid",
+    oneThingWrong: "A spoiled batch rumor sparks panic—and someone tries to prove it with sabotage",
+
+    ifSnoop: "They find the restricted cabinet and the ledger’s false-bottom drawer. If caught, Eilwen stays calm and ends service instantly.",
+    ifBribe: "Eilwen refuses coin bribes; she’ll consider rare ingredients, field samples, or a favor—quietly and with boundaries.",
+    ifThreaten: "The shopkeeper becomes ice-calm; assistants step away; a ward hums; a watch contact is summoned if it continues.",
+    ifReturn: "They’re remembered. Good behavior earns warmer service; bad behavior means only safe stock and higher scrutiny.",
+
+    cheatDM: "Use the consultation nook to pull a PC aside for private complications. The antidote bulk-buyer is a great recurring hook.",
+
+    whereKeeperLast: "Already present on the sales floor — polishing glass, watching the door, ready to greet or assess newcomers."
+  };
+
+  const npc = [
+    {name:"Merrit Quill", race:"Human", role:"Assistant / clerk", impression:"Ink-stained fingers, always listening",
+     appearance:"Short hair tied back with twine; apron pockets full of labels and chalk.",
+     personality:"Quietly kind; obsessively careful; notices lies by watching hands.",
+     reason:"Labeling a fresh batch and tracking a suspicious return."},
+    {name:"Brannic ‘Brassjaw’", race:"Dwarf", role:"Guard / bouncer", impression:"Arms crossed, polite but immovable",
+     appearance:"Chain shirt under a cloak; a scar near the jaw; smells faintly of smoke.",
+     personality:"Steady, protective, hates bullies.",
+     reason:"Here on ‘break’ but actually ensuring the shop stays safe today."},
+    {name:"Sera of the Reedboats", race:"Halfling", role:"Customer (regular)", impression:"Warm smile, nervous eyes",
+     appearance:"River-stained cloak; small satchel of herbs; damp boots.",
+     personality:"Friendly gossip; worried about someone at home.",
+     reason:"Buying fever remedy and a calming tonic."},
+    {name:"Ilyth Voss", race:"Elf", role:"Customer (outsider)", impression:"Cautious, measuring everything",
+     appearance:"Cloak with scholar stitching; spectacles; a notebook with pressed petals.",
+     personality:"Analytical; asks precise questions; prone to distraction.",
+     reason:"Comparing antidotes; searching for a rare reagent rumor."},
+    {name:"Pike", race:"Tiefling", role:"Courier / messenger", impression:"Always in a hurry",
+     appearance:"Red gloves; satchel stamped with wax; bruised knuckles.",
+     personality:"Impatient but professional; afraid of being followed.",
+     reason:"Delivering a sealed crate and insisting on a signature."},
+    {name:"Nella Graycap", race:"Gnome", role:"Rival / competitor", impression:"Too cheerful to be innocent",
+     appearance:"Bright scarf; perfume too strong; eyes flick to every label.",
+     personality:"Charming, probing, competitive.",
+     reason:"“Browsing,” but really scouting pricing and suppliers."}
+  ];
+
+  const hooks = [
+    {type:"Rumor", pitch:"A ‘moon-bloom’ tincture is sold only on certain nights—if you have the right token.",
+     dm:"The token is a pressed silverleaf; the sale is a front for vetting trustworthy buyers."},
+    {type:"Quest", pitch:"A key ingredient shipment is missing—recover it before the district runs out of antidotes.",
+     dm:"The missing caravan ties to the bulk antidote buyer and the coming event."}
+  ];
+
+  return { seed, npc, hooks };
+}
+
+/* Seed on first run */
+function applySeedIfFirstRun(){
+  const first = !localStorage.getItem(STORAGE_KEY);
+  if(!first) return false;
+
+  // Default starting state (placeholders only)
+  localState.meta.theme = "gilded-midnight";
+  localState.meta.demographicsProfile = "Human_30";
+  localState.meta.debug = false;
+  localState.meta.hookCount = 2;
+  hookCount = 2;
+
+  // Clear all field values
+  $$("[data-key]").forEach(el => { el.value = ""; });
+
+  // Sample NPC in Slot 1 (until file import is implemented)
+  const sampleNpc = {"id": 1, "name": "Nolan", "full_name": "Nolan Miststead", "appearance": "Appears as a human: lean and travel-worn, with blue eyes and chestnut hair. They wear a well-made vest over sturdy leathers and carry a small locket; a sun-browned neck completes the look.", "personality": "They are adaptable but proud, and watches reflections more than faces. They aims to keep a dangerous secret buried, and won’t harm children, no matter the job.", "stats": "Str7[-2]|Dex10[+0]|Con15[+2]|Int14[+2]|Wis11[+0]|Cha9[-1]", "profession": "Oyster dredger", "social": "Common folk", "class": "Ranger", "orientation": "Straight", "relationship": "Single", "alignment": "Lawful Evil", "secret": "True name: Yeiin. Anchor name: Zeta-15. They’re being hunted by someone who remembers their original face.", "gold_gp": 68, "interesting_items": ["a corded snare loop", "a map to a hidden spring"], "height_cm": 188, "height_ft_in": "6'2\"", "weight_kg": 63, "eye_color": "Blue", "hair_color": "Chestnut", "age_race_years": 40, "age_human_equivalent_years": 40, "clothing": "a clean traveler’s outfit with a hooded cloak", "weaponry": ["Shortbow", "Longbow"], "equipment": ["No armor (tough leathers)", "Traveler’s kit", "Thieves’ tools", "Chalk", "Healer’s kit", "Magnifying lens", "Disguise kit"]};
+  const set = (k,v)=>{ const el = $(`[data-key="npc_1_${k}"]`); if(el) el.value = v ?? ""; };
+  set("full_name", sampleNpc.full_name);
+  set("profession", sampleNpc.profession);
+  set("social", sampleNpc.social);
+  set("class", sampleNpc.class);
+  set("alignment", sampleNpc.alignment);
+  set("orientation", sampleNpc.orientation);
+  set("relationship", sampleNpc.relationship);
+  set("gold_gp", String(sampleNpc.gold_gp));
+
+  // Stats: parse "Str11[+0]|Dex10[+0]|..."
+  const statMap = {};
+  (sampleNpc.stats || "").split("|").forEach(part => {
+    const m = part.match(/^([A-Za-z]{3})(\d+)\[([+-]?\d+)\]$/);
+    if(!m) return;
+    statMap[m[1].toLowerCase()] = `${m[2]} [${m[3]}]`;
+  });
+  set("stat_str", statMap.str || "");
+  set("stat_dex", statMap.dex || "");
+  set("stat_con", statMap.con || "");
+  set("stat_int", statMap.int || "");
+  set("stat_wis", statMap.wis || "");
+  set("stat_cha", statMap.cha || "");
+
+  $(`[data-key="npc_1_appearance"]`) && ($(`[data-key="npc_1_appearance"]`).value = sampleNpc.appearance);
+  $(`[data-key="npc_1_personality"]`) && ($(`[data-key="npc_1_personality"]`).value = sampleNpc.personality);
+  $(`[data-key="npc_1_secret"]`) && ($(`[data-key="npc_1_secret"]`).value = sampleNpc.secret);
+  set("height_cm", String(sampleNpc.height_cm));
+  set("height_ft_in", sampleNpc.height_ft_in);
+  set("weight_kg", String(sampleNpc.weight_kg));
+  set("eye_color", sampleNpc.eye_color);
+  set("hair_color", sampleNpc.hair_color);
+  set("age_race_years", String(sampleNpc.age_race_years));
+  set("age_human_equivalent_years", String(sampleNpc.age_human_equivalent_years));
+  set("clothing", sampleNpc.clothing);
+  $(`[data-key="npc_1_interesting_items"]`) && ($(`[data-key="npc_1_interesting_items"]`).value = (sampleNpc.interesting_items||[]).join("\n"));
+  $(`[data-key="npc_1_weaponry"]`) && ($(`[data-key="npc_1_weaponry"]`).value = (sampleNpc.weaponry||[]).join("\n"));
+  $(`[data-key="npc_1_equipment"]`) && ($(`[data-key="npc_1_equipment"]`).value = (sampleNpc.equipment||[]).join("\n"));
+
+
+  // Clear images
+  localState.fields.shopImageDataUrl = "";
+  localState.fields.keeperImageDataUrl = "";
+  localState.fields.keeperPortraitUrl = "";
+  $("#markdownOut").value = "";
+
+  // Clear histories; keep default table options
+  for(const k in localState.tables) localState.tables[k].history = [];
+
+  document.documentElement.setAttribute("data-theme", localState.meta.theme);
+  renderAllTables();
+  updateReadaloudPreviews();
+  refreshKeeperInfobox();
+  if($('#whereKeeperOut')) $('#whereKeeperOut').textContent = "—";
+  applyAutoPlaceholders();
+  saveAll();
+  toast("Loaded placeholders + sample NPC (slot 1).");
+  return true;
+}
+
+
+/* Ctrl+Click panel title to collapse/expand all sections in that panel */
+document.addEventListener("click", (e) => {
+  const h2 = e.target.closest(".panelHead h2");
+  if(!h2 || !e.ctrlKey) return;
+  const panel = h2.closest(".panel");
+  if(!panel) return;
+  const sections = $$("details", panel);
+  if(!sections.length) return;
+  const anyOpen = sections.some(d => d.open);
+  sections.forEach(d => d.open = !anyOpen);
+  toast(anyOpen ? "Collapsed sections." : "Expanded sections.");
+});
+
+/* Ctrl+Click a section title (summary) to force-minimize (without scrolling/jump oddities) */
+document.addEventListener("click", (e) => {
+  const sum = e.target.closest("summary");
+  if(!sum || !e.ctrlKey) return;
+  const det = sum.parentElement;
+  if(det && det.tagName.toLowerCase() === "details"){
+    e.preventDefault();
+    det.open = false;
+    toast("Section minimized.");
+  }
+}, true);
+
+
+
+/* NPC Roll button delegation (survives rebuilds) */
+document.addEventListener("click", (e) => {
+  const btn = e.target && e.target.closest ? e.target.closest('button[id^="btnNpcRoll_"]') : null;
+  if(!btn) return;
+  e.preventDefault();
+  const n = Number((btn.id || "").replace("btnNpcRoll_",""));
+  if(Number.isFinite(n) && n>0){
+    dbg(`Delegation caught click for ${btn.id} -> ${n}`);
+    try{ rollNpcRace(n); }
+    catch(err){
+      console.error(err);
+      toast("Roll failed (JS error). Open DevTools console.");
+    }
+  }
+}, true);
+
+/* Global error surfacing (for debugging) */
+window.addEventListener("error", (ev) => {
+  try{
+    console.error(ev.error || ev.message);
+    toast("JS error: " + (ev.message || "unknown"));
+  }catch{}
+});
+
+
+
+/* Debugger */
+function debugClick(id){
+  dbg("CLICK: " + id);
+}
+
+function dbg(msg){
+  try{
+    if(!(localState && localState.meta && localState.meta.debug)) return;
+    const log = $("#debugLog");
+    const panel = $("#debugPanel");
+    if(!log || !panel) return;
+    const ts = new Date().toISOString().slice(11,19);
+    log.textContent += `[${ts}] ${msg}\n`;
+    panel.scrollTop = panel.scrollHeight;
+  }catch{}
+}
+function applyDebuggerUI(){
+  const on = !!(localState && localState.meta && localState.meta.debug);
+  const panel = $("#debugPanel");
+  if(panel) panel.style.display = on ? "block" : "none";
+  const t = $("#debugToggle");
+  if(t) t.checked = on;
+}
+$("#debugClear")?.addEventListener("click", () => { const log=$("#debugLog"); if(log) log.textContent=""; });
+
+
+/* Init */
+
+/* =========================
+   NPCs (v42 rebuild)
+   ========================= */
+
+function ensureNpcTableState(){
+  if(!localState) localState = { meta:{}, fields:{}, tables:{} };
+  if(!localState.tables) localState.tables = {};
+  if(!localState.tables.npcs) localState.tables.npcs = { rows: [], history: [] };
+  if(!Array.isArray(localState.tables.npcs.rows)) localState.tables.npcs.rows = [];
+}
+
+function npcRandomCode(len=6){
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let s = "";
+  for(let i=0;i<len;i++) s += chars[Math.floor(Math.random()*chars.length)];
+  return s;
+}
+
+function newNpcRow(){
+  const code = npcRandomCode(6);
+  return {
+    code,
+    title: `NPC - ${code}`,
+    name: "",
+    race: "",
+    klass: "",
+    ageHuman: "",
+    portraitUrl: "",
+
+    inSceneDoing: "",
+    inSceneReason: "",
+
+    appearance: "",
+    personality: "",
+    secret: "",
+
+    notes: "",
+    profession: "",
+    social: "",
+    alignment: "",
+    orientation: "",
+    relationship: "",
+    gold: "",
+
+    str: "", dex: "", con: "", int: "", wis: "", cha: "",
+
+    heightCm: "",
+    weightKg: "",
+    eyeColor: "",
+    hairColor: "",
+    ageRace: "",
+    clothing: "",
+    items: "",
+    weaponry: "",
+    equipment: ""
+  };
+}
+
+let _npcSaveT = null;
+function scheduleNpcSave(){
+  clearTimeout(_npcSaveT);
+  _npcSaveT = setTimeout(()=>saveAll(), 250);
+}
+
+function npcFieldHtml(label, key, value, {full=false, type="text", placeholder=""}={}){
+  const cls = full ? "field full" : "field";
+  return `
+    <div class="${cls}">
+      <label>${escapeHtml(label)}</label>
+      <input type="${type}" value="${escapeHtml(value||"")}" data-npc-key="${escapeHtml(key)}" placeholder="${escapeHtml(placeholder)}"/>
+    </div>
+  `;
+}
+
+
+
+async function copyTextToClipboard(text){
+  // Prefer async clipboard API
+  try{
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+  }catch(err){
+    // fall through
+  }
+
+  // Fallback: temporary textarea + execCommand
+  try{
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    ta.style.position = "fixed";
+    ta.style.left = "-9999px";
+    document.body.appendChild(ta);
+    ta.select();
+    const ok = document.execCommand("copy");
+    ta.remove();
+    return ok;
+  }catch(err){
+    return false;
+  }
+}
+
+
+const SHOP_INSCENE_URL = "https://raw.githubusercontent.com/Lithgren/Lithgren/refs/heads/main/Random%20Generators/Shops/Shop_Reasons_1";
+let __shopInSceneCache = null;
+
+async function getShopInSceneList(){
+  if(__shopInSceneCache) return __shopInSceneCache;
+  const res = await fetch(SHOP_INSCENE_URL, {cache:"no-store"});
+  if(!res.ok) throw new Error(`Fetch failed: ${res.status}`);
+  const data = await res.json();
+  if(!Array.isArray(data)) throw new Error("Shop reasons JSON must be an array.");
+  __shopInSceneCache = data;
+  return data;
+}
+
+function findShopInSceneById(list, idRoll){
+  if(!Array.isArray(list) || list.length === 0) return null;
+  const byId = new Map();
+  list.forEach(o=>{
+    const id = Number(o && o.id);
+    if(Number.isFinite(id)) byId.set(id, o);
+  });
+  if(byId.has(idRoll)) return byId.get(idRoll);
+  const ids = Array.from(byId.keys()).sort((a,b)=>a-b);
+  if(ids.length === 0) return list[(idRoll-1) % list.length];
+  const idx = (idRoll - 1) % ids.length;
+  return byId.get(ids[idx]);
+}
+
+function findDoingBySubId(entry, subId){
+  const arr = entry && entry.currently_doing;
+  if(!Array.isArray(arr)) return null;
+  const hit = arr.find(x => Number(x && x.sub_id) === Number(subId));
+  if(hit) return hit;
+  const clean = arr.filter(x => Number.isFinite(Number(x && x.sub_id)));
+  if(clean.length === 0) return arr[0] || null;
+  const idx = (subId - 1) % clean.length;
+  return clean[idx];
+}
+
+async function rollInSceneForNpc(idx, card){
+  ensureNpcTableState();
+  const idRoll = randInt(1, 2500);
+  const subRoll = randInt(1, 20);
+
+  try{
+    toast(`In-scene roll: ID ${idRoll}, Sub ${subRoll}`);
+    const list = await getShopInSceneList();
+    const entry = findShopInSceneById(list, idRoll);
+    if(!entry) {
+      toast("No in-scene entry found.");
+      return;
+    }
+    const doing = findDoingBySubId(entry, subRoll);
+
+    localState.tables.npcs.rows[idx].inSceneReason = entry.reason || localState.tables.npcs.rows[idx].inSceneReason || "";
+    localState.tables.npcs.rows[idx].inSceneDoing = (doing && doing.description) ? doing.description : (localState.tables.npcs.rows[idx].inSceneDoing || "");
+
+    const reasonEl = card.querySelector('textarea[data-npc-key="inSceneReason"]');
+    if(reasonEl) reasonEl.value = localState.tables.npcs.rows[idx].inSceneReason;
+    const doingEl = card.querySelector('textarea[data-npc-key="inSceneDoing"]');
+    if(doingEl) doingEl.value = localState.tables.npcs.rows[idx].inSceneDoing;
+
+    scheduleNpcSave();
+  }catch(err){
+    console.error(err);
+    toast("Failed to load in-scene JSON (see console).");
+  }
+}
+
+const NPC_EXTERNAL_SOURCES = {
+  "Dwarf": "https://raw.githubusercontent.com/Lithgren/Lithgren/refs/heads/main/Random%20Generators/Random%20NPCs/NPC_Dwarf.json"
+};
+
+let __npcCacheByRace = {};
+
+function randInt(min, max){
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function normalizeRaceKey(race){
+  const r = (race || "").toLowerCase().trim();
+  if(r === "dwarf" || r === "dwarves") return "Dwarf";
+  return null;
+}
+
+function parseStatBlock(statsStr){
+  // Example: Str4[-3]|Dex12[+1]|...
+  const out = {};
+  if(!statsStr) return out;
+  String(statsStr).split("|").forEach(part=>{
+    const m = part.match(/^(Str|Dex|Con|Int|Wis|Cha)\s*(\d+)(\[[^\]]+\])?/i);
+    if(!m) return;
+    const key = m[1].toLowerCase();
+    const val = m[2] + (m[3] ? m[3] : "");
+    out[key] = val;
+  });
+  return out;
+}
+
+async function getExternalNpcListForRace(raceKey){
+  if(__npcCacheByRace[raceKey]) return __npcCacheByRace[raceKey];
+  const url = NPC_EXTERNAL_SOURCES[raceKey];
+  if(!url) return null;
+  const res = await fetch(url, {cache:"no-store"});
+  if(!res.ok) throw new Error(`Fetch failed: ${res.status}`);
+  const data = await res.json();
+  if(!Array.isArray(data)) throw new Error("External NPC JSON must be an array.");
+  __npcCacheByRace[raceKey] = data;
+  return data;
+}
+
+function pickExternalByIdRoll(list, idRoll){
+  if(!Array.isArray(list) || list.length === 0) return null;
+  const byId = new Map();
+  let maxId = 0;
+  list.forEach(o=>{
+    const id = Number(o && o.id);
+    if(Number.isFinite(id)) {
+      byId.set(id, o);
+      if(id > maxId) maxId = id;
+    }
+  });
+  // Try exact id first (per requirement)
+  if(byId.has(idRoll)) return byId.get(idRoll);
+  // Fallback: deterministic wrap into range of available IDs
+  const ids = Array.from(byId.keys()).sort((a,b)=>a-b);
+  if(ids.length === 0) return list[(idRoll-1) % list.length];
+  const idx = (idRoll - 1) % ids.length;
+  return byId.get(ids[idx]);
+}
+
+function applyExternalNpcToRow(row, ext, raceKey){
+  if(!row || !ext) return;
+  row.race = raceKey === "Dwarf" ? "Dwarf" : (row.race || "");
+  row.name = ext.full_name || ext.name || row.name || "";
+  row.appearance = ext.appearance || row.appearance || "";
+  row.personality = ext.personality || row.personality || "";
+  row.secret = ext.secret || row.secret || "";
+  row.profession = ext.profession || row.profession || "";
+  row.social = ext.social || row.social || "";
+  row.alignment = ext.alignment || row.alignment || "";
+  row.orientation = ext.orientation || row.orientation || "";
+  row.relationship = ext.relationship || row.relationship || "";
+  row.gold = (ext.gold_gp !== undefined && ext.gold_gp !== null) ? String(ext.gold_gp) : (row.gold || "");
+  row.klass = ext.class || row.klass || "";
+  row.ageHuman = (ext.age_human_equivalent_years !== undefined && ext.age_human_equivalent_years !== null) ? String(ext.age_human_equivalent_years) : (row.ageHuman || "");
+
+  // Stats
+  const st = parseStatBlock(ext.stats);
+  row.str = st.str || row.str || "";
+  row.dex = st.dex || row.dex || "";
+  row.con = st.con || row.con || "";
+  row.int = st.int || row.int || "";
+  row.wis = st.wis || row.wis || "";
+  row.cha = st.cha || row.cha || "";
+
+  // Physical & gear
+  row.heightCm = (ext.height_cm !== undefined && ext.height_cm !== null) ? String(ext.height_cm) : (row.heightCm || "");
+  row.weightKg = (ext.weight_kg !== undefined && ext.weight_kg !== null) ? String(ext.weight_kg) : (row.weightKg || "");
+  row.eyeColor = ext.eye_color || row.eyeColor || "";
+  row.hairColor = ext.hair_color || row.hairColor || "";
+  row.ageRace = (ext.age_race_years !== undefined && ext.age_race_years !== null) ? String(ext.age_race_years) : (row.ageRace || "");
+  row.clothing = ext.clothing || row.clothing || "";
+
+  // Arrays -> newline blocks
+  if(Array.isArray(ext.interesting_items)) row.items = ext.interesting_items.join("\n");
+  if(Array.isArray(ext.weaponry)) row.weaponry = ext.weaponry.join("\n");
+  if(Array.isArray(ext.equipment)) row.equipment = ext.equipment.join("\n");
+}
+
+function syncNpcCardInputsFromRow(card, row){
+  if(!card || !row) return;
+  card.querySelectorAll('[data-npc-key]').forEach(el=>{
+    const key = el.getAttribute("data-npc-key");
+    if(!key) return;
+    if(el.tagName === "INPUT" || el.tagName === "TEXTAREA"){
+      el.value = (row[key] !== undefined && row[key] !== null) ? String(row[key]) : "";
+    }
+  });
+  const titleEl = card.querySelector(".npcTitle");
+  if(titleEl){
+    const nm = (row.name || "").trim();
+    titleEl.textContent = nm ? `NPC - ${nm}` : "NPC -";
+  }
+}
+function downloadJson(filename, obj){
+  const blob = new Blob([JSON.stringify(obj, null, 2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url), 250);
+}
+
+function npcToMarkdown(npc){
+  const lines = [];
+  const nm = safeText(npc.name||"").trim();
+  lines.push(`# NPC - ${nm || ""}`.trim());
+  lines.push("");
+  lines.push(`**Race/species:** ${safeText(npc.race||"")}`);
+  lines.push(`**Class:** ${safeText(npc.klass||"")}`);
+  lines.push(`**Age (human equiv.):** ${safeText(npc.ageHuman||"")}`);
+  lines.push("");
+  lines.push("## In-scene");
+  lines.push(`- **What are they doing?** ${safeText(npc.inSceneDoing||"")}`);
+  lines.push(`- **Reason (right now):** ${safeText(npc.inSceneReason||"")}`);
+  lines.push("");
+  lines.push("## Description");
+  lines.push(`- **Appearance:** ${safeText(npc.appearance||"")}`);
+  lines.push(`- **Personality:** ${safeText(npc.personality||"")}`);
+  lines.push(`- **Secret:** ${safeText(npc.secret||"")}`);
+  lines.push(`- **Notes:** ${safeText(npc.notes||"")}`);
+  lines.push("");
+  lines.push("## Background");
+  lines.push(`- **Profession:** ${safeText(npc.profession||"")}`);
+  lines.push(`- **Social:** ${safeText(npc.social||"")}`);
+  lines.push(`- **Alignment:** ${safeText(npc.alignment||"")}`);
+  lines.push(`- **Orientation:** ${safeText(npc.orientation||"")}`);
+  lines.push(`- **Relationship:** ${safeText(npc.relationship||"")}`);
+  lines.push(`- **Gold (gp):** ${safeText(npc.gold||"")}`);
+  lines.push("");
+  lines.push("## Stats");
+  lines.push(`STR ${safeText(npc.str||"")} | DEX ${safeText(npc.dex||"")} | CON ${safeText(npc.con||"")} | INT ${safeText(npc.int||"")} | WIS ${safeText(npc.wis||"")} | CHA ${safeText(npc.cha||"")}`);
+  lines.push("");
+  lines.push("## Physical & gear");
+  lines.push(`- **Height (cm):** ${safeText(npc.heightCm||"")}`);
+  lines.push(`- **Weight (kg):** ${safeText(npc.weightKg||"")}`);
+  lines.push(`- **Eye color:** ${safeText(npc.eyeColor||"")}`);
+  lines.push(`- **Hair color:** ${safeText(npc.hairColor||"")}`);
+  lines.push(`- **Age (race years):** ${safeText(npc.ageRace||"")}`);
+  lines.push(`- **Clothing:** ${safeText(npc.clothing||"")}`);
+  lines.push("");
+  lines.push("### Interesting items");
+  lines.push(safeText(npc.items||""));
+  lines.push("");
+  lines.push("### Weaponry");
+  lines.push(safeText(npc.weaponry||""));
+  lines.push("");
+  lines.push("### Equipment");
+  lines.push(safeText(npc.equipment||""));
+  return lines.join("\n");
+}
+
+function npcTextareaHtml(label, key, value, {full=true, placeholder="", roll=false}={}){
+  const cls = full ? "field full" : "field";
+  const rollBtn = roll ? `<button class="btn ghost small npcFieldRollBtn" type="button" data-npc-roll="${escapeHtml(key)}" aria-label="Roll for ${escapeHtml(label)}">Roll</button>` : "";
+  return `
+    <div class="${cls}">
+      <div class="fieldLabelRow">
+        <label>${escapeHtml(label)}</label>
+        ${rollBtn}
+      </div>
+      <textarea data-npc-key="${escapeHtml(key)}" placeholder="${escapeHtml(placeholder)}">${escapeHtml(value||"")}</textarea>
+    </div>
+  `;
+}
+
+function renderNpcList(){
+  const host = $("#npcList");
+  if(!host) return;
+
+  ensureNpcTableState();
+  host.innerHTML = "";
+
+  const rows = localState.tables.npcs.rows;
+  for(let idx=0; idx<rows.length; idx++){
+    const npc = rows[idx] || {};
+    const card = document.createElement("div");
+    card.className = "card npcCard";
+    card.dataset.npcIdx = String(idx);
+
+    const portrait = safeText(npc.portraitUrl || "").trim();
+    const portraitHtml = portrait
+      ? `<img alt="NPC portrait" src="${escapeHtml(portrait)}" />`
+      : `<div class="ph">No image</div>`;
+
+    
+    function updateNpcTitleFromName(){
+      const t = card.querySelector(".npcTitle");
+      if(!t) return;
+      const nm = safeText(localState.tables.npcs.rows[idx].name || "").trim();
+      t.textContent = nm ? `NPC - ${nm}` : "NPC -";
+    }
+
+    card.innerHTML = `
+
+      <div class="npcTopGrid">
+        <div class="npcTopLeft">
+          <div class="npcTopBar">
+            <div class="npcTitle">${escapeHtml((safeText(npc.name||"").trim()) ? `NPC - ${safeText(npc.name).trim()}` : "NPC -")}</div>
+          </div>
+
+          <div class="npcIdentity">
+            <div class="field full">
+              <label>First &amp; last name</label>
+              <input type="text" value="${escapeHtml(npc.name||"")}" data-npc-key="name" placeholder="e.g., Thrain Stonebeard" />
+            </div>
+
+            <div class="compactRow" style="margin-top:8px;">
+              <div class="compactField">
+                <label>Race / species</label>
+                <input type="text" value="${escapeHtml(npc.race||"")}" data-npc-key="race" />
+              </div>
+              <div class="compactField">
+                <label>Class</label>
+                <input type="text" value="${escapeHtml(npc.klass||"")}" data-npc-key="klass" />
+              </div>
+              <div class="compactField">
+                <label>Age (human equiv.)</label>
+                <input type="text" value="${escapeHtml(npc.ageHuman||"")}" data-npc-key="ageHuman" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="npcRightRow">
+          <div class="npcThumb" aria-label="NPC portrait thumbnail">
+            ${portraitHtml}
+          </div>
+        </div>
+      </div>
+
+      <details class="npcDetails">
+        <summary><span class="stitle">In-scene</span><span class="smeta">why they matter right now</span></summary>
+        <div class="content">
+          <div class="grid">
+            ${npcTextareaHtml("What are they doing?", "inSceneDoing", npc.inSceneDoing, {placeholder:"e.g., haggling, browsing, arguing, casing the place...", roll:true})}
+            ${npcTextareaHtml("Reason for being here (right now)", "inSceneReason", npc.inSceneReason, {placeholder:"e.g., needs a cure, meeting someone, hiding..."})}
+          
+            ${npcTextareaHtml("Notes", "notes", npc.notes, {placeholder:"Extra DM notes, reminders, voice, quirks..."})}
+</div>
+        </div>
+      </details>
+
+      <details class="npcDetails">
+        <summary><span class="stitle">Description</span><span class="smeta">how they read at a glance</span></summary>
+        <div class="content">
+          <div class="grid">
+            ${npcTextareaHtml("Appearance", "appearance", npc.appearance)}
+            ${npcTextareaHtml("Personality", "personality", npc.personality)}
+            ${npcTextareaHtml("Secret", "secret", npc.secret, {placeholder:"What would complicate the scene if revealed?"})}
+</div>
+        </div>
+      </details>
+
+      <details class="npcDetails">
+        <summary><span class="stitle">Background</span><span class="smeta">who they are off-stage</span></summary>
+        <div class="content">
+          <div class="grid">
+            ${npcFieldHtml("Profession", "profession", npc.profession, {full:false})}
+            ${npcFieldHtml("Social", "social", npc.social, {full:false})}
+            ${npcFieldHtml("Alignment", "alignment", npc.alignment, {full:false})}
+            ${npcFieldHtml("Orientation", "orientation", npc.orientation, {full:false})}
+            ${npcFieldHtml("Relationship", "relationship", npc.relationship, {full:false})}
+            ${npcFieldHtml("Gold (gp)", "gold", npc.gold, {full:false, placeholder:"e.g., 12"})}
+
+            <div class="field full" style="margin-top:4px;">
+<div class="statRow">
+                <div class="statField"><label>STR</label><input type="text" value="${escapeHtml(npc.str||"")}" data-npc-key="str"></div>
+                <div class="statField"><label>DEX</label><input type="text" value="${escapeHtml(npc.dex||"")}" data-npc-key="dex"></div>
+                <div class="statField"><label>CON</label><input type="text" value="${escapeHtml(npc.con||"")}" data-npc-key="con"></div>
+                <div class="statField"><label>INT</label><input type="text" value="${escapeHtml(npc.int||"")}" data-npc-key="int"></div>
+                <div class="statField"><label>WIS</label><input type="text" value="${escapeHtml(npc.wis||"")}" data-npc-key="wis"></div>
+                <div class="statField"><label>CHA</label><input type="text" value="${escapeHtml(npc.cha||"")}" data-npc-key="cha"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <details class="npcDetails">
+        <summary><span class="stitle">Physical &amp; gear</span><span class="smeta">body, clothing, loadout</span></summary>
+        <div class="content">
+          <div class="grid">
+            ${npcFieldHtml("Height (cm)", "heightCm", npc.heightCm, {full:false})}
+            ${npcFieldHtml("Weight (kg)", "weightKg", npc.weightKg, {full:false})}
+            ${npcFieldHtml("Eye color", "eyeColor", npc.eyeColor, {full:false})}
+            ${npcFieldHtml("Hair color", "hairColor", npc.hairColor, {full:false})}
+            ${npcFieldHtml("Age (race years)", "ageRace", npc.ageRace, {full:false})}
+
+            ${npcFieldHtml("Clothing", "clothing", npc.clothing, {full:true, placeholder:"Quick silhouette + notable details"})}
+            ${npcTextareaHtml("Interesting items (one per line)", "items", npc.items)}
+            ${npcTextareaHtml("Weaponry (one per line)", "weaponry", npc.weaponry)}
+            ${npcTextareaHtml("Equipment (one per line)", "equipment", npc.equipment)}
+          </div>
+        </div>
+      </details>
+
+      
+      <div class="npcFooterBar">
+        <div class="npcFooterLeft">
+          <button class="btn ghost small npcCreateBtn" type="button" aria-label="Create NPC (coming soon)">Create</button>
+          <button class="btn primary small npcRollBtn" type="button" aria-label="Roll NPC">Roll</button>
+        </div>
+        <div class="npcFooterRight">
+          <button class="btn ghost small npcCopyBtn" type="button" aria-label="Copy NPC as Markdown">Copy</button>
+          <button class="btn ghost small npcExportBtn" type="button" aria-label="Export NPC as JSON">Export</button>
+          <button class="btn ghost small npcDeleteBtn" type="button" aria-label="Delete NPC">Delete</button>
+        </div>
+      </div>
+    `;
+
+    // Bind input changes
+    card.querySelectorAll("input[data-npc-key], textarea[data-npc-key]").forEach(el=>{
+      el.addEventListener("input", (ev)=>{
+        const key = ev.currentTarget.getAttribute("data-npc-key");
+        const val = ev.currentTarget.value;
+        ensureNpcTableState();
+        localState.tables.npcs.rows[idx][key] = val;
+        if(key === "name") updateNpcTitleFromName();
+        scheduleNpcSave();
+        });
+    });
+
+    // Roll button: roll race; if Dwarf, import from external list by ID roll (1..10,000)
+    const rollBtn = card.querySelector(".npcRollBtn");
+    if(rollBtn){
+      rollBtn.addEventListener("click", async ()=>{
+        ensureNpcTableState();
+
+        const race = (typeof weightedPickRace === "function")
+          ? weightedPickRace(getDemographicsProfile())
+          : "Human";
+
+        localState.tables.npcs.rows[idx].race = race;
+
+        // External import only for Dwarf (ignore all other races)
+        const raceKey = normalizeRaceKey(race);
+        if(raceKey === "Dwarf"){
+          const idRoll = randInt(1, 10000);
+          try{
+            toast(`Dwarf roll: fetching list… (ID ${idRoll})`);
+            const list = await getExternalNpcListForRace("Dwarf");
+            const ext = pickExternalByIdRoll(list, idRoll);
+            if(ext){
+              applyExternalNpcToRow(localState.tables.npcs.rows[idx], ext, "Dwarf");
+              syncNpcCardInputsFromRow(card, localState.tables.npcs.rows[idx]);
+              scheduleNpcSave();
+              toast(`Loaded Dwarf: ${safeText(ext.full_name || ext.name || "")} (ID ${idRoll})`);
+              return;
+            }else{
+              toast(`No dwarf entry found (ID ${idRoll}).`);
+            }
+          }catch(err){
+            console.error(err);
+            toast("Failed to load dwarf JSON (see console).");
+          }
+        }
+
+        // Non-dwarf: just update race field + save
+        const raceInput = card.querySelector('input[data-npc-key="race"]');
+        if(raceInput) raceInput.value = race;
+        scheduleNpcSave();
+        toast(`Rolled: ${race}`);
+      });
+    }
+
+    // Field roll buttons
+    card.querySelectorAll(".npcFieldRollBtn").forEach(btn=>{
+      btn.addEventListener("click", async ()=>{
+        const key = btn.getAttribute("data-npc-roll") || "";
+        if(key === "inSceneDoing"){
+          await rollInSceneForNpc(idx, card);
+          return;
+        }
+        try{ toast("No roll configured for this field yet."); }catch{}
+      });
+    });
+
+    // Create button (placeholder for later)
+    const createBtn = card.querySelector(".npcCreateBtn");
+    if(createBtn){
+      createBtn.addEventListener("click", ()=>{
+        try{ toast("Create: coming soon."); }catch{}
+      });
+    }
+
+    // Delete button
+    const delBtn = card.querySelector(".npcDeleteBtn");
+    if(delBtn){
+      delBtn.addEventListener("click", ()=>{
+        ensureNpcTableState();
+        localState.tables.npcs.rows.splice(idx, 1);
+        renderNpcList();
+        try{ saveAll(); }catch(err){ console.error(err); }
+        try{ toast("NPC deleted."); }catch{}
+      });
+    }
+
+    host.appendChild(card);
+  }
+}
+
+function addNpcRandom(){ createNpcSlot(); }
+
+function bindNpcControls(){
+  // Create new is handled via delegated capture-phase listener (see createNpcSlot).
+}
+
+
+
+
+
+/* NPC footer actions delegation */
+document.addEventListener("click", async (e) => {
+  const copyBtn = e.target.closest && e.target.closest(".npcCopyBtn");
+  const exportBtn = e.target.closest && e.target.closest(".npcExportBtn");
+  if(!copyBtn && !exportBtn) return;
+
+  const card = e.target.closest(".npcCard");
+  if(!card) return;
+  const idx = parseInt(card.dataset.npcIdx || "-1", 10);
+  if(!Number.isFinite(idx) || idx < 0) return;
+
+  ensureNpcTableState();
+  const npcObj = localState.tables.npcs.rows[idx] || {};
+
+  if(copyBtn){
+    e.preventDefault();
+    try{
+      const md = npcToMarkdown(npcObj);
+      const ok = await copyTextToClipboard(md);
+      toast(ok ? "Copied Markdown." : "Copy failed (browser permission).");
+    }catch(err){
+      console.error(err);
+      try{ toast("Copy failed. See console."); }catch{}
+    }
+    return;
+  }
+
+  if(exportBtn){
+    e.preventDefault();
+    try{
+      const nm = safeText(npcObj.name||"").trim();
+      const base = (nm ? nm : (npcObj.code||"npc"))
+        .toLowerCase()
+        .replace(/[^a-z0-9\-]+/g,'-')
+        .replace(/\-+/g,'-')
+        .replace(/^\-+|\-+$/g,'');
+      downloadJson(`npc-${base || "npc"}.json`, npcObj);
+      toast("Downloaded JSON.");
+    }catch(err){
+      console.error(err);
+      try{ toast("Export failed. See console."); }catch{}
+    }
+    return;
+  }
+});
+
+/* NPC Create button delegation (capture-phase + direct DOM fallback) */
+let __npcCreateBusy = false;
+function createNpcSlot(){
+  if(__npcCreateBusy) return;
+  __npcCreateBusy = true;
+  try{
+
+  ensureNpcTableState();
+  const row = newNpcRow();
+  localState.tables.npcs.rows.push(row);
+
+  // Try normal render path
+  try{
+    if(typeof renderNpcList === "function") renderNpcList();
+  }catch(err){
+    console.error(err);
+    try{ toast("NPC created in data, but UI render failed. Check console."); }catch{}
+  }
+
+  try{ saveAll(); }catch(err){ console.error(err); }
+  try{ toast(`Created: ${row.title}`); }catch{}
+  } finally {
+    __npcCreateBusy = false;
+  }
+}
+
+document.addEventListener("click", (e) => {
+  const btn = e.target && e.target.closest ? e.target.closest("#btnNpcCreate") : null;
+  if(!btn) return;
+  e.preventDefault();
+  e.stopPropagation();
+  createNpcSlot();
+}, true);
+function init(){
+  applyEdit();
+  const hash = (location.hash || "").replace("#","").trim();
+  const known = new Set(["overview","readaloud","shopkeeper","layout","npcs","social","hooks","tables","cheat","export"]);
+  if(hash && known.has(hash)) setTab(hash);
+
+  renderAllTables();
+
+  const loaded = loadAll();
+  if(!loaded) applySeedIfFirstRun();
+  else { renderAllTables(); updateReadaloudPreviews(); }
+
+  bindAllInputs();
+  bindNpcControls();
+  ensureNpcTableState();
+  renderNpcList();
+  applyAutoPlaceholders();
+  updateReadaloudPreviews();
+  refreshKeeperInfobox();
+  saveAll();
+}
+document.addEventListener("DOMContentLoaded", init);
+</script>
+</body>
+</html>
